@@ -4,15 +4,29 @@ using UnityEngine;
 
 public class GoalChecker : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void OnTriggerEnter(Collider other)
     {
         
+        if(other.gameObject.tag == "Ball")
+        {
+            GameObject ball = other.gameObject;
+            // 해당 공이 득점 상태가 아닌 경우에만 득점 인정(공이 트리거를 한 번에 두 번 통과하는 경우 방지)
+            if(!ball.GetComponent<BallController>().IsScored)
+            {
+                Debug.Log("공 ID: " + other.gameObject.GetInstanceID());
+                ball.GetComponent<BallController>().IsScored = true;
+
+                // 3초 대기
+                StartCoroutine(MoveBall(ball));
+            }
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator MoveBall(GameObject ball)
     {
-        
+        yield return new WaitForSeconds(3.0f);
+        // (-25, 20, -25) ~ (25, 20, 25)의 랜덤 위치로 공을 이동시킴
+        ball.transform.position = new Vector3(Random.Range(-25f, 25f), 20, Random.Range(-25f, 25f));
+        ball.GetComponent<BallController>().IsScored = false;
     }
 }
