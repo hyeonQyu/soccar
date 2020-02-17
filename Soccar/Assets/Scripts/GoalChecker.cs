@@ -6,7 +6,6 @@ public class GoalChecker : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        
         if(other.gameObject.tag == "Ball")
         {
             GameObject ball = other.gameObject;
@@ -26,7 +25,7 @@ public class GoalChecker : MonoBehaviour
     {
         yield return new WaitForSeconds(3.0f);
         // (-25, 20, -25) ~ (25, 20, 25)의 랜덤 위치로 공을 이동시킴
-        ball.transform.position = new Vector3(Random.Range(-25f, 25f), 20, Random.Range(-25f, 25f));
+        ball.transform.position = new Vector3(Random.Range(-25f, 25f), 20, Random.Range(-25f, 2f));
         ball.GetComponent<BallController>().IsScored = false;
     }
 }
