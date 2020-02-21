@@ -4,16 +4,22 @@ using UnityEngine;
 
 public class GoalChecker : MonoBehaviour
 {
+    // 골대를 소유하고 있는 플레이어
+    [SerializeField]
+    private GameObject _player;
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.CompareTag("Ball"))
         {
             GameObject ball = other.gameObject;
+            GameObject scorer = ball.GetComponent<BallController>().LastPlayer;
             // 해당 공이 득점 상태가 아닌 경우에만 득점 인정(공이 트리거를 한 번에 두 번 통과하는 경우 방지)
             if(!ball.GetComponent<BallController>().IsScored)
             {
-                Debug.Log("공 ID: " + other.gameObject.GetInstanceID());
+                // 득점
                 ball.GetComponent<BallController>().IsScored = true;
+                scorer.GetComponent<PlayerController>().Scores(ref _player);
 
                 // 3초 대기
                 StartCoroutine(MoveBall(ball));

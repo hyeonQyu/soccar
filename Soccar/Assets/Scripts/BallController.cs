@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
-    private Collider _collider;
+    private Collider _ball;
+    private GameObject _lastPlayer;
+    public GameObject LastPlayer
+    {
+        get
+        {
+            return _lastPlayer;
+        }
+    }
     private bool _isOnNet;
     private bool _isScored;
     public bool IsScored
@@ -22,15 +30,14 @@ public class BallController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _collider = GetComponent<Collider>();
+        _ball = GetComponent<Collider>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.CompareTag("Net"))
         {
-            Debug.Log("bounce " + _collider.material.bounciness);
-            _collider.material.bounciness *= 0.01f;
+            _ball.material.bounciness *= 0.01f;
         }
     }
 
@@ -40,19 +47,25 @@ public class BallController : MonoBehaviour
         // 땅에 부딪히면 탄성 감소
         if(collision.gameObject.CompareTag("Ground"))
         {
-            _collider.material.bounciness *= 0.8f;
+            _ball.material.bounciness *= 0.8f;
             return;
         }
         // 그물은 공을 튀기지 않기 때문에 그물 위에 올라가면 공을 내려줘야 함
         else if(collision.gameObject.CompareTag("Net"))
         {
-            _collider.material.bounciness *= 0.01f;
+            _ball.material.bounciness *= 0.01f;
             _isOnNet = true;
             StartCoroutine(MoveBallOnNet());
             return;
         }
+
+        // 어떤 플레이어의 득점인지 판단하기 위해 가장 마지막에 접촉한 플레이어를 저장해야 함
+        if(collision.gameObject.CompareTag("Player"))
+        {
+            _lastPlayer = collision.gameObject;
+        }
         // 다른 물체에 부딪히면 탄성을 원래대로
-        _collider.material.bounciness = 0.8f;
+        _ball.material.bounciness = 0.8f;
     }
 
     private void OnCollisionExit(Collision collision)
@@ -76,7 +89,7 @@ public class BallController : MonoBehaviour
         // 공이 4초 후에도 그물 위에 있으면 탄성 복구 후 랜덤 위치로 공 이동
         if(_isOnNet)
         {
-            _collider.material.bounciness = 0.8f;
+            _ball.material.bounciness = 0.8f;
             transform.position = new Vector3(Random.Range(-25f, 25f), 30, Random.Range(-25f, 2f));
         }
     }
