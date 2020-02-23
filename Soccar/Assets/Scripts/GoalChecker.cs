@@ -19,7 +19,7 @@ public class GoalChecker : MonoBehaviour
             {
                 // 득점
                 ball.GetComponent<BallController>().IsScored = true;
-                //scorer.GetComponent<PlayerController>().Scores(ref _player);
+                scorer.GetComponent<PlayerInformation>().Scores(ref _player);
 
                 // 3초 대기
                 StartCoroutine(MoveBall(ball));

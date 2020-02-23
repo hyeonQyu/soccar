@@ -7,21 +7,42 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
+struct SyncInformation
+{
+    public int PlayerIndex;
+    public float X;
+    public float Y;
+    public float Z;
+
+    public SyncInformation(int playerIndex, float x, float y, float z)
+    {
+        PlayerIndex = playerIndex;
+        X = x;
+        Y = y;
+        Z = z;
+    }
+}
+
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
     private float _walkSpeed;
-
     private float _runSpeed;
     private float _playerSpeed;
 
     // 99 = 서버로 부터 값을 받지 않음.
-    public static int _myPlayerIndex = 99;
+    private static int _myPlayerIndex = 99;
+    public static int MyPlayerIndex
+    {
+        get
+        {
+            return _myPlayerIndex;
+        }
+    }
 
-    private Socket socket = null;
+    private Socket _socket = null;
 
     private bool _isMoved = false;
-
     private static bool _isConnected = false;
     public static bool IsConnected
     {
@@ -35,67 +56,24 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-
-    struct NetMove
-    {
-        public int playerIndex;
-        public float x;
-        public float y;
-        public float z;
-
-        public NetMove(int playerIndex, float x, float y, float z)
-        {
-            this.playerIndex = playerIndex;
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-    };
-
-    NetMove sendPosition;
-    NetMove receivePosition;
-
-    /*   현규가 만든 내용
-    [SerializeField]
-    private string _id;
-    public string Id
-    {
-        get
-        {
-            return _id;
-        }
-    }
-    private int _score = 0;
-    public int Score
-    {
-        get
-        {
-            return _score;
-        }
-        set
-        {
-            _score = value;
-        }
-    }
-    */
+    SyncInformation _sendPosition;
+    SyncInformation _receivePosition;
 
     // Use this for initialization
     void Start()
     {
         _runSpeed = _walkSpeed * 2;
-        socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-        socket.Connect(IPAddress.Parse("127.0.0.1"), 6666);
-        sendPosition = new NetMove(9, 0, 0, 0);
-        receivePosition = new NetMove(9, 0, 0, 0);
+        _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+        _socket.Connect(IPAddress.Parse("127.0.0.1"), 6666);
+        _sendPosition = new SyncInformation(9, 0, 0, 0);
+        _receivePosition = new SyncInformation(9, 0, 0, 0);
 
         byte[] receivedData = new byte[4];
-        socket.Receive(receivedData, 4, SocketFlags.None);
+        _socket.Receive(receivedData, 4, SocketFlags.None);
         _myPlayerIndex = BitConverter.ToInt32(receivedData, 0);
         // In Camera.cs for checking receive clientIndex from server
         _isConnected = true;
         Debug.Log("Receive Index From Server = " + _myPlayerIndex);
-
     }
 
     // Update is called once per frame
@@ -107,114 +85,116 @@ public class PlayerController : MonoBehaviour
 
     private void KeyDowned()
     {
-            Vector3 myPosition = new Vector3(0, 0, 0);
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                _playerSpeed = _runSpeed;
-            }
-            else
-            {
-                _playerSpeed = _walkSpeed;
-            }
-            if (Input.GetKey(KeyCode.A))
-            {
-                switch (_myPlayerIndex)
-                {
-                    case 0:
-                        myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
-                        break;
-                    case 1:
-                        myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
-                        break;
-                    case 2:
-                        myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
-                        break;
-                    case 3:
-                        myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
-                        break;
-                }
-                _isMoved = true;
-            }
-            if (Input.GetKey(KeyCode.D))
-            {
-                switch (_myPlayerIndex)
-                {
-                    case 0:
-                        myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
-                        break;
-                    case 1:
-                        myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
-                        break;
-                    case 2:
-                        myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
-                        break;
-                    case 3:
-                        myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
-                        break;
-                }
-                _isMoved = true;
-            }
-            if (Input.GetKey(KeyCode.W))
-            {
-                switch (_myPlayerIndex)
-                {
-                    case 0:
-                        myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
-                        break;
-                    case 1:
-                        myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
-                        break;
-                    case 2:
-                        myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
-                        break;
-                    case 3:
-                        myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
-                        break;
-                }
-                _isMoved = true;
-            }
-            if (Input.GetKey(KeyCode.S))
-            {
-                switch (_myPlayerIndex)
-                {
-                    case 0:
-                        myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
-                        break;
-                    case 1:
-                        myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
-                        break;
-                    case 2:
-                        myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
-                        break;
-                    case 3:
-                        myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
-                        break;
-                }
-            _isMoved = true;
-            }
-            if (_isMoved)
-            {
-                SendPositionToServer(myPosition);
-                _isMoved = false;
-            }
+        Vector3 myPosition = new Vector3(0, 0, 0);
+        if(Input.GetKey(KeyCode.LeftShift))
+        {
+            _playerSpeed = _runSpeed;
         }
+        else
+        {
+            _playerSpeed = _walkSpeed;
+        }
+
+        if(Input.GetKey(KeyCode.A))
+        {
+            switch(_myPlayerIndex)
+            {
+                case 0:
+                    myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
+                    break;
+                case 1:
+                    myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
+                    break;
+                case 2:
+                    myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
+                    break;
+                case 3:
+                    myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
+                    break;
+            }
+            _isMoved = true;
+        }
+        if(Input.GetKey(KeyCode.D))
+        {
+            switch(_myPlayerIndex)
+            {
+                case 0:
+                    myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
+                    break;
+                case 1:
+                    myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
+                    break;
+                case 2:
+                    myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
+                    break;
+                case 3:
+                    myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
+                    break;
+            }
+            _isMoved = true;
+        }
+        if(Input.GetKey(KeyCode.W))
+        {
+            switch(_myPlayerIndex)
+            {
+                case 0:
+                    myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
+                    break;
+                case 1:
+                    myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
+                    break;
+                case 2:
+                    myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
+                    break;
+                case 3:
+                    myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
+                    break;
+            }
+            _isMoved = true;
+        }
+        if(Input.GetKey(KeyCode.S))
+        {
+            switch(_myPlayerIndex)
+            {
+                case 0:
+                    myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
+                    break;
+                case 1:
+                    myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
+                    break;
+                case 2:
+                    myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
+                    break;
+                case 3:
+                    myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
+                    break;
+            }
+            _isMoved = true;
+        }
+
+        if(_isMoved)
+        {
+            SendPositionToServer(myPosition);
+            _isMoved = false;
+        }
+    }
 
     private void Move()
     {
-        if (socket.Poll(0, SelectMode.SelectRead))
+        if (_socket.Poll(0, SelectMode.SelectRead))
         {
             Debug.Log("@@@@@@@@@@@@@ Receive Data From Server @@@@@@@@@@@@@@@@@@@@@@@");
             byte[] receivedData = new byte[16];
             Debug.Log("11111111");
-            socket.Receive(receivedData, 16, SocketFlags.None);
+            _socket.Receive(receivedData, 16, SocketFlags.None);
             Debug.Log("222222222");
-            receivePosition = (NetMove)ByteToStructure(receivedData, typeof(NetMove));
-            Debug.Log("receivedPosition x = " + receivePosition.x);
-            Vector3 vector3 = new Vector3(receivePosition.x, receivePosition.y, receivePosition.z);
-            Camera.GameObjectsList[receivePosition.playerIndex].transform.Translate(vector3);
+            _receivePosition = (SyncInformation)ByteToStructure(receivedData, typeof(SyncInformation));
+            Debug.Log("receivedPosition x = " + _receivePosition.X);
+
+            Vector3 vector3 = new Vector3(_receivePosition.X, _receivePosition.Y, _receivePosition.Z);
+            Camera.PlayerList[_receivePosition.PlayerIndex].transform.Translate(vector3);
         }
-    }
-     
+    }  
 
     public static byte[] StructureToByte(object obj)
     {
@@ -244,51 +224,26 @@ public class PlayerController : MonoBehaviour
     public void SendPositionToServer(Vector3 positon)
     {
         // 여기서 나의 캐릭터 인덱스를 넣어야함. -> _myPlayerIndex;
-        sendPosition.playerIndex = _myPlayerIndex;
-        sendPosition.x = positon.x;
-        sendPosition.y = positon.y;
-        sendPosition.z = positon.z;
+        _sendPosition.PlayerIndex = _myPlayerIndex;
+        _sendPosition.X = positon.x;
+        _sendPosition.Y = positon.y;
+        _sendPosition.Z = positon.z;
         //Debug.Log("SendPositionToServer = " +StructureToByte(sendPosition).Length);
+
         Action<byte[]> Send = (b) =>
         {
-            socket.Send(BitConverter.GetBytes(b.Length), 4, SocketFlags.None);
-            socket.Send(b, b.Length, SocketFlags.None);
+            _socket.Send(BitConverter.GetBytes(b.Length), 4, SocketFlags.None);
+            _socket.Send(b, b.Length, SocketFlags.None);
         };
+
         Debug.Log("Send !!~~~~");
-        Send(StructureToByte(sendPosition));
+        Send(StructureToByte(_sendPosition));
     }
 
     private void OnApplicationQuit()
     {
         Debug.Log("Quit");
-        socket.Disconnect(true);
-        socket.Close();
-
+        _socket.Disconnect(true);
+        _socket.Close();
     }
-
-    /*  현규가 만든 거
-    // 득점
-    public void Scores(ref GameObject conceder)
-    {
-        PlayerController concederPlayer = conceder.GetComponent<PlayerController>();
-
-        // 득점자는 +2점, 실점자는 -1점
-        if(concederPlayer.Id != _id)
-        {
-            _score += 2;
-            // 득점에 대한 메시지 
-            Debug.Log("득점자: " + _id + "   실점자: " + concederPlayer.Id);
-        }
-        // 자책골, 자책골은 득점으로 인정하지 않음
-        else
-        {
-            // 자책골에 대한 메시지
-            Debug.Log(_id + "의 자책골");
-        }
-        concederPlayer.Score--;
-
-        Debug.Log(_id + ": " + _score + "    " + concederPlayer.Id + ": " + concederPlayer.Score);
-    }
-    */
-
 }
