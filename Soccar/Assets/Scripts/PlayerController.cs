@@ -16,8 +16,22 @@ public class PlayerController : MonoBehaviour
 
     private Socket socket = null;
 
-    Boolean _isMoved = false;
-    public static Boolean _isConnected = false;
+    private bool _isMoved = false;
+
+    private static bool _isConnected = false;
+    public static bool IsConnected
+    {
+        get
+        {
+            return _isConnected;
+        }
+        set
+        {
+            _isConnected = value;
+        }
+    }
+
+
 
     struct NetMove
     {

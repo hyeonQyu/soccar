@@ -7,7 +7,7 @@ public class Camera : MonoBehaviour
 
     private static GameObject[] _gameObjectList;
     private static GameObject _gameObject;
-    private static int _playerIndex; // p1=0, p2=1, p3=2, p4=3
+    private int _playerIndex; // p1=0, p2=1, p3=2, p4=3
 
     private float _distance = 20f;
     private float _angle = 35f;
@@ -18,6 +18,10 @@ public class Camera : MonoBehaviour
         {
             return _gameObjectList;
         }
+        set
+        {
+            _gameObjectList = value;
+        }
     }
 
     public static GameObject GameObject
@@ -26,13 +30,9 @@ public class Camera : MonoBehaviour
         {
             return _gameObject;
         }
-    }
-
-    public static int PlayerIndex
-    {
-        get
+        set
         {
-            return _playerIndex;
+            _gameObject = value;
         }
     }
 
@@ -46,21 +46,18 @@ public class Camera : MonoBehaviour
         _gameObjectList[1] = GameObject.Find("Player2");
         _gameObjectList[2] = GameObject.Find("Player3");
         _gameObjectList[3] = GameObject.Find("Player4");
-        _playerIndex = 0;
-        _gameObject = _gameObjectList[_playerIndex];
-        transform.eulerAngles = new Vector3(45f, _playerIndex * 90f, 0);
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(PlayerController._isConnected)
+        if(PlayerController.IsConnected)
         {
             _playerIndex = PlayerController._myPlayerIndex;
             _gameObject = _gameObjectList[_playerIndex];
             transform.eulerAngles = new Vector3(45f, _playerIndex * 90f, 0);
-            PlayerController._isConnected = false;
+            PlayerController.IsConnected = false;
         }
         // 왼쪽 오른쪽 방향키가 눌렸을 경우를 위한 함수
         OnArrowTyped();
