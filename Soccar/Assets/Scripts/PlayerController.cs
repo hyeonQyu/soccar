@@ -12,6 +12,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float _walkSpeed;
 
+    private float _runSpeed;
+    private float _playerSpeed;
+
+    // 99 = 서버로 부터 값을 받지 않음.
     public static int _myPlayerIndex = 99;
 
     private Socket socket = null;
@@ -79,6 +83,7 @@ public class PlayerController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        _runSpeed = _walkSpeed * 2;
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
         socket.Connect(IPAddress.Parse("127.0.0.1"), 6666);
         sendPosition = new NetMove(9, 0, 0, 0);
@@ -105,27 +110,27 @@ public class PlayerController : MonoBehaviour
             Vector3 myPosition = new Vector3(0, 0, 0);
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                _walkSpeed = 2;
+                _playerSpeed = _runSpeed;
             }
             else
             {
-                _walkSpeed = 1;
+                _playerSpeed = _walkSpeed;
             }
             if (Input.GetKey(KeyCode.A))
             {
                 switch (_myPlayerIndex)
                 {
                     case 0:
-                        myPosition += (Vector3.left * _walkSpeed * Time.deltaTime);
+                        myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
                         break;
                     case 1:
-                        myPosition += (Vector3.forward * _walkSpeed * Time.deltaTime);
+                        myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
                         break;
                     case 2:
-                        myPosition += (Vector3.right * _walkSpeed * Time.deltaTime);
+                        myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
                         break;
                     case 3:
-                        myPosition += (Vector3.back * _walkSpeed * Time.deltaTime);
+                        myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
                         break;
                 }
                 _isMoved = true;
@@ -135,16 +140,16 @@ public class PlayerController : MonoBehaviour
                 switch (_myPlayerIndex)
                 {
                     case 0:
-                        myPosition += (Vector3.right * _walkSpeed * Time.deltaTime);
+                        myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
                         break;
                     case 1:
-                        myPosition += (Vector3.back * _walkSpeed * Time.deltaTime);
+                        myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
                         break;
                     case 2:
-                        myPosition += (Vector3.left * _walkSpeed * Time.deltaTime);
+                        myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
                         break;
                     case 3:
-                        myPosition += (Vector3.forward * _walkSpeed * Time.deltaTime);
+                        myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
                         break;
                 }
                 _isMoved = true;
@@ -154,16 +159,16 @@ public class PlayerController : MonoBehaviour
                 switch (_myPlayerIndex)
                 {
                     case 0:
-                        myPosition += (Vector3.forward * _walkSpeed * Time.deltaTime);
+                        myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
                         break;
                     case 1:
-                        myPosition += (Vector3.right * _walkSpeed * Time.deltaTime);
+                        myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
                         break;
                     case 2:
-                        myPosition += (Vector3.back * _walkSpeed * Time.deltaTime);
+                        myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
                         break;
                     case 3:
-                        myPosition += (Vector3.left * _walkSpeed * Time.deltaTime);
+                        myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
                         break;
                 }
                 _isMoved = true;
@@ -173,16 +178,16 @@ public class PlayerController : MonoBehaviour
                 switch (_myPlayerIndex)
                 {
                     case 0:
-                        myPosition += (Vector3.back * _walkSpeed * Time.deltaTime);
+                        myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
                         break;
                     case 1:
-                        myPosition += (Vector3.left * _walkSpeed * Time.deltaTime);
+                        myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
                         break;
                     case 2:
-                        myPosition += (Vector3.forward * _walkSpeed * Time.deltaTime);
+                        myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
                         break;
                     case 3:
-                        myPosition += (Vector3.right * _walkSpeed * Time.deltaTime);
+                        myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
                         break;
                 }
             _isMoved = true;
