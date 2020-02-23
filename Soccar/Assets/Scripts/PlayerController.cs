@@ -12,7 +12,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float _walkSpeed;
 
-
     public static int _myPlayerIndex = 99;
 
     private Socket socket = null;
@@ -39,12 +38,36 @@ public class PlayerController : MonoBehaviour
     NetMove sendPosition;
     NetMove receivePosition;
 
+    /*   현규가 만든 내용
+    [SerializeField]
+    private string _id;
+    public string Id
+    {
+        get
+        {
+            return _id;
+        }
+    }
+    private int _score = 0;
+    public int Score
+    {
+        get
+        {
+            return _score;
+        }
+        set
+        {
+            _score = value;
+        }
+    }
+    */
+
     // Use this for initialization
     void Start()
     {
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
         socket.Connect(IPAddress.Parse("127.0.0.1"), 6666);
-        sendPosition = new NetMove(9,0,0,0);
+        sendPosition = new NetMove(9, 0, 0, 0);
         receivePosition = new NetMove(9, 0, 0, 0);
 
         byte[] receivedData = new byte[4];
@@ -54,18 +77,13 @@ public class PlayerController : MonoBehaviour
         _isConnected = true;
         Debug.Log("Receive Index From Server = " + _myPlayerIndex);
 
-
     }
-
-
-
 
     // Update is called once per frame
     void Update()
     {
         KeyDowned();
         Move();
-
     }
 
     private void KeyDowned()
@@ -96,7 +114,7 @@ public class PlayerController : MonoBehaviour
                         myPosition += (Vector3.back * _walkSpeed * Time.deltaTime);
                         break;
                 }
-            _isMoved = true;
+                _isMoved = true;
             }
             if (Input.GetKey(KeyCode.D))
             {
@@ -115,8 +133,8 @@ public class PlayerController : MonoBehaviour
                         myPosition += (Vector3.forward * _walkSpeed * Time.deltaTime);
                         break;
                 }
-            _isMoved = true;
-        }
+                _isMoved = true;
+            }
             if (Input.GetKey(KeyCode.W))
             {
                 switch (_myPlayerIndex)
@@ -134,8 +152,8 @@ public class PlayerController : MonoBehaviour
                         myPosition += (Vector3.left * _walkSpeed * Time.deltaTime);
                         break;
                 }
-            _isMoved = true;
-        }
+                _isMoved = true;
+            }
             if (Input.GetKey(KeyCode.S))
             {
                 switch (_myPlayerIndex)
@@ -154,13 +172,13 @@ public class PlayerController : MonoBehaviour
                         break;
                 }
             _isMoved = true;
+            }
+            if (_isMoved)
+            {
+                SendPositionToServer(myPosition);
+                _isMoved = false;
+            }
         }
-        if (_isMoved)
-        {
-            SendPositionToServer(myPosition);
-            _isMoved = false;
-        }
-    }
 
     private void Move()
     {
@@ -174,7 +192,7 @@ public class PlayerController : MonoBehaviour
             receivePosition = (NetMove)ByteToStructure(receivedData, typeof(NetMove));
             Debug.Log("receivedPosition x = " + receivePosition.x);
             Vector3 vector3 = new Vector3(receivePosition.x, receivePosition.y, receivePosition.z);
-            Camera._gameObjectList[receivePosition.playerIndex].transform.Translate(vector3);
+            Camera.GameObjectsList[receivePosition.playerIndex].transform.Translate(vector3);
         }
     }
      
@@ -226,6 +244,32 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Quit");
         socket.Disconnect(true);
         socket.Close();
+
     }
+
+    /*  현규가 만든 거
+    // 득점
+    public void Scores(ref GameObject conceder)
+    {
+        PlayerController concederPlayer = conceder.GetComponent<PlayerController>();
+
+        // 득점자는 +2점, 실점자는 -1점
+        if(concederPlayer.Id != _id)
+        {
+            _score += 2;
+            // 득점에 대한 메시지 
+            Debug.Log("득점자: " + _id + "   실점자: " + concederPlayer.Id);
+        }
+        // 자책골, 자책골은 득점으로 인정하지 않음
+        else
+        {
+            // 자책골에 대한 메시지
+            Debug.Log(_id + "의 자책골");
+        }
+        concederPlayer.Score--;
+
+        Debug.Log(_id + ": " + _score + "    " + concederPlayer.Id + ": " + concederPlayer.Score);
+    }
+    */
 
 }
