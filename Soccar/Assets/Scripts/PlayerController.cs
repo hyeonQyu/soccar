@@ -40,9 +40,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private Socket _socket = null;
+    private bool _isMoved = false; // 움직임 발생시 true로 변환하여 서버로 패킷전송
 
-    private bool _isMoved = false;
     private static bool _isConnected = false;
     public static bool IsConnected
     {
@@ -56,6 +55,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public static bool IsClickedStart { get => _isClickedStart; set => _isClickedStart = value; }
+    private static bool _isClickedStart = false;
+
+    private Socket _socket = null;
+    private const int GameStartPacket = 2015;
+    private const int RequestPlayerIndex = 2016;
+
+
     SyncInformation _sendPosition;
     SyncInformation _receivePosition;
 
@@ -67,20 +74,42 @@ public class PlayerController : MonoBehaviour
         _socket.Connect(IPAddress.Parse("127.0.0.1"), 6666);
         _sendPosition = new SyncInformation(9, 0, 0, 0);
         _receivePosition = new SyncInformation(9, 0, 0, 0);
-
-        byte[] receivedData = new byte[4];
-        _socket.Receive(receivedData, 4, SocketFlags.None);
-        _myPlayerIndex = BitConverter.ToInt32(receivedData, 0);
-        // In Camera.cs for checking receive clientIndex from server
-        _isConnected = true;
-        Debug.Log("Receive Index From Server = " + _myPlayerIndex);
     }
 
     // Update is called once per frame
     void Update()
     {
-        KeyDowned();
-        Move();
+        if (_isClickedStart)
+        {
+            Debug.Log("Start button clicked");
+            byte[] startPacket = BitConverter.GetBytes(GameStartPacket);
+            _socket.Send(BitConverter.GetBytes(startPacket.Length), 4, SocketFlags.None);
+            _socket.Send(startPacket, startPacket.Length, SocketFlags.None);
+            byte[] startPacketAck = new byte[4];
+            _socket.Receive(startPacketAck, 4, SocketFlags.None);
+            
+            if (GameStartPacket == BitConverter.ToInt32(startPacketAck, 0))
+            {
+                Debug.Log("GameStart. Received right ACK from server");
+                byte[] indexPacket = BitConverter.GetBytes(RequestPlayerIndex);
+                _socket.Send(BitConverter.GetBytes(indexPacket.Length), 4, SocketFlags.None);
+                _socket.Send(indexPacket, indexPacket.Length, SocketFlags.None);
+                byte[] receivedIndex = new byte[4];
+                _socket.Receive(receivedIndex, 4, SocketFlags.None);
+                _myPlayerIndex = BitConverter.ToInt32(receivedIndex, 0);
+                // In Camera.cs for checking receive clientIndex from server
+                _isConnected = true;
+                _isClickedStart = false;
+                Debug.Log("Receive Index From Server = " + _myPlayerIndex);
+            }
+
+
+        }
+        if (_isConnected)
+        {
+            KeyDowned();
+            Move();
+        }
     }
 
     private void KeyDowned()
@@ -246,4 +275,5 @@ public class PlayerController : MonoBehaviour
         _socket.Disconnect(true);
         _socket.Close();
     }
+
 }

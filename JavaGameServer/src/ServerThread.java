@@ -14,7 +14,7 @@ public class ServerThread extends Thread {
 	private OutputStream sender;
 	private InputStream receiver;
 	private int clientIndex;
-	private int maybeDisconnected = 0;
+	private int maybeDisconnected = 0; // 클라이언트의 연결해제 상태를 예측하기 위함.
 
 	ServerThread(Socket s, int index) {
 		this.socket = s;
@@ -64,9 +64,8 @@ public class ServerThread extends Thread {
 				receiver = socket.getInputStream();
 				
 				System.out.println("Client Index = " + clientIndex);								
-				
-				sender.write(IntToByte(clientIndex, ByteOrder.LITTLE_ENDIAN));
 
+				
 				while (socket.isConnected() && !socket.isClosed()) {
 					byte[] data = getRecieve(receiver, socket);
 
@@ -74,13 +73,25 @@ public class ServerThread extends Thread {
 						System.out.println("data 수신");
 
 						//System.out.println("Received Data Length = " + data.length);
-
+						if(data.length == 4) {
+							int num = ByteToInt(data);
+							System.out.println("Receive Num = " + num);
+							if(num == 2015) { // GameStart 버튼을 눌렀을 때.
+								sender.write(data);
+							}
+							else if(num == 2016){
+								sender.write(IntToByte(clientIndex, ByteOrder.LITTLE_ENDIAN));
+							}
+						}
+						else {
 						Enumeration<Integer> en = Server.hashTable.keys();// en에 커서가 있다
 						  while(en.hasMoreElements()){
 						   int key = en.nextElement();
 						   sender = Server.hashTable.get(key).getOutputStream();
 						   sender.write(data);
 						  }
+						  sender = socket.getOutputStream();
+						}
 
 					}
 					else {
@@ -124,5 +135,11 @@ public class ServerThread extends Thread {
 		return buff.array();
 		
 		
+	}
+	
+	public int ByteToInt(byte[] buf) {
+		ByteBuffer buffer = ByteBuffer.wrap(buf);
+		buffer.order(ByteOrder.LITTLE_ENDIAN);  // if you want little-endian
+		return buffer.getShort();
 	}
 }

@@ -12,6 +12,8 @@ public class Camera : MonoBehaviour
     private float _distance = 20f;
     private float _angle = 35f;
 
+    private bool _isFirstRun = true;
+
     public static GameObject[] PlayerList
     {
         get
@@ -52,18 +54,20 @@ public class Camera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(PlayerController.IsConnected)
+        if(PlayerController.IsConnected && _isFirstRun)
         {
             _playerIndex = PlayerController.MyPlayerIndex;
             _player = _playerList[_playerIndex];
             transform.eulerAngles = new Vector3(_angle, _playerIndex * 90f, 0);
-            PlayerController.IsConnected = false;
+            _isFirstRun = false;
         }
-        // 왼쪽 오른쪽 방향키가 눌렸을 경우를 위한 함수
-        OnArrowTyped();
-
-        // 카메라의 position을 실시간으로 업데이트함
-        ChangeCameraView();
+        if (!_isFirstRun)
+        {
+            // 왼쪽 오른쪽 방향키가 눌렸을 경우를 위한 함수
+            OnArrowTyped();
+            // 카메라의 position을 실시간으로 업데이트함
+            ChangeCameraView();
+        }
     }
 
     void OnArrowTyped()

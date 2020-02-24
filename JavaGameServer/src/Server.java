@@ -14,13 +14,16 @@ import java.util.concurrent.Executors;
 
 public class Server {
 
+	public static Hashtable<Integer, Hashtable<Integer, Socket>> tableList = new Hashtable<Integer, Hashtable<Integer,Socket>>();
 	public static Hashtable<Integer, Socket> hashTable = new Hashtable<Integer, Socket>();
+	public static int tableListCounts = 0;
 	
 	public void go() {
 		ServerSocket ss = null;
 		Socket s = null;
+		int maxClientPerRomm = 4;
 		
-		int playerIndex = 0;
+		int clientIndex = 0;
 
 		try {
 			ss = new ServerSocket(6666);
@@ -28,11 +31,11 @@ public class Server {
 			// 다수의 클라이언트와 통신하기 위해 loop
 			while (true) {
 				s = ss.accept(); // 클라이언트 접속시 새로운 소켓이 리턴
-				Server.hashTable.put(playerIndex, s);
-				ServerThread st = new ServerThread(s, playerIndex);
+				Server.hashTable.put(clientIndex, s);
+				ServerThread st = new ServerThread(s, clientIndex);
 				st.start();
-				System.out.println(playerIndex + "님 입장");
-				++playerIndex;
+				System.out.println(clientIndex + "님 입장");
+				++clientIndex;
 			}
 		} catch (Throwable e) {
 			e.printStackTrace();
