@@ -19,5 +19,7 @@ public class ButtonControl : MonoBehaviour
     public void OnClickedStartButton()
     {
         PlayerController.IsClickedStart = true;
+        GameObject gameobject = GameObject.Find("StartButton");
+        gameobject.SetActive(false);
     }
 }
