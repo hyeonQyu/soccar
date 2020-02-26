@@ -63,40 +63,8 @@ public class Camera : MonoBehaviour
         }
         if (!_isFirstRun)
         {
-            // 왼쪽 오른쪽 방향키가 눌렸을 경우를 위한 함수
-            OnArrowTyped();
             // 카메라의 position을 실시간으로 업데이트함
             ChangeCameraView();
-        }
-    }
-
-    void OnArrowTyped()
-    {
-        if (Input.GetKeyUp(KeyCode.LeftArrow) == true)
-        {
-            ChangePlayer(false);
-        }
-        else if (Input.GetKeyUp(KeyCode.RightArrow) == true)
-        {
-            ChangePlayer(true);
-        }
-    }
-
-    void ChangePlayer(bool isRight)
-    {
-        if (isRight)
-        {
-            // 다음플레이어로 변경
-            _playerIndex = _playerIndex + 1;
-            _playerIndex = _playerIndex % PlayerCount;
-            _player = _playerList[_playerIndex];   
-        }
-        else
-        {
-            // 이전플레이어로 변경
-            _playerIndex = _playerIndex - 1 + PlayerCount;
-            _playerIndex = _playerIndex % PlayerCount;
-            _player = _playerList[_playerIndex];
         }
     }
 
