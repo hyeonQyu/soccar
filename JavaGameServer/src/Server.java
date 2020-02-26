@@ -17,13 +17,15 @@ public class Server {
 	public static Hashtable<Integer, Hashtable<Integer, Socket>> tableList = new Hashtable<Integer, Hashtable<Integer,Socket>>();
 	public static Hashtable<Integer, Socket> hashTable = new Hashtable<Integer, Socket>();
 	public static int tableListCounts = 0;
+	public static final int MAX_PLAYER_PER_ROOM = 2;
 	
 	public void go() {
 		ServerSocket ss = null;
 		Socket s = null;
-		int maxClientPerRomm = 4;
 		
 		int clientIndex = 0;
+		
+		tableList.put(tableListCounts++, new Hashtable<Integer, Socket>());
 
 		try {
 			ss = new ServerSocket(6666);

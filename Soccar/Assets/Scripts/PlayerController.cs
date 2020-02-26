@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour
     private float _runSpeed;
     private float _playerSpeed;
 
+    [SerializeField]
+    GameObject _waitingText;
     // 99 = 서버로 부터 값을 받지 않음.
     private static int _myPlayerIndex = 99;
     public static int MyPlayerIndex
@@ -55,12 +57,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private bool _isFull = false;
+
     public static bool IsClickedStart { get => _isClickedStart; set => _isClickedStart = value; }
     private static bool _isClickedStart = false;
 
     private Socket _socket = null;
     private const int GameStartPacket = 2015;
-    private const int RequestPlayerIndex = 2016;
+    private const int RequestPlayerIndex = 8282;
 
 
     SyncInformation _sendPosition;
@@ -87,24 +91,30 @@ public class PlayerController : MonoBehaviour
             _socket.Send(startPacket, startPacket.Length, SocketFlags.None);
             byte[] startPacketAck = new byte[4];
             _socket.Receive(startPacketAck, 4, SocketFlags.None);
-            
+
             if (GameStartPacket == BitConverter.ToInt32(startPacketAck, 0))
-            {
+            { // 게임시작 버튼 클릭 정상적으로 완료
                 Debug.Log("GameStart. Received right ACK from server");
                 byte[] indexPacket = BitConverter.GetBytes(RequestPlayerIndex);
                 _socket.Send(BitConverter.GetBytes(indexPacket.Length), 4, SocketFlags.None);
                 _socket.Send(indexPacket, indexPacket.Length, SocketFlags.None);
-                byte[] receivedIndex = new byte[4];
-                _socket.Receive(receivedIndex, 4, SocketFlags.None);
-                _myPlayerIndex = BitConverter.ToInt32(receivedIndex, 0);
-                // In Camera.cs for checking receive clientIndex from server
-                _isConnected = true;
                 _isClickedStart = false;
-                Debug.Log("Receive Index From Server = " + _myPlayerIndex);
+                _isFull = true;
+                _waitingText.SetActive(true);
             }
-
-
         }
+
+        if (_isFull && _socket.Poll(0, SelectMode.SelectRead)) {
+            byte[] receivedIndex = new byte[4];
+            _socket.Receive(receivedIndex, 4, SocketFlags.None);
+            _myPlayerIndex = BitConverter.ToInt32(receivedIndex, 0);
+            // In Camera.cs for checking received clientIndex from server
+            _waitingText.SetActive(false);
+            _isConnected = true;
+            _isFull = false;
+            Debug.Log("Receive Index From Server = " + _myPlayerIndex);
+        }
+
         if (_isConnected)
         {
             KeyDowned();
@@ -219,7 +229,6 @@ public class PlayerController : MonoBehaviour
             Debug.Log("222222222");
             _receivePosition = (SyncInformation)ByteToStructure(receivedData, typeof(SyncInformation));
             Debug.Log("receivedPosition x = " + _receivePosition.X);
-
             Vector3 vector3 = new Vector3(_receivePosition.X, _receivePosition.Y, _receivePosition.Z);
             Camera.PlayerList[_receivePosition.PlayerIndex].transform.Translate(vector3);
         }

@@ -5,7 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MergeScene.unity
     guid: b9ca93b6b1baa4d02b853a68329b0499
+  - enabled: 1
+    path: Assets/Scenes/CameraTestScene.unity
+    guid: c0f46d9b3fb9f411c93cf40f3fbd50e2
   m_configObjects: {}
