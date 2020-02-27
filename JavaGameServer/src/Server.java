@@ -14,9 +14,9 @@ import java.util.concurrent.Executors;
 
 public class Server {
 
-	public static Hashtable<Integer, Hashtable<Integer, Socket>> roomList = new Hashtable<Integer, Hashtable<Integer,Socket>>();
-	public static Hashtable<Integer, Socket> clientTable = new Hashtable<Integer, Socket>();
-	public static int roomListCounts = 0;
+	public static Hashtable<Integer, Hashtable<Integer, Socket>> tableList = new Hashtable<Integer, Hashtable<Integer,Socket>>();
+	public static Hashtable<Integer, Socket> hashTable = new Hashtable<Integer, Socket>();
+	public static int tableListCounts = 0;
 	public static final int MAX_PLAYER_PER_ROOM = 2;
 	
 	public void go() {
@@ -25,18 +25,18 @@ public class Server {
 		
 		int clientIndex = 0;
 		
-		roomList.put(roomListCounts++, new Hashtable<Integer, Socket>());
+		tableList.put(tableListCounts++, new Hashtable<Integer, Socket>());
 
 		try {
 			ss = new ServerSocket(6666);
-			System.out.println("**¼­¹ö ½ÇÇà**");
-			// ´Ù¼öÀÇ Å¬¶óÀÌ¾ğÆ®¿Í Åë½ÅÇÏ±â À§ÇØ loop
+			System.out.println("**ì„œë²„ ì‹¤í–‰**");
+			// ë‹¤ìˆ˜ì˜ í´ë¼ì´ì–¸íŠ¸ì™€ í†µì‹ í•˜ê¸° ìœ„í•´ loop
 			while (true) {
-				s = ss.accept(); // Å¬¶óÀÌ¾ğÆ® Á¢¼Ó½Ã »õ·Î¿î ¼ÒÄÏÀÌ ¸®ÅÏ
-				Server.clientTable.put(clientIndex, s);
+				s = ss.accept(); // í´ë¼ì´ì–¸íŠ¸ ì ‘ì†ì‹œ ìƒˆë¡œìš´ ì†Œì¼“ì´ ë¦¬í„´
+				Server.hashTable.put(clientIndex, s);
 				ServerThread st = new ServerThread(s, clientIndex);
 				st.start();
-				System.out.println(clientIndex + "´Ô ÀÔÀå");
+				System.out.println(clientIndex + "ë‹˜ ì…ì¥");
 				++clientIndex;
 			}
 		} catch (Throwable e) {
@@ -51,7 +51,7 @@ public class Server {
 			catch(Throwable e) {
 				e.printStackTrace();
 			}
-			System.out.println("**¼­¹ö Á¾·á**");
+			System.out.println("**ì„œë²„ ì¢…ë£Œ**");
 		}
 	}
 

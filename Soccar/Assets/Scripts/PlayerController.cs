@@ -65,9 +65,6 @@ public class PlayerController : MonoBehaviour
     private Socket _socket = null;
     private const int GameStartPacket = 2015;
     private const int RequestPlayerIndex = 8282;
-    private const string IP = "127.0.0.1";
-    private const int Port = 6666;
-    private const int UninitializedPlayerIndex = 9;
 
 
     SyncInformation _sendPosition;
@@ -78,9 +75,9 @@ public class PlayerController : MonoBehaviour
     {
         _runSpeed = _walkSpeed * 2;
         _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-        _socket.Connect(IPAddress.Parse(IP), Port);
-        _sendPosition = new SyncInformation(UninitializedPlayerIndex, 0, 0, 0);
-        _receivePosition = new SyncInformation(UninitializedPlayerIndex, 0, 0, 0);
+        _socket.Connect(IPAddress.Parse("127.0.0.1"), 6666);
+        _sendPosition = new SyncInformation(9, 0, 0, 0);
+        _receivePosition = new SyncInformation(9, 0, 0, 0);
     }
 
     // Update is called once per frame
@@ -137,7 +134,7 @@ public class PlayerController : MonoBehaviour
             _playerSpeed = _walkSpeed;
         }
 
-        if(Input.GetKey(KeyCode.LeftArrow))
+        if(Input.GetKey(KeyCode.A))
         {
             switch(_myPlayerIndex)
             {
@@ -156,7 +153,7 @@ public class PlayerController : MonoBehaviour
             }
             _isMoved = true;
         }
-        if(Input.GetKey(KeyCode.RightArrow))
+        if(Input.GetKey(KeyCode.D))
         {
             switch(_myPlayerIndex)
             {
@@ -175,7 +172,7 @@ public class PlayerController : MonoBehaviour
             }
             _isMoved = true;
         }
-        if(Input.GetKey(KeyCode.UpArrow))
+        if(Input.GetKey(KeyCode.W))
         {
             switch(_myPlayerIndex)
             {
@@ -194,7 +191,7 @@ public class PlayerController : MonoBehaviour
             }
             _isMoved = true;
         }
-        if(Input.GetKey(KeyCode.DownArrow))
+        if(Input.GetKey(KeyCode.S))
         {
             switch(_myPlayerIndex)
             {
@@ -227,8 +224,11 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("@@@@@@@@@@@@@ Receive Data From Server @@@@@@@@@@@@@@@@@@@@@@@");
             byte[] receivedData = new byte[16];
+            Debug.Log("11111111");
             _socket.Receive(receivedData, 16, SocketFlags.None);
+            Debug.Log("222222222");
             _receivePosition = (SyncInformation)ByteToStructure(receivedData, typeof(SyncInformation));
+            Debug.Log("receivedPosition x = " + _receivePosition.X);
             Vector3 vector3 = new Vector3(_receivePosition.X, _receivePosition.Y, _receivePosition.Z);
             Camera.PlayerList[_receivePosition.PlayerIndex].transform.Translate(vector3);
         }

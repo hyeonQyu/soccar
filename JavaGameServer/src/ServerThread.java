@@ -15,8 +15,8 @@ public class ServerThread extends Thread {
 	private OutputStream sender;
 	private InputStream receiver;
 	private int clientIndex;
-	private int maybeDisconnected = 0; // Å¬¶óÀÌ¾ğÆ®ÀÇ ¿¬°áÇØÁ¦ »óÅÂ¸¦ ¿¹ÃøÇÏ±â À§ÇÔ.
-	private int roomIndex = 0; // Hashtable roomListÀÇ hashTable index.
+	private int maybeDisconnected = 0; // í´ë¼ì´ì–¸íŠ¸ì˜ ì—°ê²°í•´ì œ ìƒíƒœë¥¼ ì˜ˆì¸¡í•˜ê¸° ìœ„í•¨.
+	private int roomIndex = 0; // Hashtable tableListì˜ hashTable index.
 
 	ServerThread(Socket s, int index) {
 		this.socket = s;
@@ -25,24 +25,24 @@ public class ServerThread extends Thread {
 
 	private static byte[] getRecieve(InputStream stream, Socket socket) throws IOException {
 		byte[] buffer = new byte[4];
-		// »çµ¥ÀÌÅÍ »çÀÌÁî¸¦ ¹Ş´Â´Ù.
+		// ì‚¬ë°ì´í„° ì‚¬ì´ì¦ˆë¥¼ ë°›ëŠ”ë‹¤.
 		if (!socket.isClosed()) {
 			System.out.println("Waiting for Receiving Data");
 			stream.read(buffer, 0, 4);
 			ByteBuffer data = ByteBuffer.wrap(buffer);
-			// ¸®Æ² ¾Øµğ¾ğ Å¸ÀÔÀ¸·Î ¼³Á¤
+			// ë¦¬í‹€ ì•¤ë””ì–¸ íƒ€ì…ìœ¼ë¡œ ì„¤ì •
 			data.order(ByteOrder.LITTLE_ENDIAN);
-			// intÇüÀ¸·Î º¯È¯
+			// intí˜•ìœ¼ë¡œ ë³€í™˜
 			int size = data.getInt();
 			buffer = new byte[size];
-			// µ¥ÀÌÅÍ¸¦ ¹Ş´Â´Ù.
+			// ë°ì´í„°ë¥¼ ë°›ëŠ”ë‹¤.
 			stream.read(buffer, 0, size);
 			return buffer;
 		} else
 			return null;
 	}
 
-	// ¿À¹ö¶óÀÌµùÀÏ °æ¿ì throw ºÒ°¡.
+	// ì˜¤ë²„ë¼ì´ë”©ì¼ ê²½ìš° throw ë¶ˆê°€.
 	public void run() {
 		try {
 			service();
@@ -71,15 +71,15 @@ public class ServerThread extends Thread {
 					byte[] data = getRecieve(receiver, socket);
 
 					if (data.length != 0) {
-						System.out.println("data ¼ö½Å");
+						System.out.println("data ìˆ˜ì‹ ");
 
 						// System.out.println("Received Data Length = " + data.length);
 						if (data.length == 4) {
 							int num = byteToInt(data);
 							System.out.println("Receive Num = " + num);
-							if (num == 2015) { // GameStart ¹öÆ°À» ´­·¶À» ¶§.
+							if (num == 2015) { // GameStart ë²„íŠ¼ì„ ëˆŒë €ì„ ë•Œ.
 								sender.write(data);
-							} else if (num == 8282) { // Client index¸¦ ¿äÃ»ÇßÀ» °æ¿ì
+							} else if (num == 8282) { // Client indexë¥¼ ìš”ì²­í–ˆì„ ê²½ìš°
 								int state;
 								state = findRoom();
 								if(state == 1) {
@@ -92,9 +92,9 @@ public class ServerThread extends Thread {
 									System.out.println("Waiting other player in : "+ roomIndex);
 								}
 							}
-						} else { // ÇÃ·¹ÀÌ¾î°¡ ¿òÁ÷¿´À» ¶§.
-							Enumeration<Integer> en = Server.hashTable.keys();// en¿¡ Ä¿¼­°¡ ÀÖ´Ù
-							while (en.hasMoreElements()) { // hashTableÀ» µ¹¸ç ¸ğµç Å¬¶óÀÌ¾ğÆ®¿¡°Ô À§Ä¡°ª Àü¼Û
+						} else { // í”Œë ˆì´ì–´ê°€ ì›€ì§ì˜€ì„ ë•Œ.
+							Enumeration<Integer> en = Server.hashTable.keys();// enì— ì»¤ì„œê°€ ìˆë‹¤
+							while (en.hasMoreElements()) { // hashTableì„ ëŒë©° ëª¨ë“  í´ë¼ì´ì–¸íŠ¸ì—ê²Œ ìœ„ì¹˜ê°’ ì „ì†¡
 								int key = en.nextElement();
 								sender = Server.hashTable.get(key).getOutputStream();
 								sender.write(data);
@@ -103,24 +103,24 @@ public class ServerThread extends Thread {
 						}
 
 					} else {
-						// Å¬¶óÀÌ¾ğÆ®¿¡¼­ Close È¤Àº Disconnect ½ÅÈ£°¡ ¾Èµé¾î¿Í¼­ getReceive ¿¡¼­ size°¡ 0ÀÎ ÆĞÅ¶À» 10¹ø ÀÌ»ó ¹ŞÀ¸¸é
-						// ¿¬°áÇØÁ¦·Î °£ÁÖ
+						// í´ë¼ì´ì–¸íŠ¸ì—ì„œ Close í˜¹ì€ Disconnect ì‹ í˜¸ê°€ ì•ˆë“¤ì–´ì™€ì„œ getReceive ì—ì„œ sizeê°€ 0ì¸ íŒ¨í‚·ì„ 10ë²ˆ ì´ìƒ ë°›ìœ¼ë©´
+						// ì—°ê²°í•´ì œë¡œ ê°„ì£¼
 						if (maybeDisconnected > 10) {
 							break;
 						}
 						maybeDisconnected++;
 					}
 
-					System.out.println("¿Ï·á ÄÚµå º¸³»±â");
+					System.out.println("ì™„ë£Œ ì½”ë“œ ë³´ë‚´ê¸°");
 				}
 
 			} catch (Throwable e) {
 				e.printStackTrace();
 			} finally {
 				if (socket != null) {
-					System.out.println("¼Õ´Ô ÇÑ¸í ÅğÀåÇÔ");
+					System.out.println("ì†ë‹˜ í•œëª… í‡´ì¥í•¨");
 					Server.hashTable.remove(clientIndex);
-					Server.roomList.get(roomIndex).remove(clientIndex);
+					Server.tableList.get(roomIndex).remove(clientIndex);
 					socket.close();
 					sender.close();
 					receiver.close();
@@ -154,22 +154,22 @@ public class ServerThread extends Thread {
 
 	public int findRoom() {
 		int roomKey = 0;
-		Enumeration<Integer> e = Server.roomList.keys();
+		Enumeration<Integer> e = Server.tableList.keys();
 		while (e.hasMoreElements()) {
 			roomKey = e.nextElement();
 		}
-		if (Server.roomList.get(roomKey).size() < Server.MAX_PLAYER_PER_ROOM) {
-			Server.roomList.get(roomKey).put(clientIndex, socket);
+		if (Server.tableList.get(roomKey).size() < Server.MAX_PLAYER_PER_ROOM) {
+			Server.tableList.get(roomKey).put(clientIndex, socket);
 			roomIndex = roomKey;
-			if (Server.roomList.get(roomKey).size() == Server.MAX_PLAYER_PER_ROOM) {
+			if (Server.tableList.get(roomKey).size() == Server.MAX_PLAYER_PER_ROOM) {
 				// Send GameStart Signal all client in the full room
 				e = null;
-				e = Server.roomList.get(roomKey).keys();
+				e = Server.tableList.get(roomKey).keys();
 				int playerIndex = 0;
 				try {
 					while (e.hasMoreElements()) {
 						int clientKey = e.nextElement();
-						sender = Server.roomList.get(roomKey).get(clientKey).getOutputStream();
+						sender = Server.tableList.get(roomKey).get(clientKey).getOutputStream();
 						sender.write(intToByte(playerIndex++, ByteOrder.LITTLE_ENDIAN));
 					}
 					sender = socket.getOutputStream();
@@ -177,12 +177,12 @@ public class ServerThread extends Thread {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				Server.roomList.put(Server.roomListCounts++, new Hashtable<Integer, Socket>());
+				Server.tableList.put(Server.tableListCounts++, new Hashtable<Integer, Socket>());
 				return 1; // Start new game when the room is full
 			}
 			return 0; // 0 = the room is not full
-		} else { // ¿©±â¼­ ¹Ø¿¡ ±¸¹®À» ½ÇÇà ÇÒÁö  size == MAX_PLAYER¡¦. ¿©±â if¹® ¾È¿¡¼­ ÇÒÁö.
-			// Server.roomList.put(Server.roomListCounts++, new Hashtable<Integer, Socket>());
+		} else { // ì—¬ê¸°ì„œ ë°‘ì— êµ¬ë¬¸ì„ ì‹¤í–‰ í• ì§€  size == MAX_PLAYER.... ì—¬ê¸° ifë¬¸ ì•ˆì—ì„œ í• ì§€.
+			// Server.tableList.put(Server.tableListCounts++, new Hashtable<Integer, Socket>());
 		}
 		return -1;  // Something is wrong
 	}
