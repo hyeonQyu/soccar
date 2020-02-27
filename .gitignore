@@ -9,6 +9,7 @@
 /Soccar/[Bb]uilds/
 /Soccar/[Ll]ogs/
 /Soccar/[Mm]emoryCaptures/
+/Game
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/Soccar/[Aa]ssets/**/*.meta
