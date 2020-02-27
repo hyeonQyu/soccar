@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,6 +19,8 @@ public class Server {
 	public static Hashtable<Integer, Socket> clientTable = new Hashtable<Integer, Socket>();
 	public static int roomListCounts = 0;
 	public static final int MAX_PLAYER_PER_ROOM = 2;
+	private final int PORT = 6666;
+	private final String IP = "10.14.4.139";
 	
 	public void go() {
 		ServerSocket ss = null;
@@ -28,7 +31,8 @@ public class Server {
 		roomList.put(roomListCounts++, new Hashtable<Integer, Socket>());
 
 		try {
-			ss = new ServerSocket(6666);
+			ss = new ServerSocket();
+			ss.bind(new InetSocketAddress(IP, PORT));
 			System.out.println("**서버 실행**");
 			// 다수의 클라이언트와 통신하기 위해 loop
 			while (true) {

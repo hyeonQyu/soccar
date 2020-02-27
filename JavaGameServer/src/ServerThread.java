@@ -16,7 +16,7 @@ public class ServerThread extends Thread {
 	private InputStream receiver;
 	private int clientIndex;
 	private int maybeDisconnected = 0; // 클라이언트의 연결해제 상태를 예측하기 위함.
-	private int roomIndex = 0; // Hashtable roomList의 hashTable index.
+	private int roomIndex = 0; // Hashtable roomList의 clientTable index.
 
 	ServerThread(Socket s, int index) {
 		this.socket = s;
@@ -93,10 +93,10 @@ public class ServerThread extends Thread {
 								}
 							}
 						} else { // 플레이어가 움직였을 때.
-							Enumeration<Integer> en = Server.hashTable.keys();// en에 커서가 있다
-							while (en.hasMoreElements()) { // hashTable을 돌며 모든 클라이언트에게 위치값 전송
+							Enumeration<Integer> en = Server.clientTable.keys();// en에 커서가 있다
+							while (en.hasMoreElements()) { // clientTable을 돌며 모든 클라이언트에게 위치값 전송
 								int key = en.nextElement();
-								sender = Server.hashTable.get(key).getOutputStream();
+								sender = Server.clientTable.get(key).getOutputStream();
 								sender.write(data);
 							}
 							sender = socket.getOutputStream();
@@ -119,7 +119,7 @@ public class ServerThread extends Thread {
 			} finally {
 				if (socket != null) {
 					System.out.println("손님 한명 퇴장함");
-					Server.hashTable.remove(clientIndex);
+					Server.clientTable.remove(clientIndex);
 					Server.roomList.get(roomIndex).remove(clientIndex);
 					socket.close();
 					sender.close();

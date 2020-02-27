@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviour
     private Socket _socket = null;
     private const int GameStartPacket = 2015;
     private const int RequestPlayerIndex = 8282;
-    private const string IP = "127.0.0.1";
+    private const string IP = "10.14.4.13";
     private const int Port = 6666;
     private const int UninitializedPlayerIndex = 9;
 
@@ -223,7 +223,7 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        if (_socket.Poll(0, SelectMode.SelectRead))
+        while (_socket.Poll(0, SelectMode.SelectRead))
         {
             Debug.Log("@@@@@@@@@@@@@ Receive Data From Server @@@@@@@@@@@@@@@@@@@@@@@");
             byte[] receivedData = new byte[16];

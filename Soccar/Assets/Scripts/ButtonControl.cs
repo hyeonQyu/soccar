@@ -7,7 +7,13 @@ public class ButtonControl : MonoBehaviour
 {
     private GameObject _inputField;
     private static InputField _inputID;
-    public static InputField InputID;
+    public static InputField InputID
+    {
+        get
+        {
+            return _inputID;
+        }
+    }
 
     private void Start()
     {
