@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class PlayerInformation : MonoBehaviour
 {
-    [SerializeField]
     private string _id;
-    public string Id
+    public string ID
     {
+        set
+        {
+            _id = value;
+        }
         get
         {
             return _id;
@@ -32,11 +35,11 @@ public class PlayerInformation : MonoBehaviour
         PlayerInformation concederPlayer = conceder.GetComponent<PlayerInformation>();
 
         // 득점자는 +2점, 실점자는 -1점
-        if(concederPlayer.Id != _id)
+        if(concederPlayer.ID != _id)
         {
             _score += 2;
             // 득점에 대한 메시지 
-            Debug.Log("득점자: " + _id + "   실점자: " + concederPlayer.Id);
+            Debug.Log("득점자: " + _id + "   실점자: " + concederPlayer.ID);
         }
         // 자책골, 자책골은 득점으로 인정하지 않음
         else
@@ -46,6 +49,6 @@ public class PlayerInformation : MonoBehaviour
         }
         concederPlayer.Score--;
 
-        Debug.Log(_id + ": " + _score + "    " + concederPlayer.Id + ": " + concederPlayer.Score);
+        Debug.Log(_id + ": " + _score + "    " + concederPlayer.ID + ": " + concederPlayer.Score);
     }
 }

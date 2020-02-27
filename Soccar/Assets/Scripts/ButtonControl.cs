@@ -1,25 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ButtonControl : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private GameObject _inputField;
+    private static InputField _inputID;
+    public static InputField InputID;
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        // 사용자 ID 입력창
+        _inputField = GameObject.Find("Input ID");
+        _inputID = _inputField.GetComponent<InputField>();
     }
 
     public void OnClickedStartButton()
     {
         PlayerController.IsClickedStart = true;
-        GameObject gameobject = GameObject.Find("StartButton");
-        gameobject.SetActive(false);
+        GameObject btnStart = GameObject.Find("StartButton");
+
+        btnStart.SetActive(false);
+        _inputField.SetActive(false);
     }
 }

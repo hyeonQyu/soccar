@@ -56,8 +56,11 @@ public class Camera : MonoBehaviour
     {
         if(PlayerController.IsConnected && _isFirstRun)
         {
+            // 플레이어 캐릭터 배정
             _playerIndex = PlayerController.MyPlayerIndex;
             _player = _playerList[_playerIndex];
+            _player.GetComponent<PlayerInformation>().ID = ButtonControl.InputID.text;
+
             transform.eulerAngles = new Vector3(_angle, _playerIndex * 90f, 0);
             _isFirstRun = false;
         }
