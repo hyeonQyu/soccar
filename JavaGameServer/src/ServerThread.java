@@ -118,7 +118,7 @@ public class ServerThread extends Thread {
 				e.printStackTrace();
 			} finally {
 				if (socket != null) {
-					System.out.println("¼Õ´Ô ÇÑ¸í ÅğÀåÇÔ");
+					System.out.println(clientIndex + " ¼Õ´Ô ÇÑ¸í ÅğÀåÇÔ");
 					Server.clientTable.remove(clientIndex);
 					Server.roomList.get(roomIndex).remove(clientIndex);
 					socket.close();

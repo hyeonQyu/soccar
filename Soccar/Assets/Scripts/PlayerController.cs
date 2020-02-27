@@ -7,24 +7,10 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
-struct SyncInformation
-{
-    public int PlayerIndex;
-    public float X;
-    public float Y;
-    public float Z;
-
-    public SyncInformation(int playerIndex, float x, float y, float z)
-    {
-        PlayerIndex = playerIndex;
-        X = x;
-        Y = y;
-        Z = z;
-    }
-}
-
 public class PlayerController : MonoBehaviour
 {
+    NetworkThread _networkThread;// = new NetworkThread();
+
     [SerializeField]
     private float _walkSpeed;
     private float _runSpeed;
@@ -62,25 +48,11 @@ public class PlayerController : MonoBehaviour
     public static bool IsClickedStart { get => _isClickedStart; set => _isClickedStart = value; }
     private static bool _isClickedStart = false;
 
-    private Socket _socket = null;
-    private const int GameStartPacket = 2015;
-    private const int RequestPlayerIndex = 8282;
-    private const string IP = "10.14.4.13";
-    private const int Port = 6666;
-    private const int UninitializedPlayerIndex = 9;
-
-
-    SyncInformation _sendPosition;
-    SyncInformation _receivePosition;
-
     // Use this for initialization
     void Start()
     {
         _runSpeed = _walkSpeed * 2;
-        _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-        _socket.Connect(IPAddress.Parse(IP), Port);
-        _sendPosition = new SyncInformation(UninitializedPlayerIndex, 0, 0, 0);
-        _receivePosition = new SyncInformation(UninitializedPlayerIndex, 0, 0, 0);
+        _networkThread = new NetworkThread();
     }
 
     // Update is called once per frame
@@ -89,33 +61,38 @@ public class PlayerController : MonoBehaviour
         if (_isClickedStart)
         {
             Debug.Log("Start button clicked");
-            byte[] startPacket = BitConverter.GetBytes(GameStartPacket);
-            _socket.Send(BitConverter.GetBytes(startPacket.Length), 4, SocketFlags.None);
-            _socket.Send(startPacket, startPacket.Length, SocketFlags.None);
-            byte[] startPacketAck = new byte[4];
-            _socket.Receive(startPacketAck, 4, SocketFlags.None);
+            byte[] startPacket = BitConverter.GetBytes(NetworkThread.GameStartPacket);
+            _networkThread.Socket.Send(BitConverter.GetBytes(startPacket.Length), 4, SocketFlags.None);
+            _networkThread.Socket.Send(startPacket, startPacket.Length, SocketFlags.None);
 
-            if (GameStartPacket == BitConverter.ToInt32(startPacketAck, 0))
-            { // 게임시작 버튼 클릭 정상적으로 완료
+            byte[] startPacketAck = new byte[4];
+            _networkThread.Socket.Receive(startPacketAck, 4, SocketFlags.None);
+
+            if (NetworkThread.GameStartPacket == BitConverter.ToInt32(startPacketAck, 0))
+            { 
+                // 게임시작 버튼 클릭 정상적으로 완료
                 Debug.Log("GameStart. Received right ACK from server");
-                byte[] indexPacket = BitConverter.GetBytes(RequestPlayerIndex);
-                _socket.Send(BitConverter.GetBytes(indexPacket.Length), 4, SocketFlags.None);
-                _socket.Send(indexPacket, indexPacket.Length, SocketFlags.None);
+                byte[] indexPacket = BitConverter.GetBytes(NetworkThread.RequestPlayerIndex);
+                _networkThread.Socket.Send(BitConverter.GetBytes(indexPacket.Length), 4, SocketFlags.None);
+                _networkThread.Socket.Send(indexPacket, indexPacket.Length, SocketFlags.None);
                 _isClickedStart = false;
                 _isFull = true;
                 _waitingText.SetActive(true);
             }
         }
 
-        if (_isFull && _socket.Poll(0, SelectMode.SelectRead)) {
+        if (_isFull && _networkThread.Socket.Poll(0, SelectMode.SelectRead)) {
             byte[] receivedIndex = new byte[4];
-            _socket.Receive(receivedIndex, 4, SocketFlags.None);
+            _networkThread.Socket.Receive(receivedIndex, 4, SocketFlags.None);
             _myPlayerIndex = BitConverter.ToInt32(receivedIndex, 0);
+
             // In Camera.cs for checking received clientIndex from server
             _waitingText.SetActive(false);
             _isConnected = true;
             _isFull = false;
             Debug.Log("Receive Index From Server = " + _myPlayerIndex);
+
+            _networkThread.StartThread();
         }
 
         if (_isConnected)
@@ -216,73 +193,29 @@ public class PlayerController : MonoBehaviour
 
         if(_isMoved)
         {
-            SendPositionToServer(myPosition);
+            _networkThread.SendPositionToServer(myPosition, _myPlayerIndex);
             _isMoved = false;
         }
     }
 
     private void Move()
     {
-        while (_socket.Poll(0, SelectMode.SelectRead))
+        if(_networkThread.Socket.Poll(10, SelectMode.SelectRead))
         {
-            Debug.Log("@@@@@@@@@@@@@ Receive Data From Server @@@@@@@@@@@@@@@@@@@@@@@");
-            byte[] receivedData = new byte[16];
-            _socket.Receive(receivedData, 16, SocketFlags.None);
-            _receivePosition = (SyncInformation)ByteToStructure(receivedData, typeof(SyncInformation));
-            Vector3 vector3 = new Vector3(_receivePosition.X, _receivePosition.Y, _receivePosition.Z);
-            Camera.PlayerList[_receivePosition.PlayerIndex].transform.Translate(vector3);
+            //for(int i = 0; i < 4; i++)
+            //{
+            Vector3 vector3 = new Vector3(_networkThread.ReceivePosition.X, _networkThread.ReceivePosition.Y, _networkThread.ReceivePosition.Z);
+            Camera.PlayerList[_networkThread.ReceivePosition.PlayerIndex].transform.Translate(vector3);
+            //}
         }
-    }  
-
-    public static byte[] StructureToByte(object obj)
-    {
-        int datasize = Marshal.SizeOf(obj);//((PACKET_DATA)obj).TotalBytes; // 구조체에 할당된 메모리의 크기를 구한다.
-        IntPtr buff = Marshal.AllocHGlobal(datasize); // 비관리 메모리 영역에 구조체 크기만큼의 메모리를 할당한다.
-        Marshal.StructureToPtr(obj, buff, false); // 할당된 구조체 객체의 주소를 구한다.
-        byte[] data = new byte[datasize]; // 구조체가 복사될 배열
-        Marshal.Copy(buff, data, 0, datasize); // 구조체 객체를 배열에 복사
-        Marshal.FreeHGlobal(buff); // 비관리 메모리 영역에 할당했던 메모리를 해제함
-        return data; // 배열을 리턴
-    }
-
-    public static object ByteToStructure(byte[] data, Type type)
-    {
-        IntPtr buff = Marshal.AllocHGlobal(data.Length); // 배열의 크기만큼 비관리 메모리 영역에 메모리를 할당한다.
-        Marshal.Copy(data, 0, buff, data.Length); // 배열에 저장된 데이터를 위에서 할당한 메모리 영역에 복사한다.
-        object obj = Marshal.PtrToStructure(buff, type); // 복사된 데이터를 구조체 객체로 변환한다.
-        Marshal.FreeHGlobal(buff); // 비관리 메모리 영역에 할당했던 메모리를 해제함
-
-        if (Marshal.SizeOf(obj) != data.Length)// (((PACKET_DATA)obj).TotalBytes != data.Length) // 구조체와 원래의 데이터의 크기 비교
-        {
-            return null; // 크기가 다르면 null 리턴
-        }
-        return obj; // 구조체 리턴
-    }
-
-    public void SendPositionToServer(Vector3 positon)
-    {
-        // 여기서 나의 캐릭터 인덱스를 넣어야함. -> _myPlayerIndex;
-        _sendPosition.PlayerIndex = _myPlayerIndex;
-        _sendPosition.X = positon.x;
-        _sendPosition.Y = positon.y;
-        _sendPosition.Z = positon.z;
-        //Debug.Log("SendPositionToServer = " +StructureToByte(sendPosition).Length);
-
-        Action<byte[]> Send = (b) =>
-        {
-            _socket.Send(BitConverter.GetBytes(b.Length), 4, SocketFlags.None);
-            _socket.Send(b, b.Length, SocketFlags.None);
-        };
-
-        Debug.Log("Send !!~~~~");
-        Send(StructureToByte(_sendPosition));
-    }
+    }      
 
     private void OnApplicationQuit()
     {
         Debug.Log("Quit");
-        _socket.Disconnect(true);
-        _socket.Close();
+        _networkThread.Socket.Disconnect(true);
+        _networkThread.Socket.Close();
+        _networkThread.IsThreadRun = false;
     }
 
 }

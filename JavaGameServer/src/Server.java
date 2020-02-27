@@ -20,7 +20,7 @@ public class Server {
 	public static int roomListCounts = 0;
 	public static final int MAX_PLAYER_PER_ROOM = 2;
 	private final int PORT = 6666;
-	private final String IP = "10.14.4.139";
+	private final String IP = "10.14.4.23";
 	
 	public void go() {
 		ServerSocket ss = null;
