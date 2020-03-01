@@ -20,7 +20,7 @@ public class Server {
 	public static int roomListCounts = 0;
 	public static final int MAX_PLAYER_PER_ROOM = 2;
 	private final int PORT = 6666;
-	private final String IP = "10.14.4.23";
+	private final String IP = "172.30.1.1";
 	
 	public void go() {
 		ServerSocket ss = null;
@@ -33,14 +33,14 @@ public class Server {
 		try {
 			ss = new ServerSocket();
 			ss.bind(new InetSocketAddress(IP, PORT));
-			System.out.println("**¼­¹ö ½ÇÇà**");
-			// ´Ù¼öÀÇ Å¬¶óÀÌ¾ğÆ®¿Í Åë½ÅÇÏ±â À§ÇØ loop
+			System.out.println("**ì„œë²„ ì‹¤í–‰**");
+			// ë‹¤ìˆ˜ì˜ í´ë¼ì´ì–¸íŠ¸ì™€ í†µì‹ í•˜ê¸° ìœ„í•´ loop
 			while (true) {
-				s = ss.accept(); // Å¬¶óÀÌ¾ğÆ® Á¢¼Ó½Ã »õ·Î¿î ¼ÒÄÏÀÌ ¸®ÅÏ
+				s = ss.accept(); // í´ë¼ì´ì–¸íŠ¸ ì ‘ì†ì‹œ ìƒˆë¡œìš´ ì†Œì¼“ì´ ë¦¬í„´
 				Server.clientTable.put(clientIndex, s);
 				ServerThread st = new ServerThread(s, clientIndex);
 				st.start();
-				System.out.println(clientIndex + "´Ô ÀÔÀå");
+				System.out.println(clientIndex + "ë‹˜ ì…ì¥");
 				++clientIndex;
 			}
 		} catch (Throwable e) {
@@ -55,7 +55,7 @@ public class Server {
 			catch(Throwable e) {
 				e.printStackTrace();
 			}
-			System.out.println("**¼­¹ö Á¾·á**");
+			System.out.println("**ì„œë²„ ì¢…ë£Œ**");
 		}
 	}
 

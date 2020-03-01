@@ -9,7 +9,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    NetworkThread _networkThread;// = new NetworkThread();
+    NetworkThread _networkThread;
+    private Packet.PlayerMotionSend _playerMotionSend = new Packet.PlayerMotionSend();
 
     [SerializeField]
     private float _walkSpeed;
@@ -61,38 +62,71 @@ public class PlayerController : MonoBehaviour
         if (_isClickedStart)
         {
             Debug.Log("Start button clicked");
-            byte[] startPacket = BitConverter.GetBytes(NetworkThread.GameStartPacket);
-            _networkThread.Socket.Send(BitConverter.GetBytes(startPacket.Length), 4, SocketFlags.None);
-            _networkThread.Socket.Send(startPacket, startPacket.Length, SocketFlags.None);
 
-            byte[] startPacketAck = new byte[4];
-            _networkThread.Socket.Receive(startPacketAck, 4, SocketFlags.None);
+            // 게임 시작 버튼이 눌렸음을 서버에 전송
+            Packet.StartButtonSend startButtonSend = new Packet.StartButtonSend();
+            startButtonSend.CheckNum = NetworkThread.GameStartPacket;
+            _networkThread.Send(Packet.TypeStartButtonSend, startButtonSend);
 
-            if (NetworkThread.GameStartPacket == BitConverter.ToInt32(startPacketAck, 0))
-            { 
+            // 서버로부터 Ack를 받음
+            _networkThread.Receive();
+
+            //byte[] startPacket = BitConverter.GetBytes(NetworkThread.GameStartPacket);
+            //_networkThread.Socket.Send(BitConverter.GetBytes(startPacket.Length), 4, SocketFlags.None);
+            //_networkThread.Socket.Send(startPacket, startPacket.Length, SocketFlags.None);
+
+            //byte[] startPacketAck = new byte[4];
+            //_networkThread.Socket.Receive(startPacketAck, 4, SocketFlags.None);
+
+            if (NetworkThread.GameStartPacket == _networkThread.StartButtonAck.CheckNum)
+            {
                 // 게임시작 버튼 클릭 정상적으로 완료
                 Debug.Log("GameStart. Received right ACK from server");
-                byte[] indexPacket = BitConverter.GetBytes(NetworkThread.RequestPlayerIndex);
-                _networkThread.Socket.Send(BitConverter.GetBytes(indexPacket.Length), 4, SocketFlags.None);
-                _networkThread.Socket.Send(indexPacket, indexPacket.Length, SocketFlags.None);
+
+                // 플레이어 인덱스 요청
+                Packet.RequestPlayerIndexSend requestPlayerIndexSend = new Packet.RequestPlayerIndexSend();
+                requestPlayerIndexSend.CheckNum = NetworkThread.RequestPlayerIndex;
+                _networkThread.Send(Packet.TypeRequestPlayerIndexSend, requestPlayerIndexSend);
+
                 _isClickedStart = false;
                 _isFull = true;
                 _waitingText.SetActive(true);
+
+                //byte[] indexPacket = BitConverter.GetBytes(NetworkThread.RequestPlayerIndex);
+                //_networkThread.Socket.Send(BitConverter.GetBytes(indexPacket.Length), 4, SocketFlags.None);
+                //_networkThread.Socket.Send(indexPacket, indexPacket.Length, SocketFlags.None);
+                //_isClickedStart = false;
+                //_isFull = true;
+                //_waitingText.SetActive(true);
             }
         }
 
-        if (_isFull && _networkThread.Socket.Poll(0, SelectMode.SelectRead)) {
-            byte[] receivedIndex = new byte[4];
-            _networkThread.Socket.Receive(receivedIndex, 4, SocketFlags.None);
-            _myPlayerIndex = BitConverter.ToInt32(receivedIndex, 0);
+        // 게임 인원이 충족되면
+        if (_isFull && _networkThread.Socket.Poll(0, SelectMode.SelectRead)) 
+        {
+            // 플레이어 인덱스를 받음
+            _networkThread.Receive();
+            _myPlayerIndex = _networkThread.RequestplayerIndexAck.PlayerIndex;
 
-            // In Camera.cs for checking received clientIndex from server
+            // 플레이어들끼리 연결됨
             _waitingText.SetActive(false);
             _isConnected = true;
             _isFull = false;
             Debug.Log("Receive Index From Server = " + _myPlayerIndex);
 
             _networkThread.StartThread();
+
+            //byte[] receivedIndex = new byte[4];
+            //_networkThread.Socket.Receive(receivedIndex, 4, SocketFlags.None);
+            //_myPlayerIndex = BitConverter.ToInt32(receivedIndex, 0);
+
+            //// In Camera.cs for checking received clientIndex from server
+            //_waitingText.SetActive(false);
+            //_isConnected = true;
+            //_isFull = false;
+            //Debug.Log("Receive Index From Server = " + _myPlayerIndex);
+
+            //_networkThread.StartThread();
         }
 
         if (_isConnected)
@@ -105,6 +139,7 @@ public class PlayerController : MonoBehaviour
     private void KeyDowned()
     {
         Vector3 myPosition = new Vector3(0, 0, 0);
+        //Vector3 myPosition = Camera.PlayerList[_myPlayerIndex].transform.position;
         if(Input.GetKey(KeyCode.LeftShift))
         {
             _playerSpeed = _runSpeed;
@@ -193,21 +228,22 @@ public class PlayerController : MonoBehaviour
 
         if(_isMoved)
         {
-            _networkThread.SendPositionToServer(myPosition, _myPlayerIndex);
+            _playerMotionSend.PlayerIndex = _myPlayerIndex;
+            _playerMotionSend.X = myPosition.x;
+            _playerMotionSend.Y = myPosition.y;
+            _playerMotionSend.Z = myPosition.z;
+
+            // 움직임 전송
+            _networkThread.Send(Packet.TypePlayerMotionSend, _playerMotionSend);
             _isMoved = false;
         }
     }
 
     private void Move()
     {
-        if(_networkThread.Socket.Poll(10, SelectMode.SelectRead))
-        {
-            //for(int i = 0; i < 4; i++)
-            //{
-            Vector3 vector3 = new Vector3(_networkThread.ReceivePosition.X, _networkThread.ReceivePosition.Y, _networkThread.ReceivePosition.Z);
-            Camera.PlayerList[_networkThread.ReceivePosition.PlayerIndex].transform.Translate(vector3);
-            //}
-        }
+        Vector3 vector3 = new Vector3(_networkThread.PlayerMotionAck.X, _networkThread.PlayerMotionAck.Y, _networkThread.PlayerMotionAck.Z);
+        Camera.PlayerList[_networkThread.PlayerMotionAck.PlayerIndex].transform.Translate(vector3);
+        //Camera.PlayerList[_networkThread.ReceivePosition.PlayerIndex].transform.position = vector3;     
     }      
 
     private void OnApplicationQuit()
