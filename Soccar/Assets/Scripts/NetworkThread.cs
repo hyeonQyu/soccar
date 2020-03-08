@@ -43,7 +43,7 @@ public class NetworkThread
         }
     }
     
-    private const string IP = "172.30.1.1";
+    private const string IP = "127.0.0.1";
     private const int Port = 6666;
     private const int UninitializedPlayerIndex = 9;
 

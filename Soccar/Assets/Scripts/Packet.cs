@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Packet
 {
@@ -11,7 +12,8 @@ public class Packet
     public const int TypePlayerMotionSend = 4;
     public const int TypePlayerMotionAck = 5;
 
-    public struct Header
+    [Serializable]
+    public class Header
     {
         public int MsgType;
         public int Length;
@@ -23,32 +25,38 @@ public class Packet
         }
     }
 
-    public struct StartButtonSend
+    [Serializable]
+    public class StartButtonSend
     { 
         public int CheckNum;
     }
-    public struct StartButtonAck
+    [Serializable]
+    public class StartButtonAck
     {
         public int CheckNum;
     }
 
-    public struct RequestPlayerIndexSend
+    [Serializable]
+    public class RequestPlayerIndexSend
     {
         public int CheckNum;
     }
-    public struct RequestPlayerIndexAck
+    [Serializable]
+    public class RequestPlayerIndexAck
     {
         public int PlayerIndex;
     }
 
-    public struct PlayerMotionSend
+    [Serializable]
+    public class PlayerMotionSend
     {
         public int PlayerIndex;
         public float X;
         public float Y;
         public float Z;
     }
-    public struct PlayerMotionAck
+    [Serializable]
+    public class PlayerMotionAck
     {
         public int PlayerIndex;
         public float X;
