@@ -51,18 +51,18 @@ public class ServerThread extends Thread {
 			//Object body = byteToObject(byteBody);
 
 			switch (header.MsgType) {
-			case Packet.TypeStartButtonSend:
+			case Packet.TYPE_START_BUTTON_SEND:
 				Packet.StartButtonSend startButtonSend = (Packet.StartButtonSend) body;
-				if (startButtonSend.CheckNum == Server.GameStartPacket) {
+				if (startButtonSend.CheckNum == Server.GAME_START_PACKET) {
 					// Send 할 패킷구성
 					Packet.StartButtonAck startButtonAck = new Packet.StartButtonAck();
-					startButtonAck.CheckNum = Server.GameStartPacket;
-					packetSend(Packet.TypeStartButtonAck, startButtonAck);
+					startButtonAck.CheckNum = Server.GAME_START_PACKET;
+					packetSend(Packet.TYPE_START_BUTTON_ACK, startButtonAck);
 				}
 				break;
-			case Packet.TypeRequestPlayerIndexSend:
+			case Packet.TYPE_REQUEST_PLAYER_INDEX_SEND:
 				Packet.RequestPlayerIndexSend requestPlayerIndexSend = (Packet.RequestPlayerIndexSend) body;
-				if (requestPlayerIndexSend.CheckNum == Server.RequestPlayerIndex) {
+				if (requestPlayerIndexSend.CheckNum == Server.REQUEST_PLAYER_INDEX) {
 					int state;
 					state = findRoom();
 					if (state == 1) {
@@ -74,12 +74,12 @@ public class ServerThread extends Thread {
 					}
 				}
 				break;
-			case Packet.TypePlayerMotionSend:
+			case Packet.TYPE_PLAYER_MOTION_SEND:
 				Enumeration<Integer> en = Server.clientTable.keys();// en에 커서가 있다
 				while (en.hasMoreElements()) { // clientTable을 돌며 모든 클라이언트에게 위치값 전송
 					int key = en.nextElement();
 					sender = Server.clientTable.get(key).getOutputStream();
-					packetSend(Packet.TypePlayerMotionAck, body);
+					packetSend(Packet.TYPE_PLAYER_MOTION_ACK, body);
 				}
 				sender = socket.getOutputStream();
 				break;
@@ -238,7 +238,7 @@ public class ServerThread extends Thread {
 						sender = Server.roomList.get(roomKey).get(clientKey).getOutputStream();
 						Packet.RequestPlayerIndexAck requestPlayerIndexAck = new Packet.RequestPlayerIndexAck();
 						requestPlayerIndexAck.PlayerIndex = playerIndex++;
-						packetSend(Packet.TypeRequestPlayerIndexAck, requestPlayerIndexAck);
+						packetSend(Packet.TYPE_REQUEST_PLAYER_INDEX_ACK, requestPlayerIndexAck);
 					}
 					sender = socket.getOutputStream();
 				} catch (IOException e1) {

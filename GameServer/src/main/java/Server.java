@@ -9,8 +9,8 @@ public class Server {
 	public static Hashtable<Integer, Socket> clientTable = new Hashtable<Integer, Socket>();
 	public static int roomListCounts = 0;
 	public static final int MAX_PLAYER_PER_ROOM = 2;
-	public static final int GameStartPacket = 2015;
-    public static final int RequestPlayerIndex = 8282;
+	public static final int GAME_START_PACKET = 2015;
+    public static final int REQUEST_PLAYER_INDEX = 8282;
 	private final int PORT = 6666;
 	private final String IP = "127.0.0.1";
 	

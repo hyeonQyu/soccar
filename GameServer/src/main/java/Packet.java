@@ -1,10 +1,10 @@
 public class Packet {
-	public static final int TypeStartButtonSend = 0;
-	public static final int TypeStartButtonAck = 1;
-	public static final int TypeRequestPlayerIndexSend = 2;
-	public static final int TypeRequestPlayerIndexAck = 3;
-	public static final int TypePlayerMotionSend = 4;
-	public static final int TypePlayerMotionAck = 5;
+	public static final int TYPE_START_BUTTON_SEND = 0;
+	public static final int TYPE_START_BUTTON_ACK = 1;
+	public static final int TYPE_REQUEST_PLAYER_INDEX_SEND = 2;
+	public static final int TYPE_REQUEST_PLAYER_INDEX_ACK = 3;
+	public static final int TYPE_PLAYER_MOTION_SEND = 4;
+	public static final int TYPE_PLAYER_MOTION_ACK = 5;
 
 	static public class Header {
 		public int MsgType;
