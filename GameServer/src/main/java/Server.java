@@ -26,6 +26,7 @@ public class Server {
 			ss = new ServerSocket();
 			ss.bind(new InetSocketAddress(IP, PORT));
 			System.out.println("**서버 실행**");
+			
 			// 다수의 클라이언트와 통신하기 위해 loop
 			while (true) {
 				s = ss.accept(); // 클라이언트 접속시 새로운 소켓이 리턴
@@ -54,7 +55,6 @@ public class Server {
 	public static void main(String[] args) {
 		Server server = new Server();
 		server.go();
-
 	}
 
 }

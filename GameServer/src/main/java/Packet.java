@@ -1,4 +1,5 @@
 public class Packet {
+	
 	public static final int TYPE_START_BUTTON_SEND = 0;
 	public static final int TYPE_START_BUTTON_ACK = 1;
 	public static final int TYPE_REQUEST_PLAYER_INDEX_SEND = 2;
@@ -7,49 +8,78 @@ public class Packet {
 	public static final int TYPE_PLAYER_MOTION_ACK = 5;
 
 	static public class Header {
-		public int MsgType;
-		public int Length;
+		private int msgType;
+		private int length;
 
 		public Header(int msgType) {
-			this.MsgType = msgType;
-			this.Length = 0;
+			this.msgType = msgType;
+			this.length = 0;
+		}
+
+		public void setLength(int length) {
+			this.length = length;
+		}
+
+		public int getLength() {
+			return length;
+		}
+
+		public int getMsgType() {
+			return msgType;
 		}
 	}
 
 	static public class StartButtonSend {
-		public int CheckNum;
+		private int checkNum;
+		
+		public int getCheckNum() {
+			return checkNum;
+		}
 	}
 
 	static public class StartButtonAck {
-		public int CheckNum;
+		private int checkNum;
+		
+		public void setCheckNum(int checkNum) {
+			this.checkNum = checkNum;
+		}
 	}
 
 	static public class RequestPlayerIndexSend {
-		public int CheckNum;
+		private int checkNum;
+		
+		public int getCheckNum() {
+			return checkNum;
+		}
 	}
 
 	static public class RequestPlayerIndexAck {
-		public int PlayerIndex;
+		private int playerIndex;
+		
+		public void setPlayerIndex(int playerIndex) {
+			this.playerIndex = playerIndex;
+		}
 	}
 
 	static public class PlayerMotionSend {
-		public int PlayerIndex;
-		public float X;
-		public float Y;
-		public float Z;
+		private int playerIndex;
+		private float x;
+		private float y;
+		private float z;
 	}
 
 	static public class PlayerMotionAck {
-		public int PlayerIndex;
-		public float X;
-		public float Y;
-		public float Z;
+		private int playerIndex;
+		private float x;
+		private float y;
+		private float z;
 
 		public PlayerMotionAck(int playerIndex, int x, int y, int z) {
-			PlayerIndex = playerIndex;
-			X = x;
-			Y = y;
-			Z = z;
+			this.playerIndex = playerIndex;
+			this.x = x;
+			this.y = y;
+			this.z = z;
 		}
 	}
+	
 }

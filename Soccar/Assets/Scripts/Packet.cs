@@ -13,7 +13,7 @@ public class Packet
     public const int TypePlayerMotionAck = 5;
 
     [Serializable]
-    public class Header
+    public struct Header
     {
         public int MsgType;
         public int Length;
@@ -26,29 +26,29 @@ public class Packet
     }
 
     [Serializable]
-    public class StartButtonSend
+    public struct StartButtonSend
     { 
         public int CheckNum;
     }
     [Serializable]
-    public class StartButtonAck
+    public struct StartButtonAck
     {
         public int CheckNum;
     }
 
     [Serializable]
-    public class RequestPlayerIndexSend
+    public struct RequestPlayerIndexSend
     {
         public int CheckNum;
     }
     [Serializable]
-    public class RequestPlayerIndexAck
+    public struct RequestPlayerIndexAck
     {
         public int PlayerIndex;
     }
 
     [Serializable]
-    public class PlayerMotionSend
+    public struct PlayerMotionSend
     {
         public int PlayerIndex;
         public float X;
@@ -56,7 +56,7 @@ public class Packet
         public float Z;
     }
     [Serializable]
-    public class PlayerMotionAck
+    public struct PlayerMotionAck
     {
         public int PlayerIndex;
         public float X;
