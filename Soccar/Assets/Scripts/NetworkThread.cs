@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 //public struct SyncInformation
 //{
@@ -97,7 +98,7 @@ public class NetworkThread
                 //byte[] receivedData = new byte[16];
                 //_socket.Receive(receivedData, 16, SocketFlags.None);
                 //_receivePosition = (SyncInformation)ByteToStructure(receivedData, typeof(SyncInformation));
-                Receive();
+                ReceivePacket();
             }
         }
     }
@@ -109,80 +110,63 @@ public class NetworkThread
         _isThreadRun = true;
     }
 
-    private static byte[] StructureToByte(object obj)
-    {
-        int datasize = Marshal.SizeOf(obj);//((PACKET_DATA)obj).TotalBytes; // 구조체에 할당된 메모리의 크기를 구한다.
-        IntPtr buff = Marshal.AllocHGlobal(datasize); // 비관리 메모리 영역에 구조체 크기만큼의 메모리를 할당한다.
-        Marshal.StructureToPtr(obj, buff, false); // 할당된 구조체 객체의 주소를 구한다.
-        byte[] data = new byte[datasize]; // 구조체가 복사될 배열
-        Marshal.Copy(buff, data, 0, datasize); // 구조체 객체를 배열에 복사
-        Marshal.FreeHGlobal(buff); // 비관리 메모리 영역에 할당했던 메모리를 해제함
-        return data; // 배열을 리턴
-    }
-
-    private static object ByteToStructure(byte[] data, Type type)
-    {
-        IntPtr buff = Marshal.AllocHGlobal(data.Length); // 배열의 크기만큼 비관리 메모리 영역에 메모리를 할당한다.
-        Marshal.Copy(data, 0, buff, data.Length); // 배열에 저장된 데이터를 위에서 할당한 메모리 영역에 복사한다.
-        object obj = Marshal.PtrToStructure(buff, type); // 복사된 데이터를 구조체 객체로 변환한다.
-        Marshal.FreeHGlobal(buff); // 비관리 메모리 영역에 할당했던 메모리를 해제함
-
-        if(Marshal.SizeOf(obj) != data.Length)// (((PACKET_DATA)obj).TotalBytes != data.Length) // 구조체와 원래의 데이터의 크기 비교
-        {
-            return null; // 크기가 다르면 null 리턴
-        }
-        return obj; // 구조체 리턴
-    }
-
-    public void Send(int msgType, object obj)
+    public void SendPacket(int msgType, object body)
     {
         Packet.Header header = new Packet.Header(msgType);
 
-        // 헤더와 패킷 구조체를 바이트화
-        byte[] byteBody = StructureToByte(obj);
+        // 패킷을 Json으로 변환 후 byte 배열로 변환
+        string jsonBody = JsonManager.ObjectToJson(body);
+        byte[] byteBody = JsonManager.JsonToByte(jsonBody);
+
+        // 헤더를 Json으로 변환 후 byte 배열로 변환
         header.Length = byteBody.Length;
-        byte[] byteHeader = StructureToByte(header);
+        string jsonHeader = JsonManager.ObjectToJson(header);
+        JsonManager.SetHeaderLength(header, ref jsonHeader);
+        Debug.Log(jsonHeader + ". " + jsonHeader.Length);
+        byte[] byteHeader = JsonManager.JsonToByte(jsonHeader);
 
         // 최종 전송할 패킷을 바이트화
-        byte[] packet = new byte[byteHeader.Length + byteBody.Length];
-        Buffer.BlockCopy(byteHeader, 0, packet, 0, byteHeader.Length);
-        Buffer.BlockCopy(byteBody, 0, packet, byteHeader.Length, byteBody.Length);
+        byte[] bytePacket = new byte[byteHeader.Length + byteBody.Length];
+        Buffer.BlockCopy(byteHeader, 0, bytePacket, 0, byteHeader.Length);
+        Buffer.BlockCopy(byteBody, 0, bytePacket, byteHeader.Length, byteBody.Length);
 
         // 패킷 전송
-        _socket.Send(packet, packet.Length, SocketFlags.None);
+        _socket.Send(bytePacket, bytePacket.Length, SocketFlags.None);
     }
 
-    public void Receive()
+    public void ReceivePacket()
     {
         // 헤더를 받음
-        Packet.Header header = new Packet.Header(-1);
-        byte[] byteHeader = new byte[Marshal.SizeOf(header)];
-        _socket.Receive(byteHeader, byteHeader.Length, SocketFlags.None);
-        header = (Packet.Header) ByteToStructure(byteHeader, typeof(Packet.Header));
+        byte[] byteHeader = new byte[Packet.LengthHeader];
+        _socket.Receive(byteHeader, Packet.LengthHeader, SocketFlags.None);
+        string jsonHeader = JsonManager.ByteToJson(byteHeader);
+        Packet.Header header = JsonManager.JsonToObject<Packet.Header>(jsonHeader);
 
+        // 패킷 내용을 받음
         byte[] byteBody = new byte[header.Length];
-        _socket.Receive(byteBody, byteBody.Length, SocketFlags.None);
+        _socket.Receive(byteBody, header.Length, SocketFlags.None);
+        string jsonBody = JsonManager.ByteToJson(byteBody);
 
-        object packet = new object();
+        //object packet = new object();
         switch(header.MsgType)
         {
             //case Packet.TypeStartButtonSend:
             //    packet = (Packet.StartButtonSend)ByteToStructure(byteBody, typeof(Packet.StartButtonSend));
             //    break;
             case Packet.TypeStartButtonAck:
-                StartButtonAck = (Packet.StartButtonAck)ByteToStructure(byteBody, typeof(Packet.StartButtonAck));
+                StartButtonAck = JsonManager.JsonToObject<Packet.StartButtonAck>(jsonBody);
                 break;
             //case Packet.TypeRequestPlayerIndexSend:
             //    packet = (Packet.RequestPlayerIndexSend)ByteToStructure(byteBody, typeof(Packet.RequestPlayerIndexSend));
             //    break;
             case Packet.TypeRequestPlayerIndexAck:
-                RequestplayerIndexAck = (Packet.RequestPlayerIndexAck)ByteToStructure(byteBody, typeof(Packet.RequestPlayerIndexAck));
+                RequestplayerIndexAck = JsonManager.JsonToObject<Packet.RequestPlayerIndexAck>(jsonBody);
                 break;
             //case Packet.TypePlayerMotionSend:
             //    packet = (Packet.PlayerMotionSend)ByteToStructure(byteBody, typeof(Packet.PlayerMotionSend));
             //    break;
             case Packet.TypePlayerMotionAck:
-                PlayerMotionAck = (Packet.PlayerMotionAck)ByteToStructure(byteBody, typeof(Packet.PlayerMotionAck));
+                PlayerMotionAck = JsonManager.JsonToObject<Packet.PlayerMotionAck>(jsonBody);
                 break;
         }
     }

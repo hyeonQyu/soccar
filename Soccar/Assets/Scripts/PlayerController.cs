@@ -66,10 +66,10 @@ public class PlayerController : MonoBehaviour
             // 게임 시작 버튼이 눌렸음을 서버에 전송
             Packet.StartButtonSend startButtonSend = new Packet.StartButtonSend();
             startButtonSend.CheckNum = NetworkThread.GameStartPacket;
-            _networkThread.Send(Packet.TypeStartButtonSend, startButtonSend);
+            _networkThread.SendPacket(Packet.TypeStartButtonSend, startButtonSend);
 
             // 서버로부터 Ack를 받음
-            _networkThread.Receive();
+            _networkThread.ReceivePacket();
 
             //byte[] startPacket = BitConverter.GetBytes(NetworkThread.GameStartPacket);
             //_networkThread.Socket.Send(BitConverter.GetBytes(startPacket.Length), 4, SocketFlags.None);
@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour
                 // 플레이어 인덱스 요청
                 Packet.RequestPlayerIndexSend requestPlayerIndexSend = new Packet.RequestPlayerIndexSend();
                 requestPlayerIndexSend.CheckNum = NetworkThread.RequestPlayerIndex;
-                _networkThread.Send(Packet.TypeRequestPlayerIndexSend, requestPlayerIndexSend);
+                _networkThread.SendPacket(Packet.TypeRequestPlayerIndexSend, requestPlayerIndexSend);
 
                 _isClickedStart = false;
                 _isFull = true;
@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour
         if (_isFull && _networkThread.Socket.Poll(0, SelectMode.SelectRead)) 
         {
             // 플레이어 인덱스를 받음
-            _networkThread.Receive();
+            _networkThread.ReceivePacket();
             _myPlayerIndex = _networkThread.RequestplayerIndexAck.PlayerIndex;
 
             // 플레이어들끼리 연결됨
@@ -234,7 +234,7 @@ public class PlayerController : MonoBehaviour
             _playerMotionSend.Z = myPosition.z;
 
             // 움직임 전송
-            _networkThread.Send(Packet.TypePlayerMotionSend, _playerMotionSend);
+            _networkThread.SendPacket(Packet.TypePlayerMotionSend, _playerMotionSend);
             _isMoved = false;
         }
     }

@@ -1,5 +1,6 @@
 public class Packet {
 	
+	public static final int LENGTH_HEADER = 26;
 	public static final int TYPE_START_BUTTON_SEND = 0;
 	public static final int TYPE_START_BUTTON_ACK = 1;
 	public static final int TYPE_REQUEST_PLAYER_INDEX_SEND = 2;
@@ -10,22 +11,28 @@ public class Packet {
 	static public class Header {
 		private int msgType;
 		private int length;
+		
+		public Header() {}
 
 		public Header(int msgType) {
 			this.msgType = msgType;
 			this.length = 0;
 		}
+		
+		public void setMsgType(int msgType) {
+			this.msgType = msgType;
+		}
 
 		public void setLength(int length) {
 			this.length = length;
 		}
+		
+		public int getMsgType() {
+			return msgType;
+		}
 
 		public int getLength() {
 			return length;
-		}
-
-		public int getMsgType() {
-			return msgType;
 		}
 	}
 
@@ -39,6 +46,10 @@ public class Packet {
 
 	static public class StartButtonAck {
 		private int checkNum;
+		
+		public int getCheckNum() {
+			return checkNum;
+		}
 		
 		public void setCheckNum(int checkNum) {
 			this.checkNum = checkNum;
@@ -56,6 +67,10 @@ public class Packet {
 	static public class RequestPlayerIndexAck {
 		private int playerIndex;
 		
+		public int getPlayerIndex() {
+			return playerIndex;
+		}
+		
 		public void setPlayerIndex(int playerIndex) {
 			this.playerIndex = playerIndex;
 		}
@@ -66,6 +81,22 @@ public class Packet {
 		private float x;
 		private float y;
 		private float z;
+		
+		public int getPlayerIndex() {
+			return playerIndex;
+		}
+		
+		public float getX() {
+			return x;
+		}
+		
+		public float getY() {
+			return y;
+		}
+		
+		public float getZ() {
+			return z;
+		}
 	}
 
 	static public class PlayerMotionAck {
@@ -79,6 +110,22 @@ public class Packet {
 			this.x = x;
 			this.y = y;
 			this.z = z;
+		}
+		
+		public int getPlayerIndex() {
+			return playerIndex;
+		}
+		
+		public float getX() {
+			return x;
+		}
+		
+		public float getY() {
+			return y;
+		}
+		
+		public float getZ() {
+			return z;
 		}
 	}
 	

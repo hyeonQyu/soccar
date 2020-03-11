@@ -5,6 +5,7 @@ using System;
 
 public class Packet
 {
+    public const int LengthHeader = 26;
     public const int TypeStartButtonSend = 0;
     public const int TypeStartButtonAck = 1;
     public const int TypeRequestPlayerIndexSend = 2;
@@ -12,7 +13,6 @@ public class Packet
     public const int TypePlayerMotionSend = 4;
     public const int TypePlayerMotionAck = 5;
 
-    [Serializable]
     public struct Header
     {
         public int MsgType;
@@ -25,29 +25,26 @@ public class Packet
         }
     }
 
-    [Serializable]
     public struct StartButtonSend
-    { 
+    {
         public int CheckNum;
     }
-    [Serializable]
+
     public struct StartButtonAck
     {
         public int CheckNum;
     }
 
-    [Serializable]
     public struct RequestPlayerIndexSend
     {
         public int CheckNum;
     }
-    [Serializable]
+
     public struct RequestPlayerIndexAck
     {
         public int PlayerIndex;
     }
 
-    [Serializable]
     public struct PlayerMotionSend
     {
         public int PlayerIndex;
@@ -55,7 +52,7 @@ public class Packet
         public float Y;
         public float Z;
     }
-    [Serializable]
+
     public struct PlayerMotionAck
     {
         public int PlayerIndex;
