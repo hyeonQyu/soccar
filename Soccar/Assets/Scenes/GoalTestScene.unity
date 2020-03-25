@@ -4940,7 +4940,7 @@ GameObject:
   - component: {fileID: 981798737}
   - component: {fileID: 981798736}
   m_Layer: 0
-  m_Name: PlayerController
+  m_Name: Game Launcher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
