@@ -45,8 +45,8 @@ io.on('connection', function(socket) {
         console.log('player_motion');
         console.log('player_motion ' + data.X + ' ' + data.Y + ' ' + data.Z);
         
-        // 해당 게임방에 있는 모든 클라이언트에게 위치 정보 전송
-        io.emit('player_motion', data);
+        // 해당 게임방에 있는 움직인 클라이언트를 제외한 모든 클라이언트에게 위치 정보 전송
+        socket.broadcast.emit('player_motion', data);
     });
 
 });
