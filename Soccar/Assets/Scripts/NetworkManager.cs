@@ -12,11 +12,13 @@ public static class NetworkManager
     public static Packet.PlayerMotion MyPlayerMotion { get; set; }
 
     public static string GameStart { get; private set; }
+    public static string RequestPlayerIndex { get; set; }
 
     // Start 함수에서 호출되어야 함
     public static void SetWebSocket()
     {
         GameStart = "";
+        RequestPlayerIndex = "";
 
         _socket = Socket.Connect(Url);
 
@@ -36,6 +38,7 @@ public static class NetworkManager
 
         _socket.On("player_motion", (string data) =>
         {
+            // 상대방 캐릭터를 이동시킴
             Packet.PlayerMotion playerMotionFromServer = JsonUtility.FromJson<Packet.PlayerMotion>(data);
             PlayerController.Move(playerMotionFromServer);
         });

@@ -58,7 +58,7 @@ public static class PlayerController
     //public static bool IsClickedStart { get => _isClickedStart; set => _isClickedStart = value; }
     //private static bool _isClickedStart = false;
 
-    public static void InitializePlayers()
+    public static void SetPlayers()
     {
         _walkSpeed = 10;
         _runSpeed = _walkSpeed * 2;
@@ -68,8 +68,6 @@ public static class PlayerController
         Players[1] = GameObject.Find("Player2");
         Players[2] = GameObject.Find("Player3");
         Players[3] = GameObject.Find("Player4");
-
-        _isPlayersInitialized = true;
     }
 
     //// Use this for initialization
@@ -194,10 +192,12 @@ public static class PlayerController
     //    //}
     //}
 
-    public static void SetPlayer()
+    public static void InitializePlayer()
     {
         Player = Players[_playerIndex];
         Player.GetComponent<PlayerInformation>().ID = ButtonControl.InputID.text;
+
+        _isPlayersInitialized = true;
     }
 
     public static void KeyDowned()
@@ -292,12 +292,12 @@ public static class PlayerController
 
         if(_isMoved)
         {
+            // 움직임 전송
+            NetworkManager.MyPlayerMotion.SetLocation(myPosition);
+            NetworkManager.Send("player_motion", NetworkManager.MyPlayerMotion);
+
             // 자신의 캐릭터를 움직임
             Move(myPosition);
-
-            // 움직임 전송
-            NetworkManager.MyPlayerMotion.SetLocation(myPosition.x, myPosition.y, myPosition.z);
-            NetworkManager.Send("player_motion", NetworkManager.MyPlayerMotion);
 
             _isMoved = false;
         }

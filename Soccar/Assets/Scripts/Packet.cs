@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+// 값이 아닌 레퍼런스가 변경되어야 하므로 패킷은 클래스로 생성
 public class Packet
 {
     // 플레이어의 움직임
-    public struct PlayerMotion
+    public class PlayerMotion
     {
         public int PlayerIndex;
         public float X;
@@ -19,11 +20,11 @@ public class Packet
             X = Y = Z = 0;
         }
 
-        public void SetLocation(float x, float y, float z)
+        public void SetLocation(Vector3 movingPosition)
         {
-            X = x;
-            Y = y;
-            Z = z;
+            X = movingPosition.x;
+            Y = movingPosition.y;
+            Z = movingPosition.z;
         }
     }
 }

@@ -16,7 +16,7 @@ public class GameLauncher : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlayerController.InitializePlayers();
+        PlayerController.SetPlayers();
         NetworkManager.SetWebSocket();
     }
 
@@ -25,29 +25,34 @@ public class GameLauncher : MonoBehaviour
     {
         if(_isClickedStart)
         {
-            Debug.Log("Start button clicked");
+            Debug.Log("==시작 버튼 눌림");
 
             // 게임 시작 버튼이 눌렸음을 서버에 전송
             NetworkManager.Send("start_button", "start");
 
             _isClickedStart = false;
+            NetworkManager.RequestPlayerIndex = "req";
             return;
         }
 
         // 게임 시작 Ack를 맨 처음에 제대로 수신하면
         if(NetworkManager.GameStart == "start" && PlayerController.PlayerIndex == 99)
         {
+            Debug.Log("==플레이어 인덱스 주세요");
             // Player Index 요청
-            NetworkManager.Send("request_player_index", "req");
+            NetworkManager.Send("request_player_index", NetworkManager.RequestPlayerIndex);
 
-            while(PlayerController.PlayerIndex == 99)
-            {
-                Debug.Log("==수신 대기중..."); // Player Index를 서버로부터 수신할 때까지 대기
-            }
+            NetworkManager.RequestPlayerIndex = "";
+            return;       
+        }
+
+        // 인덱스를 받은 후
+        if(PlayerController.PlayerIndex != 99 && !PlayerController.IsPlayerInitialized)
+        {
             Debug.Log("==인덱스 받음, 초기화 할차례");
 
             // 플레이어 초기화
-            PlayerController.SetPlayer();
+            PlayerController.InitializePlayer();
             return;
         }
 
