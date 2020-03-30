@@ -58,4 +58,11 @@ public class GameLauncher : MonoBehaviour
 
         PlayerController.KeyDowned();
     }
+
+    private void OnDestroy()
+    {
+        ButtonControl.Destroy();
+        NetworkManager.Destroy();
+        PlayerController.Destroy();
+    }
 }

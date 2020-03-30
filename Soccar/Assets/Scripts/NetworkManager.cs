@@ -5,7 +5,7 @@ using socket.io;
 
 public static class NetworkManager
 {
-    private const string Url = "http://127.0.0.1:9090/";
+    private const string Url = "http://54.180.145.171:9090";//"http://127.0.0.1:9090/";
     private static Socket _socket;
 
     // 현재 플레이어가 컨트롤 하는 캐릭터의 움직임
@@ -54,5 +54,11 @@ public static class NetworkManager
     {
         string json = JsonUtility.ToJson(body);
         _socket.EmitJson(header, json);
+    }
+
+    public static void Destroy()
+    {
+        _socket = null;
+        MyPlayerMotion = null;
     }
 }

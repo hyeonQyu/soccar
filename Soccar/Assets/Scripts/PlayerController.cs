@@ -111,8 +111,8 @@ public static class PlayerController
 
     //        //byte[] startPacketAck = new byte[4];
     //        //_networkThread.Socket.Receive(startPacketAck, 4, SocketFlags.None);
-                
-            
+
+
 
     //        //if (NetworkThread.GameStartPacket == _networkThread.StartButtonAck.CheckNum)
     //        //{
@@ -314,6 +314,12 @@ public static class PlayerController
     {
         Vector3 movingPosition = new Vector3(playerMotionFromServer.X, playerMotionFromServer.Y, playerMotionFromServer.Z);
         Players[playerMotionFromServer.PlayerIndex].transform.Translate(movingPosition);
-    }      
+    }
+
+    public static void Destroy()
+    {
+        Players = null;
+        Player = null;
+    }
 
 }

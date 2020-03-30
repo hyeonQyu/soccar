@@ -30,4 +30,9 @@ public class ButtonControl : MonoBehaviour
         btnStart.SetActive(false);
         _inputField.SetActive(false);
     }
+
+    public static void Destroy()
+    {
+        _inputID = null;
+    }
 }
