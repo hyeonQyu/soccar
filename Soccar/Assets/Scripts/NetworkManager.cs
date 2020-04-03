@@ -1,16 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 using socket.io;
 
 public static class NetworkManager
 {
-    private const string Url = "http://54.180.145.171:9090";//"http://127.0.0.1:9090/";
+    /* 서버 접속에 관한 요소 */
+    private const string Url = "http://127.0.0.1:9090/";
+    //private const string Url = "http://54.180.145.171:9090";
     private static Socket _socket;
 
-    // 현재 플레이어가 컨트롤 하는 캐릭터의 움직임
+    /* 동기화를 위한 요소 */
+    private static long _rtt;
+
+    /* 서버로 전송할 패킷 */
     public static Packet.PlayerMotion MyPlayerMotion { get; set; }
 
+    /* 서버로부터의 Ack 확인 */
     public static string GameStart { get; private set; }
     public static string RequestPlayerIndex { get; set; }
 
@@ -38,9 +43,15 @@ public static class NetworkManager
 
         _socket.On("player_motion", (string data) =>
         {
+            long timestamp = GetTimestamp();
+
             // 상대방 캐릭터를 이동시킴
             Packet.PlayerMotion playerMotionFromServer = JsonUtility.FromJson<Packet.PlayerMotion>(data);
             PlayerController.Move(playerMotionFromServer);
+
+            // RTT 계산
+            _rtt = timestamp - playerMotionFromServer.Timestamp;
+            Debug.Log("RTT: " + _rtt);
         });
     }
 
@@ -52,8 +63,17 @@ public static class NetworkManager
     // 구조체 전송
     public static void Send(string header, object body)
     {
-        string json = JsonUtility.ToJson(body);
+        Packet.PlayerMotion packetBody = (Packet.PlayerMotion)body;
+        // 현재 시스템 시간 전송
+        packetBody.Timestamp = GetTimestamp();
+        string json = JsonUtility.ToJson(packetBody);
         _socket.EmitJson(header, json);
+    }
+
+    public static long GetTimestamp()
+    {
+        TimeSpan timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
+        return (long)(timeSpan.TotalSeconds * 1000);
     }
 
     public static void Destroy()

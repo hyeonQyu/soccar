@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameLauncher : MonoBehaviour
 {
@@ -55,6 +53,9 @@ public class GameLauncher : MonoBehaviour
             PlayerController.InitializePlayer();
             return;
         }
+
+        /* 게임을 시작하기 전에 선수들이 등장하는 동안 여러번 RTT를 계산하여 평균을 내고
+         * 평균 RTT가 가장 짧은 클라이언트를 메인 시뮬레이터로 사용할 예정 */
 
         PlayerController.KeyDowned();
     }

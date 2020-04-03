@@ -23,6 +23,8 @@ io.on('connection', function(socket) {
 
     socket.on('start_button', function(data) {
         console.log('start_button ' + data);
+        /* 서버에서 timestamp를 구하는 코드
+        console.log('time ' + Date.now()); */
         
         // 클라이언트가 게임 시작 버튼을 눌렀으면 게임 시작 메시지 전송
         if(data == GAME_START) {
@@ -42,11 +44,14 @@ io.on('connection', function(socket) {
     });
 
     socket.on('player_motion', function(data) {
-        console.log('player_motion');
-        console.log('player_motion ' + data.X + ' ' + data.Y + ' ' + data.Z);
+        console.log('player_motion ' + data.PlayerIndex);
+        var position = data.Position;
+        console.log(position.x + ' ' + position.y + ' ' + position.z);
         
-        // 해당 게임방에 있는 움직인 클라이언트를 제외한 모든 클라이언트에게 위치 정보 전송
-        socket.broadcast.emit('player_motion', data);
+        //// 해당 게임방에 있는 움직인 클라이언트를 제외한 모든 클라이언트에게 위치 정보 전송
+        //socket.broadcast.emit('player_motion', data);
+        // 모든 클라이언트에게 위치 정보 전송
+        io.emit('player_motion', data);
     });
 
 });

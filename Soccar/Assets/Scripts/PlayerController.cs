@@ -202,7 +202,8 @@ public static class PlayerController
 
     public static void KeyDowned()
     {
-        Vector3 myPosition = new Vector3(0, 0, 0);
+        //Vector3 myPosition = new Vector3(0, 0, 0);
+        Vector3 myPosition = Player.transform.position;
 
         if(Input.GetKey(KeyCode.LeftShift))
         {
@@ -293,11 +294,11 @@ public static class PlayerController
         if(_isMoved)
         {
             // 움직임 전송
-            NetworkManager.MyPlayerMotion.SetLocation(myPosition);
+            NetworkManager.MyPlayerMotion.Position = myPosition;
             NetworkManager.Send("player_motion", NetworkManager.MyPlayerMotion);
 
             // 자신의 캐릭터를 움직임
-            Move(myPosition);
+            //Move(myPosition);
 
             _isMoved = false;
         }
@@ -312,8 +313,15 @@ public static class PlayerController
     // 서버로부터 타 플레이어의 캐릭터 움직임을 전달받아 움직임
     public static void Move(Packet.PlayerMotion playerMotionFromServer)
     {
-        Vector3 movingPosition = new Vector3(playerMotionFromServer.X, playerMotionFromServer.Y, playerMotionFromServer.Z);
-        Players[playerMotionFromServer.PlayerIndex].transform.Translate(movingPosition);
+        Vector3 movingPosition = playerMotionFromServer.Position;
+        //Vector3 movingPosition = new Vector3(playerMotionFromServer.X, playerMotionFromServer.Y, playerMotionFromServer.Z);
+        //상대
+        //Players[playerMotionFromServer.PlayerIndex].transform.Translate(movingPosition);
+        //절대
+        //Players[playerMotionFromServer.PlayerIndex].transform.position = movingPosition;
+        //Lerp보간
+        Vector3 currentPosition = Players[playerMotionFromServer.PlayerIndex].transform.position;
+        Players[playerMotionFromServer.PlayerIndex].transform.position = Vector3.Lerp(currentPosition, movingPosition, Time.deltaTime * 30f);
     }
 
     public static void Destroy()

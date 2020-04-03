@@ -16,6 +16,7 @@ public class PlayerInformation : MonoBehaviour
             return _id;
         }
     }
+
     private int _score = 0;
     public int Score
     {
@@ -26,6 +27,15 @@ public class PlayerInformation : MonoBehaviour
         set
         {
             _score = value;
+        }
+    }
+
+    private Vector3 _lastReceivedPosition;
+    public Vector3 LastReceivedPosition
+    {
+        set
+        {
+            _lastReceivedPosition = value;
         }
     }
 

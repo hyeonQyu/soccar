@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Camera : MonoBehaviour
 {
-    private float _distance = 20f;
+    private float _distance = 30f;
     private float _angle = 35f;
 
     private bool _isFirstRun = true;
