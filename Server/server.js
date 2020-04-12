@@ -1,5 +1,6 @@
 const GAME_START = 'start';
-const REQUEST_PLAYER_INDEX = 'req';
+const GAME_SERVER1 = '9091'
+const GAME_SERVER2 = '9092'
 
 var express = require('express');
 var app = express();
@@ -11,47 +12,43 @@ var io = require('socket.io')(server);
 app.use(compression());
 app.use(express.static(__dirname + '/client/'));
 
-var playerIndex = 0;
+var server_num = 0;
 
 app.get('/', function(req, res) {
-    
+
 });
 
 io.on('connection', function(socket) {
 
-    console.log("Connect");
+    console.log("Connect " + socket.id);
 
     socket.on('start_button', function(data) {
         console.log('start_button ' + data);
-        /* ¼­¹ö¿¡¼­ timestamp¸¦ ±¸ÇÏ´Â ÄÚµå
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ timestampï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Úµï¿½
         console.log('time ' + Date.now()); */
-        
-        // Å¬¶óÀÌ¾ðÆ®°¡ °ÔÀÓ ½ÃÀÛ ¹öÆ°À» ´­·¶À¸¸é °ÔÀÓ ½ÃÀÛ ¸Þ½ÃÁö Àü¼Û
+
+        // Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if(data == GAME_START) {
-            socket.emit('start_button', GAME_START);
+          if(server_num == 1){
+            socket.emit('start_button', GAME_SERVER1);
+            server_num = 0;
+          }
+          else {
+            socket.emit('start_button', GAME_SERVER2);
+            server_num = 1;
+          }
         }
     });
 
     socket.on('request_player_index', function(data) {
         console.log('request_player_index ' + data);
 
-        if(data == REQUEST_PLAYER_INDEX) {    
-            // Å¬¶óÀÌ¾ðÆ®¿¡°Ô ¹æÀ» Ã£¾ÆÁÖ°í ¾Ë¸ÂÀº ÇÃ·¹ÀÌ¾î ÀÎµ¦½º¸¦ Àü¼Û
+        if(data == REQUEST_PLAYER_INDEX) {
+            // Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ï¿½Ö°ï¿½ ï¿½Ë¸ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             var playerIndexString = playerIndex.toString();
             socket.emit('request_player_index', playerIndexString);
             playerIndex++;
         }
-    });
-
-    socket.on('player_motion', function(data) {
-        console.log('player_motion ' + data.PlayerIndex);
-        var position = data.Position;
-        console.log(position.x + ' ' + position.y + ' ' + position.z);
-        
-        //// ÇØ´ç °ÔÀÓ¹æ¿¡ ÀÖ´Â ¿òÁ÷ÀÎ Å¬¶óÀÌ¾ðÆ®¸¦ Á¦¿ÜÇÑ ¸ðµç Å¬¶óÀÌ¾ðÆ®¿¡°Ô À§Ä¡ Á¤º¸ Àü¼Û
-        //socket.broadcast.emit('player_motion', data);
-        // ¸ðµç Å¬¶óÀÌ¾ðÆ®¿¡°Ô À§Ä¡ Á¤º¸ Àü¼Û
-        io.emit('player_motion', data);
     });
 
 });
@@ -63,14 +60,14 @@ server.listen(9090, function() {
 
 
 
-    //// Á¢¼ÓµÈ ¸ðµç Å¬¶óÀÌ¾ðÆ®¿¡°Ô ¸Þ½ÃÁö¸¦ Àü¼ÛÇÑ´Ù
+    //// ï¿½ï¿½ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½
     //io.emit('event_name', msg);
 
-    //// ¸Þ½ÃÁö¸¦ Àü¼ÛÇÑ Å¬¶óÀÌ¾ðÆ®¿¡°Ô¸¸ ¸Þ½ÃÁö¸¦ Àü¼ÛÇÑ´Ù
+    //// ï¿½Þ½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ï¿½Ô¸ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½
     //socket.emit('event_name', msg);
 
-    //// ¸Þ½ÃÁö¸¦ Àü¼ÛÇÑ Å¬¶óÀÌ¾ðÆ®¸¦ Á¦¿ÜÇÑ ¸ðµç Å¬¶óÀÌ¾ðÆ®¿¡°Ô ¸Þ½ÃÁö¸¦ Àü¼ÛÇÑ´Ù
+    //// ï¿½Þ½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½
     //socket.broadcast.emit('event_name', msg);
 
-    //// Æ¯Á¤ Å¬¶óÀÌ¾ðÆ®¿¡°Ô¸¸ ¸Þ½ÃÁö¸¦ Àü¼ÛÇÑ´Ù
+    //// Æ¯ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ï¿½Ô¸ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½
     //io.to(id).emit('event_name', data);

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using socket.io;
 
 public class GameLauncher : MonoBehaviour
 {
@@ -34,8 +35,10 @@ public class GameLauncher : MonoBehaviour
         }
 
         // 게임 시작 Ack를 맨 처음에 제대로 수신하면
-        if(NetworkManager.GameStart == "start" && PlayerController.PlayerIndex == 99)
+        if((NetworkManager.GameServerPort == "9091" || NetworkManager.GameServerPort == "9092") && PlayerController.PlayerIndex == 99)
         {
+            NetworkManager.Sender = null;
+            NetworkManager.Sender = Socket.Connect("127.0.0.1:" + NetworkManager.GameServerPort);
             Debug.Log("==플레이어 인덱스 주세요");
             // Player Index 요청
             NetworkManager.Send("request_player_index", NetworkManager.RequestPlayerIndex);
