@@ -38,7 +38,10 @@ public class GameLauncher : MonoBehaviour
         if((NetworkManager.GameServerPort == "9091" || NetworkManager.GameServerPort == "9092") && PlayerController.PlayerIndex == 99)
         {
             NetworkManager.Sender = null;
-            NetworkManager.Sender = Socket.Connect("127.0.0.1:" + NetworkManager.GameServerPort);
+            string gameServerURL = "http://127.0.0.1:" + NetworkManager.GameServerPort;
+            NetworkManager.Sender = Socket.Connect(gameServerURL);
+            NetworkManager.StartSecondFlow();
+            NetworkManager.GameServerPort = "";
             Debug.Log("==플레이어 인덱스 주세요");
             // Player Index 요청
             NetworkManager.Send("request_player_index", NetworkManager.RequestPlayerIndex);

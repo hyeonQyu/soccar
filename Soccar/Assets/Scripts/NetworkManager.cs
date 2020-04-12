@@ -25,6 +25,7 @@ public static class NetworkManager
     {
         GameStart = "";
         RequestPlayerIndex = "";
+        GameServerPort = "";
 
         Sender = Socket.Connect(Url);
 
