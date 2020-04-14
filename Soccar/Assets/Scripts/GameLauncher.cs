@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using socket.io;
 
-public class GameLauncher : MonoBehaviour
+public class GameLauncher:MonoBehaviour
 {
     private static bool _isClickedStart;
     public static bool IsClickedStart
@@ -20,8 +19,10 @@ public class GameLauncher : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        //Debug.Log(NetworkManager.GetTimestamp());
+
         if(_isClickedStart)
         {
             Debug.Log("==시작 버튼 눌림");
@@ -35,19 +36,14 @@ public class GameLauncher : MonoBehaviour
         }
 
         // 게임 시작 Ack를 맨 처음에 제대로 수신하면
-        if((NetworkManager.GameServerPort == "9091" || NetworkManager.GameServerPort == "9092") && PlayerController.PlayerIndex == 99)
+        if(NetworkManager.GameStart == "start" && PlayerController.PlayerIndex == 99)
         {
-            NetworkManager.Sender = null;
-            string gameServerURL = "http://127.0.0.1:" + NetworkManager.GameServerPort;
-            NetworkManager.Sender = Socket.Connect(gameServerURL);
-            NetworkManager.StartSecondFlow();
-            NetworkManager.GameServerPort = "";
             Debug.Log("==플레이어 인덱스 주세요");
             // Player Index 요청
             NetworkManager.Send("request_player_index", NetworkManager.RequestPlayerIndex);
 
             NetworkManager.RequestPlayerIndex = "";
-            return;       
+            return;
         }
 
         // 인덱스를 받은 후
@@ -62,7 +58,6 @@ public class GameLauncher : MonoBehaviour
 
         /* 게임을 시작하기 전에 선수들이 등장하는 동안 여러번 RTT를 계산하여 평균을 내고
          * 평균 RTT가 가장 짧은 클라이언트를 메인 시뮬레이터로 사용할 예정 */
-
         PlayerController.KeyDowned();
     }
 

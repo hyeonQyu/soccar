@@ -3,6 +3,16 @@
 // 값이 아닌 레퍼런스가 변경되어야 하므로 패킷은 클래스로 생성
 public class Packet
 {
+    public class PlayersPosition
+    {
+        public Vector3[] Positions;
+
+        public PlayersPosition()
+        {
+            Positions = new Vector3[PlayerController.Players.Length];
+        }
+    }
+
     // 플레이어의 움직임
     public class PlayerMotion
     {

@@ -7,7 +7,7 @@ public static class NetworkManager
     /* 서버 접속에 관한 요소 */
     private const string Url = "http://127.0.0.1:9090/";
     //private const string Url = "http://54.180.145.171:9090";
-    public static Socket Sender { get; set; }
+    private static Socket _socket;
 
     /* 동기화를 위한 요소 */
     private static long _rtt;
@@ -18,52 +18,53 @@ public static class NetworkManager
     /* 서버로부터의 Ack 확인 */
     public static string GameStart { get; private set; }
     public static string RequestPlayerIndex { get; set; }
-    public static string GameServerPort { get; set; }
 
     // Start 함수에서 호출되어야 함
     public static void SetWebSocket()
     {
         GameStart = "";
         RequestPlayerIndex = "";
-        GameServerPort = "";
 
-        Sender = Socket.Connect(Url);
+        _socket = Socket.Connect(Url);
 
         /* 서버로부터 메시지 수신 */
-        Sender.On("start_button", (string data) =>
+        _socket.On("start_button", (string data) =>
         {
-            GameServerPort = data.Substring(1, 4);
-            Debug.Log("==Game Server Port: " + GameServerPort);
+            GameStart = data.Substring(1, 5);
+            Debug.Log("==Game Start Message: " + GameStart);
         });
 
-    }
-
-    public static void StartSecondFlow() {
-
-        Sender.On("request_player_index", (string data) =>
+        _socket.On("request_player_index", (string data) =>
         {
             PlayerController.PlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
             MyPlayerMotion = new Packet.PlayerMotion(PlayerController.PlayerIndex);
             Debug.Log("==Received Player Index: " + PlayerController.PlayerIndex);
         });
 
-        Sender.On("player_motion", (string data) =>
+        _socket.On("player_motion", (string data) =>
         {
             long timestamp = GetTimestamp();
+            //Debug.Log("==플레이어모션 " + data);
 
-            // 상대방 캐릭터를 이동시킴
-            Packet.PlayerMotion playerMotionFromServer = JsonUtility.FromJson<Packet.PlayerMotion>(data);
-            PlayerController.Move(playerMotionFromServer);
+            Packet.PlayersPosition playersPosition = JsonUtility.FromJson<Packet.PlayersPosition>(data);
+            Debug.Log("==위치 " + playersPosition.Positions[0].x);
 
-            // RTT 계산
-            _rtt = timestamp - playerMotionFromServer.Timestamp;
-            Debug.Log("RTT: " + _rtt);
+            //// 상대방 캐릭터를 이동시킴
+            //Packet.PlayerMotion playerMotionFromServer = JsonUtility.FromJson<Packet.PlayerMotion>(data);
+            //PlayerController.Move(playerMotionFromServer);
+
+            //if(playerMotionFromServer.PlayerIndex == PlayerController.PlayerIndex)
+            //{
+            //    // RTT 계산
+            //    _rtt = timestamp - playerMotionFromServer.Timestamp;
+            //    Debug.Log("RTT: " + _rtt);
+            //}
         });
     }
 
     public static void Send(string header, string message)
     {
-        Sender.Emit(header, message);
+        _socket.Emit(header, message);
     }
 
     // 구조체 전송
@@ -73,7 +74,7 @@ public static class NetworkManager
         // 현재 시스템 시간 전송
         packetBody.Timestamp = GetTimestamp();
         string json = JsonUtility.ToJson(packetBody);
-        Sender.EmitJson(header, json);
+        _socket.EmitJson(header, json);
     }
 
     public static long GetTimestamp()
@@ -84,7 +85,7 @@ public static class NetworkManager
 
     public static void Destroy()
     {
-        Sender = null;
+        _socket = null;
         MyPlayerMotion = null;
     }
 }
