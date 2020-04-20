@@ -14,13 +14,13 @@ public class Packet
     }
 
     // 플레이어의 움직임
-    public class PlayerMotion
+    public class PersonalPosition
     {
         public long Timestamp;
         public int PlayerIndex;
         public Vector3 Position;
 
-        public PlayerMotion(int playerIndex)
+        public PersonalPosition(int playerIndex)
         {
             Timestamp = 0;
             PlayerIndex = playerIndex;

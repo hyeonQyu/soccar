@@ -13,7 +13,7 @@ public static class NetworkManager
     private static long _rtt;
 
     /* 서버로 전송할 패킷 */
-    public static Packet.PlayerMotion MyPlayerMotion { get; set; }
+    public static Packet.PersonalPosition MyPosition { get; set; }
 
     /* 서버로부터의 Ack 확인 */
     public static string GameStart { get; private set; }
@@ -37,11 +37,11 @@ public static class NetworkManager
         _socket.On("request_player_index", (string data) =>
         {
             PlayerController.PlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
-            MyPlayerMotion = new Packet.PlayerMotion(PlayerController.PlayerIndex);
+            MyPosition = new Packet.PersonalPosition(PlayerController.PlayerIndex);
             Debug.Log("==Received Player Index: " + PlayerController.PlayerIndex);
         });
 
-        _socket.On("player_motion", (string data) =>
+        _socket.On("relative_position", (string data) =>
         {
             long timestamp = GetTimestamp();
             
@@ -50,7 +50,7 @@ public static class NetworkManager
 
             // 캐릭터 이동
             Packet.PlayersPosition playersPosition = JsonUtility.FromJson<Packet.PlayersPosition>(data);
-            PlayerController.Move(playersPosition);
+            PlayerController.Move(playersPosition, PlayerController.Relative);  // type = 0 -> relative
 
             //// 상대방 캐릭터를 이동시킴
             //Packet.PlayerMotion playerMotionFromServer = JsonUtility.FromJson<Packet.PlayerMotion>(data);
@@ -63,6 +63,15 @@ public static class NetworkManager
             //    Debug.Log("RTT: " + _rtt);
             //}
         });
+
+        _socket.On("absolute_position", (string data) =>
+        {
+            data = data.Replace("\\", "");
+            data = data.Substring(1, data.Length - 2);
+
+            Packet.PlayersPosition playersPosition = JsonUtility.FromJson<Packet.PlayersPosition>(data);
+            PlayerController.Move(playersPosition, PlayerController.Absolute);  // type = 0 -> relative
+        });
     }
 
     public static void Send(string header, string message)
@@ -73,7 +82,7 @@ public static class NetworkManager
     // 구조체 전송
     public static void Send(string header, object body)
     {
-        Packet.PlayerMotion packetBody = (Packet.PlayerMotion)body;
+        Packet.PersonalPosition packetBody = (Packet.PersonalPosition)body;
         // 현재 시스템 시간 전송
         packetBody.Timestamp = GetTimestamp();
         string json = JsonUtility.ToJson(packetBody);
@@ -89,6 +98,6 @@ public static class NetworkManager
     public static void Destroy()
     {
         _socket = null;
-        MyPlayerMotion = null;
+        MyPosition = null;
     }
 }

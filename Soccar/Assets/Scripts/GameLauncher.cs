@@ -11,11 +11,14 @@ public class GameLauncher:MonoBehaviour
     [SerializeField]
     GameObject _waitingText;
 
+    private int _frameCount;
+
     // Start is called before the first frame update
     void Start()
     {
         PlayerController.SetPlayers();
         NetworkManager.SetWebSocket();
+        _frameCount = 0;
     }
 
     // Update is called once per frame
@@ -58,7 +61,9 @@ public class GameLauncher:MonoBehaviour
 
         /* 게임을 시작하기 전에 선수들이 등장하는 동안 여러번 RTT를 계산하여 평균을 내고
          * 평균 RTT가 가장 짧은 클라이언트를 메인 시뮬레이터로 사용할 예정 */
-        PlayerController.KeyDowned();
+        PlayerController.InputRelativePosition();
+        PlayerController.InputAbsolutePostion();
+
     }
 
     private void OnDestroy()

@@ -14,20 +14,34 @@ app.use(express.static(__dirname + '/client/'));
 const totalPlayer = 4;
 var playerIndex = 0;
 
-var timestamp = 0;
-var isFirst = true;
+var timestamp = [];
+timestamp[0] = 0;
+timestamp[1] = 0;
 
-var playersPosition = new Object();
-var positions = [];
-for(var i = 0; i < totalPlayer; i++){
-    var position = new Object();
-    position.x = i;
-    position.y = 0;
-    position.z = 0;
+var isFirst = [];
+isFirst[0] = true;
+isFirst[1] = true;
 
-    positions.push(position);
+// 상대위치 이동정도 및 절대위치를 보관
+var playersPositions = [];
+for(var i = 0; i < 2; i++){
+    var playersPosition = new Object();
+    var positions = [];
+    for(var j = 0; j < totalPlayer; j++){
+        var position = new Object();
+        position.x = 0;
+        position.y = 0;
+        position.z = 0;
+
+        positions.push(position);
+    }
+    playersPositions.push(playersPosition);
 }
-playersPosition.Positions = positions;
+
+playersPositions[1].Positions = positions;
+playersPositions[1].Positions[1].x = -0.09;
+playersPositions[1].Positions[1].y = 3;
+playersPositions[1].Positions[1].z = -8.6;
 
 app.get('/', function(req, res) {
 
@@ -56,29 +70,52 @@ io.on('connection', function(socket) {
         }
     });
 
-    socket.on('player_motion', function(data) {
-        if(isFirst){
-            timestamp = Date.now();
-            isFirst = false;
+    socket.on('relative_position', function(data) {
+        if(isFirst[0]){
+            timestamp[0] = Date.now();
+            isFirst[0] = false;
         }
 
         //console.log(data);
         //console.log('player_motion ' + data.PlayerIndex);
 
-        playersPosition.Positions[data.PlayerIndex].x = data.Position.x;
-        playersPosition.Positions[data.PlayerIndex].y = data.Position.y;
-        playersPosition.Positions[data.PlayerIndex].z = data.Position.z;
-      //  console.log(playersPosition.Positions[data.PlayerIndex].x + ' ' + playersPosition.Positions[data.PlayerIndex].y + ' ' + playersPosition.Positions[data.PlayerIndex].z);
+        playersPositions[0].Positions[data.PlayerIndex].x += data.Position.x;
+        playersPositions[0].Positions[data.PlayerIndex].y += data.Position.y;
+        playersPositions[0].Positions[data.PlayerIndex].z += data.Position.z;
 
         // 일정 시간이 되면 각 플레이어들에게 서버에서 모은 모든 플레이어들의 위치를 전송
-        if(Date.now() - timestamp > 20){
-            var datas = JSON.stringify(playersPosition);
+        if(Date.now() - timestamp[0] > 20){
+            var datas = JSON.stringify(playersPositions[0]);
 
             console.log(datas);
-            io.emit('player_motion', datas);
-            timestamp = Date.now();
+            io.emit('relative_position', datas);
+            for(var i = 0; i < totalPlayer; i++){
+                playersPositions[0].Positions[i].x = 0;
+                playersPositions[0].Positions[i].y = 0;
+                playersPositions[0].Positions[i].z = 0;
+            }
+
+            timestamp[0] = Date.now();
         }
 
+    });
+
+    socket.on('absolute_position', function(data){
+        if(isFirst[1]){
+            timestamp[1] = Date.now();
+            isFirst[1] = false;
+        }
+
+        playersPositions[1].Positions[data.PlayerIndex].x = data.Position.x;
+        playersPositions[1].Positions[data.PlayerIndex].y = data.Position.y;
+        playersPositions[1].Positions[data.PlayerIndex].z = data.Position.z;
+
+        // 일정 시간이 되면 모든 플레이어의 위치를 서버에서 보관한 위치로 맞춤
+        if(Date.now() - timestamp[1] > 50){
+            var datas = JSON.stringify(playersPositions[1]);
+            io.emit('absolute_position', datas);
+            timestamp[1] = Date.now();
+        }
     });
 
 });

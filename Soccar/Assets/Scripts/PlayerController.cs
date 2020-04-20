@@ -5,6 +5,9 @@ using UnityEngine;
 
 public static class PlayerController
 {
+    public const int Relative = 0;
+    public const int Absolute = 1;
+
     // 전체 플레이어
     public static GameObject[] Players { get; set; }
     // 현재 컨트롤하는 플레이어
@@ -57,15 +60,15 @@ public static class PlayerController
         _isPlayersInitialized = true;
     }
 
-    public static void KeyDowned()
+    public static void InputRelativePosition()
     {
         // 상대 좌표
-        //Vector3 myPosition = new Vector3(0, 0, 0);
+        Vector3 myPosition = new Vector3(0, 0, 0);
         // 절대 좌표
-        Vector3 myPosition = Player.transform.position;
-        NetworkManager.MyPlayerMotion.Position = myPosition;
+        //Vector3 myPosition = Player.transform.position;
+        NetworkManager.MyPosition.Position = myPosition;
 
-        if(Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
             _playerSpeed = _runSpeed;
         }
@@ -74,9 +77,9 @@ public static class PlayerController
             _playerSpeed = _walkSpeed;
         }
 
-        if(Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
-            switch(_playerIndex)
+            switch (_playerIndex)
             {
                 case 0:
                     myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
@@ -93,9 +96,9 @@ public static class PlayerController
             }
             _isMoved = true;
         }
-        if(Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow))
         {
-            switch(_playerIndex)
+            switch (_playerIndex)
             {
                 case 0:
                     myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
@@ -112,9 +115,9 @@ public static class PlayerController
             }
             _isMoved = true;
         }
-        if(Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.UpArrow))
         {
-            switch(_playerIndex)
+            switch (_playerIndex)
             {
                 case 0:
                     myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
@@ -131,9 +134,9 @@ public static class PlayerController
             }
             _isMoved = true;
         }
-        if(Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.DownArrow))
         {
-            switch(_playerIndex)
+            switch (_playerIndex)
             {
                 case 0:
                     myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
@@ -151,10 +154,10 @@ public static class PlayerController
             _isMoved = true;
         }
 
-        if(_isMoved)
+        if (_isMoved)
         {
             // 움직임 변경
-            NetworkManager.MyPlayerMotion.Position = myPosition;
+            NetworkManager.MyPosition.Position = myPosition;
             //NetworkManager.Send("player_motion", NetworkManager.MyPlayerMotion);
 
             // 자신의 캐릭터를 움직임
@@ -163,7 +166,14 @@ public static class PlayerController
             _isMoved = false;
         }
 
-        NetworkManager.Send("player_motion", NetworkManager.MyPlayerMotion);
+        NetworkManager.Send("relative_position", NetworkManager.MyPosition);
+    }
+
+    public static void InputAbsolutePostion()
+    {
+        Packet.PersonalPosition myPosition = new Packet.PersonalPosition(PlayerIndex);
+        myPosition.Position = Players[PlayerIndex].transform.position;
+        NetworkManager.Send("absolute_postion", myPosition);
     }
 
     // 자신의 캐릭터를 움직임
@@ -173,7 +183,7 @@ public static class PlayerController
     }
 
     // 서버로부터 타 플레이어의 캐릭터 움직임을 전달받아 움직임
-    public static void Move(Packet.PlayerMotion playerMotionFromServer)
+    public static void Move(Packet.PersonalPosition playerMotionFromServer)
     {
         Vector3 movingPosition = playerMotionFromServer.Position;
         //Vector3 movingPosition = new Vector3(playerMotionFromServer.X, playerMotionFromServer.Y, playerMotionFromServer.Z);
@@ -187,16 +197,27 @@ public static class PlayerController
     }
 
     // 서버로부터 모든 플레이어의 위치를 받아 한꺼번에 움직임
-    public static void Move(Packet.PlayersPosition playersPositionFromServer)
+    public static void Move(Packet.PlayersPosition playersPositionFromServer, int type)
     {
         //Vector3 myMovingPosition = playersPositionFromServer.Positions[_playerIndex];
         //Players[_playerIndex].transform.position = myMovingPosition;
-        
-        // 원래는 모두를 움직여주어야 함
-        for(int i = 0; i < 2; i++)
+
+        if (type == Relative)
         {
-            Vector3 movingPosition = playersPositionFromServer.Positions[i];
-            Players[i].transform.position = movingPosition;
+            // 원래는 모두를 움직여주어야 함
+            for (int i = 0; i < 4; i++)
+            {
+                Vector3 movingPosition = playersPositionFromServer.Positions[i];
+                Players[i].transform.Translate(movingPosition);
+            }
+        }
+        else if (type == Absolute)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                Vector3 movingPosition = playersPositionFromServer.Positions[i];
+                Players[i].transform.position = movingPosition;
+            }
         }
     }
 
