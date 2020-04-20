@@ -5,8 +5,12 @@ using socket.io;
 public static class NetworkManager
 {
     /* 서버 접속에 관한 요소 */
+    //private const string Url = "http://10.21.20.1:9090";
+#if UNITY_EDITOR
     private const string Url = "http://127.0.0.1:9090/";
-    //private const string Url = "http://54.180.145.171:9090";
+#elif UNITY_WEBGL
+    private const string Url = "http://15.164.220.253:9090/";
+#endif
     private static Socket _socket;
 
     /* 동기화를 위한 요소 */

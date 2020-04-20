@@ -173,7 +173,7 @@ public static class PlayerController
     {
         Packet.PersonalPosition myPosition = new Packet.PersonalPosition(PlayerIndex);
         myPosition.Position = Players[PlayerIndex].transform.position;
-        NetworkManager.Send("absolute_postion", myPosition);
+        NetworkManager.Send("absolute_position", myPosition);
     }
 
     // 자신의 캐릭터를 움직임
