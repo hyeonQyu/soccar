@@ -35,6 +35,7 @@ for(var i = 0; i < 2; i++){
 
         positions.push(position);
     }
+    playersPosition.Positions = positions;
     playersPositions.push(playersPosition);
 }
 
@@ -87,7 +88,7 @@ io.on('connection', function(socket) {
         if(Date.now() - timestamp[0] > 20){
             var datas = JSON.stringify(playersPositions[0]);
 
-            console.log(datas);
+            //console.log(datas);
             io.emit('relative_position', datas);
             for(var i = 0; i < totalPlayer; i++){
                 playersPositions[0].Positions[i].x = 0;
@@ -111,7 +112,7 @@ io.on('connection', function(socket) {
         playersPositions[1].Positions[data.PlayerIndex].z = data.Position.z;
 
         // 일정 시간이 되면 모든 플레이어의 위치를 서버에서 보관한 위치로 맞춤
-        if(Date.now() - timestamp[1] > 50){
+        if(Date.now() - timestamp[1] > 500){
             var datas = JSON.stringify(playersPositions[1]);
             io.emit('absolute_position', datas);
             timestamp[1] = Date.now();
