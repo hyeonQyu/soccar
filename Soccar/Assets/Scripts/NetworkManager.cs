@@ -49,7 +49,7 @@ public static class NetworkManager
             data = data.Substring(1, data.Length - 2);
 
             // 캐릭터 이동
-            Packet.PlayersPosition playersPosition = JsonUtility.FromJson<Packet.PlayersPosition>(data.Replace("\\", ""));
+            Packet.PlayersPosition playersPosition = JsonUtility.FromJson<Packet.PlayersPosition>(data);
             PlayerController.Move(playersPosition);
 
             //// 상대방 캐릭터를 이동시킴
