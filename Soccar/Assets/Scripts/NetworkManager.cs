@@ -44,10 +44,13 @@ public static class NetworkManager
         _socket.On("player_motion", (string data) =>
         {
             long timestamp = GetTimestamp();
-            //Debug.Log("==플레이어모션 " + data);
+            
+            data = data.Replace("\\", "");
+            data = data.Substring(1, data.Length - 2);
 
-            Packet.PlayersPosition playersPosition = JsonUtility.FromJson<Packet.PlayersPosition>(data);
-            Debug.Log("==위치 " + playersPosition.Positions[0].x);
+            // 캐릭터 이동
+            Packet.PlayersPosition playersPosition = JsonUtility.FromJson<Packet.PlayersPosition>(data.Replace("\\", ""));
+            PlayerController.Move(playersPosition);
 
             //// 상대방 캐릭터를 이동시킴
             //Packet.PlayerMotion playerMotionFromServer = JsonUtility.FromJson<Packet.PlayerMotion>(data);

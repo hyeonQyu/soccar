@@ -62,13 +62,13 @@ io.on('connection', function(socket) {
             isFirst = false;
         }
 
-        //console.log(timestamp);
-        console.log('player_motion ' + data.PlayerIndex);
+        //console.log(data);
+        //console.log('player_motion ' + data.PlayerIndex);
 
         playersPosition.Positions[data.PlayerIndex].x = data.Position.x;
-        playersPosition.Positions[data.PlayerIndex].x = data.Position.y;
-        playersPosition.Positions[data.PlayerIndex].x = data.Position.z;
-        console.log(playersPosition.Positions[data.PlayerIndex].x + ' ' + playersPosition.Positions[data.PlayerIndex].y + ' ' + playersPosition.Positions[data.PlayerIndex].z);
+        playersPosition.Positions[data.PlayerIndex].y = data.Position.y;
+        playersPosition.Positions[data.PlayerIndex].z = data.Position.z;
+      //  console.log(playersPosition.Positions[data.PlayerIndex].x + ' ' + playersPosition.Positions[data.PlayerIndex].y + ' ' + playersPosition.Positions[data.PlayerIndex].z);
 
         // 일정 시간이 되면 각 플레이어들에게 서버에서 모은 모든 플레이어들의 위치를 전송
         if(Date.now() - timestamp > 20){

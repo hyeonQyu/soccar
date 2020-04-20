@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Sockets;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 public static class PlayerController
@@ -63,7 +59,9 @@ public static class PlayerController
 
     public static void KeyDowned()
     {
+        // 상대 좌표
         //Vector3 myPosition = new Vector3(0, 0, 0);
+        // 절대 좌표
         Vector3 myPosition = Player.transform.position;
         NetworkManager.MyPlayerMotion.Position = myPosition;
 
@@ -155,7 +153,7 @@ public static class PlayerController
 
         if(_isMoved)
         {
-            // 움직임 전송
+            // 움직임 변경
             NetworkManager.MyPlayerMotion.Position = myPosition;
             //NetworkManager.Send("player_motion", NetworkManager.MyPlayerMotion);
 
@@ -186,6 +184,20 @@ public static class PlayerController
         //Lerp보간
         //Vector3 currentPosition = Players[playerMotionFromServer.PlayerIndex].transform.position;
         //Players[playerMotionFromServer.PlayerIndex].transform.position = Vector3.Lerp(currentPosition, movingPosition, Time.deltaTime * 30f);
+    }
+
+    // 서버로부터 모든 플레이어의 위치를 받아 한꺼번에 움직임
+    public static void Move(Packet.PlayersPosition playersPositionFromServer)
+    {
+        //Vector3 myMovingPosition = playersPositionFromServer.Positions[_playerIndex];
+        //Players[_playerIndex].transform.position = myMovingPosition;
+        
+        // 원래는 모두를 움직여주어야 함
+        for(int i = 0; i < 2; i++)
+        {
+            Vector3 movingPosition = playersPositionFromServer.Positions[i];
+            Players[i].transform.position = movingPosition;
+        }
     }
 
     public static void Destroy()
