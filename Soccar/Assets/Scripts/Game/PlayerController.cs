@@ -66,7 +66,7 @@ public static class PlayerController
         Vector3 myPosition = new Vector3(0, 0, 0);
         // 절대 좌표
         //Vector3 myPosition = Player.transform.position;
-        //NetworkManager.MyPosition.Position = myPosition;
+        NetworkManager.MyPosition.Position = myPosition;
 
         if (Input.GetKey(KeyCode.LeftShift))
         {
@@ -158,15 +158,15 @@ public static class PlayerController
         {
             // 움직임 변경
             NetworkManager.MyPosition.Position = myPosition;
-            NetworkManager.Send("relative_position", NetworkManager.MyPosition);
+            //NetworkManager.Send("relative_position", NetworkManager.MyPosition);
 
             // 자신의 캐릭터를 움직임
-            //Move(myPosition);
+            Move(myPosition);
 
             _isMoved = false;
         }
 
-        //NetworkManager.Send("relative_position", NetworkManager.MyPosition);
+        NetworkManager.Send("relative_position", NetworkManager.MyPosition);
     }
 
     public static void InputAbsolutePostion()
@@ -180,6 +180,7 @@ public static class PlayerController
     private static void Move(Vector3 movingPosition)
     {
         Players[_playerIndex].transform.Translate(movingPosition);
+        //Players[_playerIndex].transform.position = movingPosition;
     }
 
     // 서버로부터 타 플레이어의 캐릭터 움직임을 전달받아 움직임
@@ -207,6 +208,8 @@ public static class PlayerController
             // 원래는 모두를 움직여주어야 함
             for (int i = 0; i < 4; i++)
             {
+                if (i == _playerIndex)
+                    continue;
                 Vector3 movingPosition = playersPositionFromServer.Positions[i];
                 Players[i].transform.Translate(movingPosition);
             }
@@ -216,6 +219,7 @@ public static class PlayerController
             for (int i = 0; i < 4; i++)
             {
                 Vector3 movingPosition = playersPositionFromServer.Positions[i];
+                Vector3.Lerp(Players[i].transform.position, movingPosition, 1);
                 Players[i].transform.position = movingPosition;
             }
         }

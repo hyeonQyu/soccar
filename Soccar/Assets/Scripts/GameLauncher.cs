@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class GameLauncher:MonoBehaviour
+public class GameLauncher : MonoBehaviour
 {
     private static bool _isClickedStart;
     public static bool IsClickedStart
@@ -26,7 +26,7 @@ public class GameLauncher:MonoBehaviour
     {
         //Debug.Log(NetworkManager.GetTimestamp());
 
-        if(_isClickedStart)
+        if (_isClickedStart)
         {
             Debug.Log("==시작 버튼 눌림");
 
@@ -39,7 +39,7 @@ public class GameLauncher:MonoBehaviour
         }
 
         // 게임 시작 Ack를 맨 처음에 제대로 수신하면
-        if(NetworkManager.GameStart == "start" && PlayerController.PlayerIndex == 99)
+        if (NetworkManager.GameStart == "start" && PlayerController.PlayerIndex == 99)
         {
             Debug.Log("==플레이어 인덱스 주세요");
             // Player Index 요청
@@ -50,7 +50,7 @@ public class GameLauncher:MonoBehaviour
         }
 
         // 인덱스를 받은 후
-        if(PlayerController.PlayerIndex != 99 && !PlayerController.IsPlayerInitialized)
+        if (PlayerController.PlayerIndex != 99 && !PlayerController.IsPlayerInitialized)
         {
             Debug.Log("==인덱스 받음, 초기화 할차례");
 
@@ -59,11 +59,13 @@ public class GameLauncher:MonoBehaviour
             return;
         }
 
-        /* 게임을 시작하기 전에 선수들이 등장하는 동안 여러번 RTT를 계산하여 평균을 내고
+        if (PlayerController.IsPlayerInitialized)
+        {
+            /* 게임을 시작하기 전에 선수들이 등장하는 동안 여러번 RTT를 계산하여 평균을 내고
          * 평균 RTT가 가장 짧은 클라이언트를 메인 시뮬레이터로 사용할 예정 */
-        PlayerController.InputRelativePosition();
-        //PlayerController.InputAbsolutePostion();
-
+            PlayerController.InputRelativePosition();
+            PlayerController.InputAbsolutePostion();
+        }
     }
 
     private void OnDestroy()
