@@ -85,9 +85,9 @@ public class GameLauncher : MonoBehaviour
             {
                 for(int i = 0; i < _balls.Length; i++)
                 {
-                    bool isSend = i == _balls.Length - 1 ? true : false;
-                    _ballControllers[i].SendBallPosition(i, isSend);
+                    NetworkManager.BallsPosition.Positions[i] = _balls[i].transform.position;
                 }
+                NetworkManager.Send("ball_position", NetworkManager.BallsPosition);
             }
         }
     }

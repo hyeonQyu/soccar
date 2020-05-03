@@ -94,14 +94,6 @@ public class BallController : MonoBehaviour
         }
     }
 
-    public void SendBallPosition(int i, bool isSend)
-    {
-        NetworkManager.BallsPosition.Positions[i] = transform.position;
-
-        if(isSend)
-            NetworkManager.Send("ball_position", NetworkManager.BallsPosition);
-    }
-
     public void Move(Vector3 position)
     {
         transform.position = position;
