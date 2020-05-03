@@ -15,6 +15,8 @@ public class GameLauncher : MonoBehaviour
 
     public static GameObject[] Balls = new GameObject[2];
 
+    public static int Frame = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,8 +29,9 @@ public class GameLauncher : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
+        Frame++;
         //Debug.Log(NetworkManager.GetTimestamp());
 
         if (_isClickedStart)
@@ -71,16 +74,16 @@ public class GameLauncher : MonoBehaviour
             PlayerController.InputRelativePosition();
             PlayerController.InputAbsolutePostion();
 
-            // 호스트만 공의 위치 전송
-            if(PlayerController.PlayerIndex == 0)
-            {
-                for(int i = 0; i < Balls.Length; i++)
-                {
-                    NetworkManager.BallsPosition.Positions[i] = Balls[i].transform.position;
-                }
-                Debug.Log("공 전송");
-                NetworkManager.Send<Packet.BallsPosition>("ball_position", NetworkManager.BallsPosition);
-            }
+            //// 호스트만 공의 위치 전송
+            //if(PlayerController.PlayerIndex == 0)
+            //{
+            //    for(int i = 0; i < Balls.Length; i++)
+            //    {
+            //        NetworkManager.BallsPosition.Positions[i] = Balls[i].transform.position;
+            //    }
+            //    Debug.Log("공 전송");
+            //    NetworkManager.Send<Packet.BallsPosition>("ball_position", NetworkManager.BallsPosition);
+            //}
         }
     }
 

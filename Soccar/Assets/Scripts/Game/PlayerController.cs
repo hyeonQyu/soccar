@@ -158,7 +158,7 @@ public static class PlayerController
         {
             // 움직임 변경
             NetworkManager.MyPosition.Position = myPosition;
-            //NetworkManager.Send("relative_position", NetworkManager.MyPosition);
+            NetworkManager.Send<Packet.PersonalPosition>("relative_position", NetworkManager.MyPosition);
 
             // 자신의 캐릭터를 움직임
             Move(myPosition);
@@ -166,14 +166,18 @@ public static class PlayerController
             _isMoved = false;
         }
 
-        NetworkManager.Send<Packet.PersonalPosition>("relative_position", NetworkManager.MyPosition);
+        //NetworkManager.Send<Packet.PersonalPosition>("relative_position", NetworkManager.MyPosition);
     }
 
+    // 공 + 절대좌표 전송
     public static void InputAbsolutePostion()
     {
-        Packet.PersonalPosition myPosition = new Packet.PersonalPosition(PlayerIndex);
-        myPosition.Position = Players[PlayerIndex].transform.position;
-        NetworkManager.Send<Packet.PersonalPosition>("absolute_position", myPosition);
+        Packet.SendingAbsolutePositions sendingAbsolutePositions = new Packet.SendingAbsolutePositions(PlayerIndex);
+        sendingAbsolutePositions.PlayerPosition = Players[PlayerIndex].transform.position;
+        sendingAbsolutePositions.BallPositions[0] = GameLauncher.Balls[0].transform.position;
+        sendingAbsolutePositions.BallPositions[1] = GameLauncher.Balls[1].transform.position;
+
+        NetworkManager.Send<Packet.SendingAbsolutePositions>("absolute_position", sendingAbsolutePositions);
     }
 
     // 자신의 캐릭터를 움직임
@@ -183,22 +187,22 @@ public static class PlayerController
         //Players[_playerIndex].transform.position = movingPosition;
     }
 
-    // 서버로부터 타 플레이어의 캐릭터 움직임을 전달받아 움직임
-    public static void Move(Packet.PersonalPosition playerMotionFromServer)
-    {
-        Vector3 movingPosition = playerMotionFromServer.Position;
-        //Vector3 movingPosition = new Vector3(playerMotionFromServer.X, playerMotionFromServer.Y, playerMotionFromServer.Z);
-        //상대
-        Players[playerMotionFromServer.PlayerIndex].transform.Translate(movingPosition);
-        //절대
-        //Players[playerMotionFromServer.PlayerIndex].transform.position = movingPosition;
-        //Lerp보간
-        //Vector3 currentPosition = Players[playerMotionFromServer.PlayerIndex].transform.position;
-        //Players[playerMotionFromServer.PlayerIndex].transform.position = Vector3.Lerp(currentPosition, movingPosition, Time.deltaTime * 30f);
-    }
+    //// 서버로부터 타 플레이어의 캐릭터 움직임을 전달받아 움직임
+    //public static void Move(Packet.PersonalPosition playerMotionFromServer)
+    //{
+    //    Vector3 movingPosition = playerMotionFromServer.Position;
+    //    //Vector3 movingPosition = new Vector3(playerMotionFromServer.X, playerMotionFromServer.Y, playerMotionFromServer.Z);
+    //    //상대
+    //    Players[playerMotionFromServer.PlayerIndex].transform.Translate(movingPosition);
+    //    //절대
+    //    //Players[playerMotionFromServer.PlayerIndex].transform.position = movingPosition;
+    //    //Lerp보간
+    //    //Vector3 currentPosition = Players[playerMotionFromServer.PlayerIndex].transform.position;
+    //    //Players[playerMotionFromServer.PlayerIndex].transform.position = Vector3.Lerp(currentPosition, movingPosition, Time.deltaTime * 30f);
+    //}
 
     // 서버로부터 모든 플레이어의 위치를 받아 한꺼번에 움직임
-    public static void Move(Packet.PlayersPosition playersPositionFromServer, int type)
+    public static void Move(Vector3[] playersPositionsFromServer, int type)
     {
         //Vector3 myMovingPosition = playersPositionFromServer.Positions[_playerIndex];
         //Players[_playerIndex].transform.position = myMovingPosition;
@@ -210,7 +214,7 @@ public static class PlayerController
             {
                 if (i == _playerIndex)
                     continue;
-                Vector3 movingPosition = playersPositionFromServer.Positions[i];
+                Vector3 movingPosition = playersPositionsFromServer[i];
                 Players[i].transform.Translate(movingPosition);
             }
         }
@@ -218,7 +222,7 @@ public static class PlayerController
         {
             for (int i = 0; i < 4; i++)
             {
-                Vector3 movingPosition = playersPositionFromServer.Positions[i];
+                Vector3 movingPosition = playersPositionsFromServer[i];
                 Vector3.Lerp(Players[i].transform.position, movingPosition, 1);
                 Players[i].transform.position = movingPosition;
             }

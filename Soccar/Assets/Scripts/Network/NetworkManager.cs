@@ -7,7 +7,7 @@ public static class NetworkManager
     /* 서버 접속에 관한 요소 */
     //private const string Url = "http://10.21.20.20:9090";
 #if UNITY_EDITOR
-    private const string Url = "http://15.164.220.253:9090/";
+    private const string Url = "http://10.21.20.15:9090/";
 #elif UNITY_WEBGL
     private const string Url = "http://15.164.220.253:9090/";
 #endif
@@ -48,51 +48,46 @@ public static class NetworkManager
             Debug.Log("==Received Player Index: " + PlayerController.PlayerIndex);
         });
 
+        // 상대좌표 + 공
         _socket.On("relative_position", (string data) =>
         {
-            long timestamp = GetTimestamp();
+            //Debug.Log("FRAME " + GameLauncher.Frame + " 상대좌표");
+            //long timestamp = GetTimestamp();
             
             data = data.Replace("\\", "");
             data = data.Substring(1, data.Length - 2);
 
             // 캐릭터 이동
-            Packet.PlayersPosition playersPosition = JsonUtility.FromJson<Packet.PlayersPosition>(data);
-            PlayerController.Move(playersPosition, PlayerController.Relative);  // type = 0 -> relative
+            Packet.ReceivingPositions receivingPositions = JsonUtility.FromJson<Packet.ReceivingPositions>(data);
+            PlayerController.Move(receivingPositions.PlayerPositions, PlayerController.Relative);
 
-            //// 상대방 캐릭터를 이동시킴
-            //Packet.PlayerMotion playerMotionFromServer = JsonUtility.FromJson<Packet.PlayerMotion>(data);
-            //PlayerController.Move(playerMotionFromServer);
-
-            //if(playerMotionFromServer.PlayerIndex == PlayerController.PlayerIndex)
-            //{
-            //    // RTT 계산
-            //    _rtt = timestamp - playerMotionFromServer.Timestamp;
-            //    Debug.Log("RTT: " + _rtt);
-            //}
+            if(PlayerController.PlayerIndex != 0)
+            {
+                // 공 이동
+                for(int i = 0; i < 2; i++)
+                {
+                    GameLauncher.Balls[i].transform.position = receivingPositions.BallPositions[i];
+                }
+            }
         });
 
+        // 절대 좌표 + 공
         _socket.On("absolute_position", (string data) =>
         {
-            Debug.Log("absolute_position1 " + data);
             data = data.Replace("\\", "");
             data = data.Substring(1, data.Length - 2);
-            Debug.Log("absolute_position2 " + data);
 
-            Packet.PlayersPosition playersPosition = JsonUtility.FromJson<Packet.PlayersPosition>(data);
-            PlayerController.Move(playersPosition, PlayerController.Absolute);  // type = 0 -> relative
-        });
+            // 캐릭터 이동
+            Packet.ReceivingPositions receivingPositions = JsonUtility.FromJson<Packet.ReceivingPositions>(data);
+            PlayerController.Move(receivingPositions.PlayerPositions, PlayerController.Absolute);
 
-        _socket.On("ball_position", (string data) =>
-        {
-            //Debug.Log("ball_position1 " + data);
-            //data = data.Replace("\\", "");
-            //data = data.Substring(1, data.Length - 2);
-            //Debug.Log("ball_position2 " + data);
-
-            Packet.BallsPosition ballsPosition = JsonUtility.FromJson<Packet.BallsPosition>(data);
-            for(int i = 0; i < ballsPosition.Positions.Length; i++)
+            if(PlayerController.PlayerIndex != 0)
             {
-                GameLauncher.Balls[i].transform.position = ballsPosition.Positions[i];
+                // 공 이동
+                for(int i = 0; i < 2; i++)
+                {
+                    GameLauncher.Balls[i].transform.position = receivingPositions.BallPositions[i];
+                }
             }
         });
     }
@@ -109,6 +104,7 @@ public static class NetworkManager
         // 현재 시스템 시간 전송
         //packetBody.Timestamp = GetTimestamp();
         string json = JsonUtility.ToJson(packetBody);
+        Debug.Log("json" + json);
         _socket.EmitJson(header, json);
     }
 
