@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.4489556, g: 0.49902105, b: 0.57570744, a: 1}
+  m_IndirectSpecularColor: {r: 0.4489557, g: 0.4990208, b: 0.575707, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3267,6 +3267,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 649774598}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &686290327 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -145002421371357326, guid: 09e9ddf6a72994a2883a07dc02c83a7d,
+    type: 3}
+  m_PrefabInstance: {fileID: 911942836}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &686290331
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686290327}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4522242594347925794, guid: 09e9ddf6a72994a2883a07dc02c83a7d, type: 3}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -4055,7 +4075,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 581ae1f010b505540bb2e02e36d0ee60,
         type: 3}
       propertyPath: m_Name
-      value: Ball
+      value: Ball1
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: 581ae1f010b505540bb2e02e36d0ee60,
         type: 3}
@@ -4320,7 +4340,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 581ae1f010b505540bb2e02e36d0ee60,
         type: 3}
       propertyPath: m_Name
-      value: Ball (1)
+      value: Ball2
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: 581ae1f010b505540bb2e02e36d0ee60,
         type: 3}
@@ -5073,6 +5093,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _waitingText: {fileID: 0}
+  _balls:
+  - {fileID: 1834496971}
+  - {fileID: 1055781271}
 --- !u!4 &981798737
 Transform:
   m_ObjectHideFlags: 0
@@ -10523,7 +10546,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1809956808
 MonoBehaviour:
   m_ObjectHideFlags: 0
