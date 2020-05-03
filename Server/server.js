@@ -29,20 +29,15 @@ for(var i = 0; i < 2; i++){
     var positions = [];
     for(var j = 0; j < totalPlayer; j++){
         var position = new Object();
-        position.x = 0;
-        position.y = 0;
-        position.z = 0;
+        position.x = j * 5;
+        position.y = 10;
+        position.z = j * 5;
 
         positions.push(position);
     }
     playersPosition.Positions = positions;
     playersPositions.push(playersPosition);
 }
-
-playersPositions[1].Positions = positions;
-playersPositions[1].Positions[1].x = -0.09;
-playersPositions[1].Positions[1].y = 3;
-playersPositions[1].Positions[1].z = -8.6;
 
 // 2개의 공 절대위치를 보관
 var ballsPositions = [];
@@ -57,7 +52,7 @@ for(var i = 0; i < 2; i++){
 
 var sendingPosition = new Object();
 sendingPosition.BallPositions = ballsPositions;
-sendingPosition.PlayerPositions = playersPositions[1];
+//sendingPosition.PlayerPositions = playersPositions[1].Positions;
 
 app.get('/', function(req, res) {
 
@@ -92,9 +87,6 @@ io.on('connection', function(socket) {
             isFirst[0] = false;
         }
 
-        //console.log(data);
-        //console.log('player_motion ' + data.PlayerIndex);
-
         playersPositions[0].Positions[data.PlayerIndex].x += data.Position.x;
         playersPositions[0].Positions[data.PlayerIndex].y += data.Position.y;
         playersPositions[0].Positions[data.PlayerIndex].z += data.Position.z;
@@ -123,12 +115,11 @@ io.on('connection', function(socket) {
         var timeDiff2 = Date.now() - timestamp[1];
 
         // 500ms마다 절대 좌표 + 공
-        if(timeDiff2 > 500){
-            sendingPosition.BallPositions[0] = ballsPositions[0];
-            sendingPosition.BallPositions[1] = ballsPositions[1];
-            sendingPosition.PlayersPositions = playersPositions[1];
+        if(timeDiff2 >2000){
+            sendingPosition.BallPositions = ballsPositions;
+            sendingPosition.PlayerPositions = playersPositions[1].Positions;
             var datas = JSON.stringify(sendingPosition);
-            console.log('합친거' + datas);
+            console.log('절대' + datas);
 
             io.emit('absolute_position', datas);
             for(var i = 0; i < totalPlayer; i++){
@@ -136,15 +127,15 @@ io.on('connection', function(socket) {
                 playersPositions[0].Positions[i].y = 0;
                 playersPositions[0].Positions[i].z = 0;
             }
+            timestamp[1] = Date.now();
         }
         // 20ms마다 상대 좌표 + 공 전송
         else if(timeDiff1 > 20){
-            sendingPosition.BallPositions[0] = ballsPositions[0];
-            sendingPosition.BallPositions[1] = ballsPositions[1];
-            sendingPosition.PlayersPositions = playersPositions[0];
+            sendingPosition.BallPositions = ballsPositions;
+            sendingPosition.PlayerPositions = playersPositions[0].Positions;
             var datas = JSON.stringify(sendingPosition);
+            //console.log('상대' + datas);
 
-            //console.log(datas);
             io.emit('relative_position', datas);
             for(var i = 0; i < totalPlayer; i++){
                 playersPositions[0].Positions[i].x = 0;
@@ -153,12 +144,6 @@ io.on('connection', function(socket) {
             }
 
             timestamp[0] = Date.now();
-        }
-        // 500ms마다 절대 좌표 전송
-        else if(timeDiff2 > 500){
-            var datas = JSON.stringify(playersPositions[1]);
-            io.emit('absolute_position', datas);
-            timestamp[1] = Date.now();
         }
     });
 
