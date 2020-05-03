@@ -56,6 +56,8 @@ for(var i = 0; i < 2; i++){
 }
 
 var sendingPosition = new Object();
+sendingPosition.BallPositions = ballsPositions;
+sendingPosition.PlayerPositions = playersPositions[1];
 
 app.get('/', function(req, res) {
 
@@ -105,26 +107,26 @@ io.on('connection', function(socket) {
         }
 
         //  슈퍼클라이언트에게서 공의 절대위치 수신
-        if(data.MyPosition.PlayerIndex == 0){
+        if(data.PlayerIndex == 0){
             for(var i = 0; i < 2; i++){
-                ballsPositions[i].x = data.BallsPosition.Positions[i].x;
-                ballsPositions[i].y = data.BallsPosition.Positions[i].y;
-                ballsPositions[i].z = data.BallsPosition.Positions[i].z;
+                ballsPositions[i].x = data.BallPositions[i].x;
+                ballsPositions[i].y = data.BallPositions[i].y;
+                ballsPositions[i].z = data.BallPositions[i].z;
             }
         }
 
-        playersPositions[1].Positions[data.PlayerIndex].x = data.Position.x;
-        playersPositions[1].Positions[data.PlayerIndex].y = data.Position.y;
-        playersPositions[1].Positions[data.PlayerIndex].z = data.Position.z;
+        playersPositions[1].Positions[data.PlayerIndex].x = data.PlayerPosition.x;
+        playersPositions[1].Positions[data.PlayerIndex].y = data.PlayerPosition.y;
+        playersPositions[1].Positions[data.PlayerIndex].z = data.PlayerPosition.z;
 
         var timeDiff1 = Date.now() - timestamp[0];
         var timeDiff2 = Date.now() - timestamp[1];
 
         // 500ms마다 절대 좌표 + 공
         if(timeDiff2 > 500){
-            sendingPosition.BallsPosition.Positions[0] = ballsPositions[0];
-            sendingPosition.BallsPosition.Positions[1] = ballsPositions[1];
-            sendingPosition.playersPosition = playersPositions[1];
+            sendingPosition.BallPositions[0] = ballsPositions[0];
+            sendingPosition.BallPositions[1] = ballsPositions[1];
+            sendingPosition.PlayersPositions = playersPositions[1];
             var datas = JSON.stringify(sendingPosition);
             console.log('합친거' + datas);
 
@@ -137,9 +139,9 @@ io.on('connection', function(socket) {
         }
         // 20ms마다 상대 좌표 + 공 전송
         else if(timeDiff1 > 20){
-            sendingPosition.BallsPosition.Positions[0] = ballsPositions[0];
-            sendingPosition.BallsPosition.Positions[1] = ballsPositions[1];
-            sendingPosition.playersPosition = playersPositions[0];
+            sendingPosition.BallPositions[0] = ballsPositions[0];
+            sendingPosition.BallPositions[1] = ballsPositions[1];
+            sendingPosition.PlayersPositions = playersPositions[0];
             var datas = JSON.stringify(sendingPosition);
 
             //console.log(datas);
@@ -160,9 +162,6 @@ io.on('connection', function(socket) {
         }
     });
 
-    // socket.on('ball_position', function(data){
-    //     io.emit('ball_position', data);
-    // });
 
 });
 
