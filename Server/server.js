@@ -119,6 +119,10 @@ io.on('connection', function(socket) {
         }
     });
 
+    socket.on('ball_position', function(data)){
+        io.emit('ball_position', data);
+    }
+
 });
 
 server.listen(9090, function() {
