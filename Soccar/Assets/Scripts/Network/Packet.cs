@@ -27,4 +27,10 @@ public class Packet
             Position = new Vector3(0, 0, 0);
         }
     }
+
+    // 공의 위치
+    public class BallsPosition
+    {
+        public Vector3[] Positions;
+    }
 }
