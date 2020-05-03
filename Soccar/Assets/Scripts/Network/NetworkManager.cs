@@ -18,6 +18,7 @@ public static class NetworkManager
 
     /* 서버로 전송할 패킷 */
     public static Packet.PersonalPosition MyPosition { get; set; }
+    public static Packet.BallsPosition BallsPosition { get; set; }
 
     /* 서버로부터의 Ack 확인 */
     public static string GameStart { get; private set; }
@@ -75,6 +76,19 @@ public static class NetworkManager
 
             Packet.PlayersPosition playersPosition = JsonUtility.FromJson<Packet.PlayersPosition>(data);
             PlayerController.Move(playersPosition, PlayerController.Absolute);  // type = 0 -> relative
+        });
+
+        _socket.On("ball_position", (string data) =>
+        {
+            data = data.Replace("\\", "");
+            data = data.Substring(1, data.Length - 2);
+
+            Packet.BallsPosition ballsPosition = JsonUtility.FromJson<Packet.BallsPosition>(data);
+            BallController[] ballControllers = GameLauncher.BallControllers;
+            for(int i = 0; i < ballsPosition.Positions.Length; i++)
+            {
+                ballControllers[i].Move(ballsPosition.Positions[i]);
+            }
         });
     }
 

@@ -9,9 +9,20 @@ public class GameLauncher : MonoBehaviour
     }
 
     [SerializeField]
-    GameObject _waitingText;
+    private GameObject _waitingText;
 
     private int _frameCount;
+
+    [SerializeField]
+    private GameObject[] _balls;
+    private static BallController[] _ballControllers;
+    public static BallController[] BallControllers
+    {
+        get
+        {
+            return _ballControllers;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +30,9 @@ public class GameLauncher : MonoBehaviour
         PlayerController.SetPlayers();
         NetworkManager.SetWebSocket();
         _frameCount = 0;
+
+        _ballControllers[0] = _balls[0].GetComponent<BallController>();
+        _ballControllers[1] = _balls[1].GetComponent<BallController>();
     }
 
     // Update is called once per frame
@@ -65,6 +79,16 @@ public class GameLauncher : MonoBehaviour
          * 평균 RTT가 가장 짧은 클라이언트를 메인 시뮬레이터로 사용할 예정 */
             PlayerController.InputRelativePosition();
             PlayerController.InputAbsolutePostion();
+
+            // 호스트만 공의 위치 전송
+            if(PlayerController.PlayerIndex == 0)
+            {
+                for(int i = 0; i < _balls.Length; i++)
+                {
+                    bool isSend = i == _balls.Length - 1 ? true : false;
+                    _ballControllers[i].SendBallPosition(i, isSend);
+                }
+            }
         }
     }
 
