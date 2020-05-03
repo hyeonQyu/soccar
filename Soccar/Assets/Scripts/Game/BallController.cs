@@ -93,9 +93,4 @@ public class BallController : MonoBehaviour
             transform.position = new Vector3(Random.Range(-25f, 25f), 30, Random.Range(-25f, 2f));
         }
     }
-
-    public void Move(Vector3 position)
-    {
-        transform.position = position;
-    }
 }

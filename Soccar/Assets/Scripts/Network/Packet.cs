@@ -32,5 +32,10 @@ public class Packet
     public class BallsPosition
     {
         public Vector3[] Positions;
+
+        public BallsPosition()
+        {
+            Positions = new Vector3[2];
+        }
     }
 }

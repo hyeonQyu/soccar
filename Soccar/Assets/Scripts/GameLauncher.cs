@@ -13,16 +13,7 @@ public class GameLauncher : MonoBehaviour
 
     private int _frameCount;
 
-    [SerializeField]
-    private GameObject[] _balls;
-    private static BallController[] _ballControllers;
-    public static BallController[] BallControllers
-    {
-        get
-        {
-            return _ballControllers;
-        }
-    }
+    public static GameObject[] Balls = new GameObject[2];
 
     // Start is called before the first frame update
     void Start()
@@ -31,8 +22,8 @@ public class GameLauncher : MonoBehaviour
         NetworkManager.SetWebSocket();
         _frameCount = 0;
 
-        _ballControllers[0] = _balls[0].GetComponent<BallController>();
-        _ballControllers[1] = _balls[1].GetComponent<BallController>();
+        Balls[0] = GameObject.Find("Ball1");
+        Balls[1] = GameObject.Find("Ball2");
     }
 
     // Update is called once per frame
@@ -83,11 +74,12 @@ public class GameLauncher : MonoBehaviour
             // 호스트만 공의 위치 전송
             if(PlayerController.PlayerIndex == 0)
             {
-                for(int i = 0; i < _balls.Length; i++)
+                for(int i = 0; i < Balls.Length; i++)
                 {
-                    NetworkManager.BallsPosition.Positions[i] = _balls[i].transform.position;
+                    NetworkManager.BallsPosition.Positions[i] = Balls[i].transform.position;
                 }
-                NetworkManager.Send("ball_position", NetworkManager.BallsPosition);
+                Debug.Log("공 전송");
+                NetworkManager.Send<Packet.BallsPosition>("ball_position", NetworkManager.BallsPosition);
             }
         }
     }

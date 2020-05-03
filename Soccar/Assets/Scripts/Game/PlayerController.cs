@@ -166,14 +166,14 @@ public static class PlayerController
             _isMoved = false;
         }
 
-        NetworkManager.Send("relative_position", NetworkManager.MyPosition);
+        NetworkManager.Send<Packet.PersonalPosition>("relative_position", NetworkManager.MyPosition);
     }
 
     public static void InputAbsolutePostion()
     {
         Packet.PersonalPosition myPosition = new Packet.PersonalPosition(PlayerIndex);
         myPosition.Position = Players[PlayerIndex].transform.position;
-        NetworkManager.Send("absolute_position", myPosition);
+        NetworkManager.Send<Packet.PersonalPosition>("absolute_position", myPosition);
     }
 
     // 자신의 캐릭터를 움직임

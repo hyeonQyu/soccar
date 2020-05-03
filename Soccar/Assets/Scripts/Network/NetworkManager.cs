@@ -32,6 +32,8 @@ public static class NetworkManager
 
         _socket = Socket.Connect(Url);
 
+        BallsPosition = new Packet.BallsPosition();
+
         /* 서버로부터 메시지 수신 */
         _socket.On("start_button", (string data) =>
         {
@@ -71,8 +73,10 @@ public static class NetworkManager
 
         _socket.On("absolute_position", (string data) =>
         {
+            Debug.Log("absolute_position1 " + data);
             data = data.Replace("\\", "");
             data = data.Substring(1, data.Length - 2);
+            Debug.Log("absolute_position2 " + data);
 
             Packet.PlayersPosition playersPosition = JsonUtility.FromJson<Packet.PlayersPosition>(data);
             PlayerController.Move(playersPosition, PlayerController.Absolute);  // type = 0 -> relative
@@ -80,14 +84,15 @@ public static class NetworkManager
 
         _socket.On("ball_position", (string data) =>
         {
-            data = data.Replace("\\", "");
-            data = data.Substring(1, data.Length - 2);
+            //Debug.Log("ball_position1 " + data);
+            //data = data.Replace("\\", "");
+            //data = data.Substring(1, data.Length - 2);
+            //Debug.Log("ball_position2 " + data);
 
             Packet.BallsPosition ballsPosition = JsonUtility.FromJson<Packet.BallsPosition>(data);
-            BallController[] ballControllers = GameLauncher.BallControllers;
             for(int i = 0; i < ballsPosition.Positions.Length; i++)
             {
-                ballControllers[i].Move(ballsPosition.Positions[i]);
+                GameLauncher.Balls[i].transform.position = ballsPosition.Positions[i];
             }
         });
     }
@@ -98,11 +103,11 @@ public static class NetworkManager
     }
 
     // 구조체 전송
-    public static void Send(string header, object body)
+    public static void Send<T>(string header, object body)
     {
-        Packet.PersonalPosition packetBody = (Packet.PersonalPosition)body;
+        T packetBody = (T)body;
         // 현재 시스템 시간 전송
-        packetBody.Timestamp = GetTimestamp();
+        //packetBody.Timestamp = GetTimestamp();
         string json = JsonUtility.ToJson(packetBody);
         _socket.EmitJson(header, json);
     }
