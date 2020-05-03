@@ -44,6 +44,21 @@ playersPositions[1].Positions[1].x = -0.09;
 playersPositions[1].Positions[1].y = 3;
 playersPositions[1].Positions[1].z = -8.6;
 
+// 2개의 공 절대위치를 보관
+var ballsPositions = [];
+for(var i = 0; i < 2; i++){
+    var position = new Object();
+    position.x = 18.2 + i * 5;
+    position.y = 33.3;
+    position.z = -18.7;
+
+    ballsPositions.push(position);
+}
+
+var sendingPosition = new Object();
+sendingPosition.BallPositions = ballsPositions;
+sendingPosition.PlayerPositions = playersPositions[1];
+
 app.get('/', function(req, res) {
 
 });
@@ -83,10 +98,51 @@ io.on('connection', function(socket) {
         playersPositions[0].Positions[data.PlayerIndex].x += data.Position.x;
         playersPositions[0].Positions[data.PlayerIndex].y += data.Position.y;
         playersPositions[0].Positions[data.PlayerIndex].z += data.Position.z;
+    });
 
-        // 일정 시간이 되면 각 플레이어들에게 서버에서 모은 모든 플레이어들의 위치를 전송
-        if(Date.now() - timestamp[0] > 20){
-            var datas = JSON.stringify(playersPositions[0]);
+    socket.on('absolute_position', function(data){
+        if(isFirst[1]){
+            timestamp[1] = Date.now();
+            isFirst[1] = false;
+        }
+
+        //  슈퍼클라이언트에게서 공의 절대위치 수신
+        if(data.PlayerIndex == 0){
+            for(var i = 0; i < 2; i++){
+                ballsPositions[i].x = data.BallPositions[i].x;
+                ballsPositions[i].y = data.BallPositions[i].y;
+                ballsPositions[i].z = data.BallPositions[i].z;
+            }
+        }
+
+        playersPositions[1].Positions[data.PlayerIndex].x = data.PlayerPosition.x;
+        playersPositions[1].Positions[data.PlayerIndex].y = data.PlayerPosition.y;
+        playersPositions[1].Positions[data.PlayerIndex].z = data.PlayerPosition.z;
+
+        var timeDiff1 = Date.now() - timestamp[0];
+        var timeDiff2 = Date.now() - timestamp[1];
+
+        // 500ms마다 절대 좌표 + 공
+        if(timeDiff2 > 500){
+            sendingPosition.BallPositions[0] = ballsPositions[0];
+            sendingPosition.BallPositions[1] = ballsPositions[1];
+            sendingPosition.PlayersPositions = playersPositions[1];
+            var datas = JSON.stringify(sendingPosition);
+            console.log('합친거' + datas);
+
+            io.emit('absolute_position', datas);
+            for(var i = 0; i < totalPlayer; i++){
+                playersPositions[0].Positions[i].x = 0;
+                playersPositions[0].Positions[i].y = 0;
+                playersPositions[0].Positions[i].z = 0;
+            }
+        }
+        // 20ms마다 상대 좌표 + 공 전송
+        else if(timeDiff1 > 20){
+            sendingPosition.BallPositions[0] = ballsPositions[0];
+            sendingPosition.BallPositions[1] = ballsPositions[1];
+            sendingPosition.PlayersPositions = playersPositions[0];
+            var datas = JSON.stringify(sendingPosition);
 
             //console.log(datas);
             io.emit('relative_position', datas);
@@ -98,30 +154,14 @@ io.on('connection', function(socket) {
 
             timestamp[0] = Date.now();
         }
-
-    });
-
-    socket.on('absolute_position', function(data){
-        if(isFirst[1]){
-            timestamp[1] = Date.now();
-            isFirst[1] = false;
-        }
-
-        playersPositions[1].Positions[data.PlayerIndex].x = data.Position.x;
-        playersPositions[1].Positions[data.PlayerIndex].y = data.Position.y;
-        playersPositions[1].Positions[data.PlayerIndex].z = data.Position.z;
-
-        // 일정 시간이 되면 모든 플레이어의 위치를 서버에서 보관한 위치로 맞춤
-        if(Date.now() - timestamp[1] > 500){
+        // 500ms마다 절대 좌표 전송
+        else if(timeDiff2 > 500){
             var datas = JSON.stringify(playersPositions[1]);
             io.emit('absolute_position', datas);
             timestamp[1] = Date.now();
         }
     });
 
-    socket.on('ball_position', function(data){
-        io.emit('ball_position', data);
-    });
 
 });
 
