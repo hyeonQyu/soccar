@@ -83,14 +83,14 @@ public class NetworkManager
             GameLauncher.RoutineScheduler.StartMoving(receivingPositions);
             //PlayerController.Move(receivingPositions.PlayerPositions, PlayerController.Absolute);
 
-            if(PlayerController.PlayerIndex != 0)
-            {
-                // 공 이동
-                for(int i = 0; i < 2; i++)
-                {
-                    GameLauncher.Balls[i].transform.position = receivingPositions.BallPositions[i];
-                }
-            }
+            //if(PlayerController.PlayerIndex != 0)
+            //{
+            //    // 공 이동
+            //    for(int i = 0; i < 2; i++)
+            //    {
+            //        GameLauncher.Balls[i].transform.position = receivingPositions.BallPositions[i];
+            //    }
+            //}
         });
     }
 
