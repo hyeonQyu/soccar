@@ -6,8 +6,8 @@ public static class NetworkManager
 {
     /* 서버 접속에 관한 요소 */
     //private const string Url = "http://10.21.20.20:9090";
-#if UNITY_EDITOR
-    private const string Url = "http://10.21.20.15:9090/";
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
+    private const string Url = "http://15.164.220.253:9090/";
 #elif UNITY_WEBGL
     private const string Url = "http://15.164.220.253:9090/";
 #endif
@@ -104,7 +104,7 @@ public static class NetworkManager
         // 현재 시스템 시간 전송
         //packetBody.Timestamp = GetTimestamp();
         string json = JsonUtility.ToJson(packetBody);
-        Debug.Log("json" + json);
+        //Debug.Log("json " + json);
         _socket.EmitJson(header, json);
     }
 
