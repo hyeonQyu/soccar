@@ -2,6 +2,8 @@
 
 public class GameLauncher : MonoBehaviour
 {
+    private NetworkManager _networkManager = new NetworkManager();
+
     private static bool _isClickedStart;
     public static bool IsClickedStart
     {
@@ -21,7 +23,7 @@ public class GameLauncher : MonoBehaviour
     void Start()
     {
         PlayerController.SetPlayers();
-        NetworkManager.SetWebSocket();
+        _networkManager.SetWebSocket();
         _frameCount = 0;
 
         Balls[0] = GameObject.Find("Ball1");
