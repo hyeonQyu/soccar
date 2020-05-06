@@ -208,20 +208,20 @@ public static class PlayerController
         //Vector3 myMovingPosition = playersPositionFromServer.Positions[_playerIndex];
         //Players[_playerIndex].transform.position = myMovingPosition;
 
-        if (type == Relative)
+        if(type == Relative)
         {
             // 원래는 모두를 움직여주어야 함
-            for (int i = 0; i < 4; i++)
+            for(int i = 0; i < 4; i++)
             {
-                if (i == _playerIndex)
+                if(i == _playerIndex)
                     continue;
                 Vector3 movingPosition = playersPositionsFromServer[i];
                 Players[i].transform.Translate(movingPosition);
             }
         }
-        else if (type == Absolute)
+        else if(type == Absolute)
         {
-            for (int i = 0; i < 4; i++)
+            for(int i = 0; i < 4; i++)
             {
                 Vector3 movingPosition = playersPositionsFromServer[i];
                 Vector3.Lerp(Players[i].transform.position, movingPosition, 1);

@@ -2,7 +2,7 @@
 using UnityEngine;
 using socket.io;
 
-public static class NetworkManager
+public class NetworkManager
 {
     /* 서버 접속에 관한 요소 */
     //private const string Url = "http://10.21.20.20:9090";
@@ -24,8 +24,10 @@ public static class NetworkManager
     public static string GameStart { get; private set; }
     public static string RequestPlayerIndex { get; set; }
 
+    private RoutineScheduler _scheduler;
+
     // Start 함수에서 호출되어야 함
-    public static void SetWebSocket()
+    public void SetWebSocket()
     {
         GameStart = "";
         RequestPlayerIndex = "";
@@ -79,7 +81,9 @@ public static class NetworkManager
 
             // 캐릭터 이동
             Packet.ReceivingPositions receivingPositions = JsonUtility.FromJson<Packet.ReceivingPositions>(data);
-            PlayerController.Move(receivingPositions.PlayerPositions, PlayerController.Absolute);
+            _scheduler.StopPlayerMoving();
+            _scheduler.StartPlayerMoving(receivingPositions);
+            //PlayerController.Move(receivingPositions.PlayerPositions, PlayerController.Absolute);
 
             if(PlayerController.PlayerIndex != 0)
             {
