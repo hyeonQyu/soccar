@@ -79,8 +79,8 @@ public class NetworkManager
 
             // 캐릭터 이동
             Packet.ReceivingPositions receivingPositions = JsonUtility.FromJson<Packet.ReceivingPositions>(data);
-            GameLauncher.RoutineScheduler.StopPlayerMoving();
-            GameLauncher.RoutineScheduler.StartPlayerMoving(receivingPositions);
+            GameLauncher.RoutineScheduler.StopMoving();
+            GameLauncher.RoutineScheduler.StartMoving(receivingPositions);
             //PlayerController.Move(receivingPositions.PlayerPositions, PlayerController.Absolute);
 
             if(PlayerController.PlayerIndex != 0)
