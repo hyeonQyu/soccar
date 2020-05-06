@@ -156,9 +156,10 @@ public static class PlayerController
 
         if (_isMoved)
         {
-            // 움직임 변경
+            /* 움직임 변경      Lerp
             NetworkManager.MyPosition.Position = myPosition;
             NetworkManager.Send<Packet.PersonalPosition>("relative_position", NetworkManager.MyPosition);
+            */
 
             // 자신의 캐릭터를 움직임
             Move(myPosition);

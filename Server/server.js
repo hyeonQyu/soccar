@@ -129,6 +129,7 @@ io.on('connection', function(socket) {
             }
             timestamp[1] = Date.now();
         }
+        /* Lerp
         // 20ms마다 상대 좌표 + 공 전송
         else if(timeDiff1 > 20){
             sendingPosition.BallPositions = ballsPositions;
@@ -145,6 +146,7 @@ io.on('connection', function(socket) {
 
             timestamp[0] = Date.now();
         }
+        */
     });
 
 
