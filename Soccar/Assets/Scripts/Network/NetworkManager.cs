@@ -24,8 +24,6 @@ public class NetworkManager
     public static string GameStart { get; private set; }
     public static string RequestPlayerIndex { get; set; }
 
-    private RoutineScheduler _scheduler;
-
     // Start 함수에서 호출되어야 함
     public void SetWebSocket()
     {
@@ -81,8 +79,8 @@ public class NetworkManager
 
             // 캐릭터 이동
             Packet.ReceivingPositions receivingPositions = JsonUtility.FromJson<Packet.ReceivingPositions>(data);
-            _scheduler.StopPlayerMoving();
-            _scheduler.StartPlayerMoving(receivingPositions);
+            GameLauncher.RoutineScheduler.StopPlayerMoving();
+            GameLauncher.RoutineScheduler.StartPlayerMoving(receivingPositions);
             //PlayerController.Move(receivingPositions.PlayerPositions, PlayerController.Absolute);
 
             if(PlayerController.PlayerIndex != 0)

@@ -5073,6 +5073,7 @@ GameObject:
   - component: {fileID: 981798737}
   - component: {fileID: 981798736}
   - component: {fileID: 981798738}
+  - component: {fileID: 981798739}
   m_Layer: 0
   m_Name: Game Launcher
   m_TagString: Untagged
@@ -5093,9 +5094,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _waitingText: {fileID: 0}
-  _balls:
-  - {fileID: 1834496971}
-  - {fileID: 1055781271}
 --- !u!4 &981798737
 Transform:
   m_ObjectHideFlags: 0
@@ -5120,6 +5118,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9911f0a9214bae7438c7f043c2ef397c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &981798739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981798735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 824bdc73495de17419fe90b6b175000c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1001824858

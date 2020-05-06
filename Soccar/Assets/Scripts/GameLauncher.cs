@@ -3,6 +3,7 @@
 public class GameLauncher : MonoBehaviour
 {
     private NetworkManager _networkManager = new NetworkManager();
+    public static RoutineScheduler RoutineScheduler { get; private set; }
 
     private static bool _isClickedStart;
     public static bool IsClickedStart
@@ -22,6 +23,7 @@ public class GameLauncher : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        RoutineScheduler = GetComponent<RoutineScheduler>();
         PlayerController.SetPlayers();
         _networkManager.SetWebSocket();
         _frameCount = 0;
