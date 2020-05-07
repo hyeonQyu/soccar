@@ -77,20 +77,11 @@ public class NetworkManager
             data = data.Replace("\\", "");
             data = data.Substring(1, data.Length - 2);
 
-            // 캐릭터 이동
+            // 캐릭터 및 공 이동
             Packet.ReceivingPositions receivingPositions = JsonUtility.FromJson<Packet.ReceivingPositions>(data);
             GameLauncher.RoutineScheduler.StopMoving();
             GameLauncher.RoutineScheduler.StartMoving(receivingPositions);
             //PlayerController.Move(receivingPositions.PlayerPositions, PlayerController.Absolute);
-
-            //if(PlayerController.PlayerIndex != 0)
-            //{
-            //    // 공 이동
-            //    for(int i = 0; i < 2; i++)
-            //    {
-            //        GameLauncher.Balls[i].transform.position = receivingPositions.BallPositions[i];
-            //    }
-            //}
         });
     }
 

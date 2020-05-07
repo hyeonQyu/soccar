@@ -11,7 +11,8 @@ public static class PlayerController
     // 전체 플레이어
     public static GameObject[] Players { get; set; }
     // 현재 컨트롤하는 플레이어
-    public static GameObject Player { get; set; }
+    public static GameObject Player { get; private set; }
+    public static GameObject AlterEgo { get; private set; }
 
     // 속도
     private static float _walkSpeed;
@@ -50,11 +51,14 @@ public static class PlayerController
         Players[1] = GameObject.Find("Player2");
         Players[2] = GameObject.Find("Player3");
         Players[3] = GameObject.Find("Player4");
+
+        AlterEgo = GameObject.Find("Alter Ego");
     }
 
     public static void InitializePlayer()
     {
         Player = Players[_playerIndex];
+        AlterEgo.transform.position = Player.transform.position;
         Player.GetComponent<PlayerInformation>().ID = ButtonControl.InputID.text;
 
         _isPlayersInitialized = true;
@@ -64,8 +68,7 @@ public static class PlayerController
     {
         // 상대 좌표
         Vector3 myPosition = new Vector3(0, 0, 0);
-        // 절대 좌표
-        //Vector3 myPosition = Player.transform.position;
+
         NetworkManager.MyPosition.Position = myPosition;
 
         if (Input.GetKey(KeyCode.LeftShift))
@@ -161,7 +164,7 @@ public static class PlayerController
             NetworkManager.Send<Packet.PersonalPosition>("relative_position", NetworkManager.MyPosition);
             */
 
-            // 자신의 캐릭터를 움직임
+            // 자신의 분신을 움직임
             Move(myPosition);
 
             _isMoved = false;
@@ -174,33 +177,20 @@ public static class PlayerController
     public static void InputAbsolutePostion()
     {
         Packet.SendingAbsolutePositions sendingAbsolutePositions = new Packet.SendingAbsolutePositions(PlayerIndex);
-        sendingAbsolutePositions.PlayerPosition = Players[PlayerIndex].transform.position;
+        sendingAbsolutePositions.PlayerPosition = AlterEgo.transform.position;
+        //sendingAbsolutePositions.PlayerPosition = Players[PlayerIndex].transform.position;
         sendingAbsolutePositions.BallPositions[0] = GameLauncher.Balls[0].transform.position;
         sendingAbsolutePositions.BallPositions[1] = GameLauncher.Balls[1].transform.position;
 
         NetworkManager.Send<Packet.SendingAbsolutePositions>("absolute_position", sendingAbsolutePositions);
     }
 
-    // 자신의 캐릭터를 움직임
+    // 자신의 분신을 움직임
     private static void Move(Vector3 movingPosition)
     {
-        Players[_playerIndex].transform.Translate(movingPosition);
-        //Players[_playerIndex].transform.position = movingPosition;
+        AlterEgo.transform.Translate(movingPosition);
+        //Players[_playerIndex].transform.Translate(movingPosition);
     }
-
-    //// 서버로부터 타 플레이어의 캐릭터 움직임을 전달받아 움직임
-    //public static void Move(Packet.PersonalPosition playerMotionFromServer)
-    //{
-    //    Vector3 movingPosition = playerMotionFromServer.Position;
-    //    //Vector3 movingPosition = new Vector3(playerMotionFromServer.X, playerMotionFromServer.Y, playerMotionFromServer.Z);
-    //    //상대
-    //    Players[playerMotionFromServer.PlayerIndex].transform.Translate(movingPosition);
-    //    //절대
-    //    //Players[playerMotionFromServer.PlayerIndex].transform.position = movingPosition;
-    //    //Lerp보간
-    //    //Vector3 currentPosition = Players[playerMotionFromServer.PlayerIndex].transform.position;
-    //    //Players[playerMotionFromServer.PlayerIndex].transform.position = Vector3.Lerp(currentPosition, movingPosition, Time.deltaTime * 30f);
-    //}
 
     // 서버로부터 모든 플레이어의 위치를 받아 한꺼번에 움직임
     public static void Move(Vector3[] playersPositionsFromServer, int type)

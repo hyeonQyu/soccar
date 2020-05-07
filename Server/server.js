@@ -30,7 +30,7 @@ for(var i = 0; i < 2; i++){
     for(var j = 0; j < totalPlayer; j++){
         var position = new Object();
         position.x = j * 5;
-        position.y = 10;
+        position.y = 3.5;
         position.z = j * 5;
 
         positions.push(position);
@@ -96,6 +96,12 @@ io.on('connection', function(socket) {
         if(isFirst[1]){
             timestamp[1] = Date.now();
             isFirst[1] = false;
+
+            for(var i = 0; i < totalPlayer; i++){
+                playersPositions[1].Positions[i].x = j * 5;
+                playersPositions[1].Positions[i].y = 3.5;
+                playersPositions[1].Positions[i].z = j * 5;
+            }
         }
 
         //  슈퍼클라이언트에게서 공의 절대위치 수신
@@ -114,8 +120,8 @@ io.on('connection', function(socket) {
         var timeDiff1 = Date.now() - timestamp[0];
         var timeDiff2 = Date.now() - timestamp[1];
 
-        // 500ms마다 절대 좌표 + 공
-        if(timeDiff2 >20){
+        // 20ms마다 절대 좌표 + 공
+        if(timeDiff2 > 20){
             sendingPosition.BallPositions = ballsPositions;
             sendingPosition.PlayerPositions = playersPositions[1].Positions;
             var datas = JSON.stringify(sendingPosition);
