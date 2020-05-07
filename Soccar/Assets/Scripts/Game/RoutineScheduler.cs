@@ -43,7 +43,7 @@ public class RoutineScheduler : MonoBehaviour
                 PlayerController.Players[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
             }
 
-            yield return new WaitForSeconds(0.005f);
+            yield return new WaitForSeconds(0.002f);
         }
     }
 
@@ -60,7 +60,7 @@ public class RoutineScheduler : MonoBehaviour
                 GameLauncher.Balls[i].transform.position = Vector3.Lerp(prePositions[i], destPositions[i], t);
             }
 
-            yield return new WaitForSeconds(0.005f);
+            yield return new WaitForSeconds(0.002f);
         }
     }
 

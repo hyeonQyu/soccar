@@ -115,7 +115,7 @@ io.on('connection', function(socket) {
         var timeDiff2 = Date.now() - timestamp[1];
 
         // 500ms마다 절대 좌표 + 공
-        if(timeDiff2 >2000){
+        if(timeDiff2 >20){
             sendingPosition.BallPositions = ballsPositions;
             sendingPosition.PlayerPositions = playersPositions[1].Positions;
             var datas = JSON.stringify(sendingPosition);
