@@ -2,7 +2,7 @@
 
 public class GameLauncher : MonoBehaviour
 {
-    private NetworkManager _networkManager = new NetworkManager();
+    private NetworkManager _networkManager;
     public static RoutineScheduler RoutineScheduler { get; private set; }
 
     private static bool _isClickedStart;
@@ -25,7 +25,7 @@ public class GameLauncher : MonoBehaviour
     {
         RoutineScheduler = GetComponent<RoutineScheduler>();
         PlayerController.SetPlayers();
-        _networkManager.SetWebSocket();
+        _networkManager = new NetworkManager(true);
         _frameCount = 0;
 
         Balls[0] = GameObject.Find("Ball1");

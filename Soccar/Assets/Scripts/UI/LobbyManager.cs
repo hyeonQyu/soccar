@@ -14,7 +14,11 @@ public class LobbyManager : MonoBehaviour
     private Image _pressAnyKey;
 
     public static bool IsLogoDestroyed { set; get; }
-    private bool _isGameStart;
+    private bool _isOnLobby;
+
+    private NetworkManager _networkManager;
+
+    public static string PlayerId { get; set; }
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +29,8 @@ public class LobbyManager : MonoBehaviour
         // Press Any Key 크기 조정
         _pressAnyKey.gameObject.transform.localPosition = new Vector3(0, Screen.height / -2.3f, 0);
         _pressAnyKey.gameObject.transform.localScale = new Vector3(Screen.height / 197.6f, Screen.height / 988f, 1);
+
+        _networkManager = new NetworkManager(false);
     }
 
     // Update is called once per frame
@@ -41,15 +47,16 @@ public class LobbyManager : MonoBehaviour
         }
         catch(Exception e) { }
 
-        // 아무 키나 눌르면 Main Screen이 사라지고 게임 시작
-        if(IsLogoDestroyed && Input.anyKeyDown && !_isGameStart)
+        // 아무 키나 누르면 Main Screen이 사라지고 로그인 화면으로 이동
+        if(IsLogoDestroyed && Input.anyKeyDown && !_isOnLobby)
         {
             Destroy(_pressAnyKey.gameObject);
             Animator mainScreenAnimator = _mainScreen.GetComponent<Animator>();
-            mainScreenAnimator.SetBool("isStart", true);
-            _isGameStart = true;
+            mainScreenAnimator.SetBool("isDestroy", true);
+            _isOnLobby = true;
         }
 
-        /* 게임 시작 */
+        /* 로비 */
+        
     }
 }
