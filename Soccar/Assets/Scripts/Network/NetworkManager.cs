@@ -24,8 +24,11 @@ public class NetworkManager
     public static string GameStart { get; private set; }
     public static string RequestPlayerIndex { get; set; }
 
-    public NetworkManager(bool isGameScene)
+    RoomManager _roomManager;
+
+    public NetworkManager(bool isGameScene, RoomManager roomManager = null)
     {
+        _roomManager = roomManager;
         SetWebSocket(isGameScene);
     }
 
@@ -62,8 +65,7 @@ public class NetworkManager
                 //Debug.Log("FRAME " + GameLauncher.Frame + " 상대좌표");
                 //long timestamp = GetTimestamp();
 
-                data = data.Replace("\\", "");
-                data = data.Substring(1, data.Length - 2);
+                data = ToJsonFormat(data);
 
                 // 캐릭터 이동
                 Packet.ReceivingPositions receivingPositions = JsonUtility.FromJson<Packet.ReceivingPositions>(data);
@@ -82,8 +84,7 @@ public class NetworkManager
             // 절대 좌표 + 공
             _socket.On("absolute_position", (string data) =>
             {
-                data = data.Replace("\\", "");
-                data = data.Substring(1, data.Length - 2);
+                data = ToJsonFormat(data);
 
                 // 캐릭터 및 공 이동
                 Packet.ReceivingPositions receivingPositions = JsonUtility.FromJson<Packet.ReceivingPositions>(data);
@@ -99,7 +100,10 @@ public class NetworkManager
             /* 서버로부터 메시지 수신 */
             _socket.On("room_list", (string data) =>
             {
-                
+                data = ToJsonFormat(data);
+
+                Packet.ReceivingRoomList receivingRoomList = JsonUtility.FromJson<Packet.ReceivingRoomList>(data);
+                _roomManager.SetRoomInfo(receivingRoomList);
             });
         }  
     }
@@ -124,6 +128,11 @@ public class NetworkManager
     {
         TimeSpan timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
         return (long)(timeSpan.TotalSeconds * 1000);
+    }
+
+    private string ToJsonFormat(string data)
+    {
+        return data.Replace("\\", "").Substring(1, data.Length - 2);
     }
 
     public static void Destroy()
