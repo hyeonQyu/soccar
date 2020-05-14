@@ -1223,7 +1223,7 @@ GameObject:
   - component: {fileID: 677702938}
   - component: {fileID: 677702937}
   m_Layer: 5
-  m_Name: Room0 (2)
+  m_Name: Room2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1592,7 +1592,7 @@ GameObject:
   - component: {fileID: 744193835}
   - component: {fileID: 744193834}
   m_Layer: 5
-  m_Name: Room0 (4)
+  m_Name: Room4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2986,7 +2986,7 @@ GameObject:
   - component: {fileID: 1438832210}
   - component: {fileID: 1438832209}
   m_Layer: 5
-  m_Name: Room0 (1)
+  m_Name: Room1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4449,7 +4449,7 @@ GameObject:
   - component: {fileID: 2126459003}
   - component: {fileID: 2126459002}
   m_Layer: 5
-  m_Name: Room0 (3)
+  m_Name: Room3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

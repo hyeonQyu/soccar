@@ -47,18 +47,20 @@ public class ButtonController : MonoBehaviour
     public void OnClickCreateRoom()
     {
         GameObject createRoomPanel = GameObject.Find("Create Room Panel");
+        InputField inputRoomName = createRoomPanel.transform.Find("InputField").GetComponent<InputField>();
 
         // 방만들기 패널 활성화(애니메이션)
+        inputRoomName.text = "";
         createRoomPanel.GetComponent<Animator>().Play("Create Room Panel");
     }
 
     // 방만들기 패널 안의 Cancel 버튼
     public void OnClickCreateRoomCancel()
     {
-        GameObject createRoomPanel = GameObject.Find("Create Room Panel");
+        GameObject createRoomPanel = GameObject.Find("Create Room Panel");     
 
         // 방만들기 패널 비활성화(애니메이션)
-        createRoomPanel.GetComponent<Animator>().Play("Destroy Room Panel");
+        createRoomPanel.GetComponent<Animator>().Play("Destroy Room Panel");  
     }
 
     public void OnClickEnterRoom()

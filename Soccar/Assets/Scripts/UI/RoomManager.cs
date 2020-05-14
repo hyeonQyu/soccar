@@ -63,7 +63,7 @@ public class RoomManager
 
             index.text = (i + 1).ToString();
             name.text = Rooms[i].Name;
-            headcount.text = Rooms[i].Headcount.ToString();
+            headcount.text = Rooms[i].Headcount.ToString() + "/6";
         }
     }
 }

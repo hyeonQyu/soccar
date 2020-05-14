@@ -7,7 +7,7 @@ public class NetworkManager
     /* 서버 접속에 관한 요소 */
     //private const string Url = "http://10.21.20.20:9090";
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-    private const string Url = "http://10.21.20.11:9090/";
+    private const string Url = "http://127.0.0.1:9090/";
 #elif UNITY_WEBGL
     private const string Url = "http://15.164.220.253:9090/";
 #endif
@@ -101,9 +101,7 @@ public class NetworkManager
             _socket.On("room_list", (string data) =>
             {
                 data = ToJsonFormat(data);
-                Debug.Log(data);
                 Packet.ReceivingRoomList receivingRoomList = JsonUtility.FromJson<Packet.ReceivingRoomList>(data);
-                Debug.Log(receivingRoomList.RoomNames[0] + " " + receivingRoomList.Headcounts[0]);
                 _roomManager.SetRoomInfo(receivingRoomList);
             });
         }  
