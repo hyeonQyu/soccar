@@ -41,7 +41,7 @@ public class Packet
     }
 
     // 공 + 절대좌표 전송
-    public class SendingAbsolutePositions 
+    public class SendingAbsolutePositions
     {
         public Vector3[] BallPositions;
         public int PlayerIndex;
@@ -76,6 +76,19 @@ public class Packet
 
             //BallsPosition = new BallsPosition();
             //PlayersPosition = new PlayersPosition();
+        }
+    }
+
+    // 대기중인 방 정보 수신
+    public class ReceivingRoomList
+    {
+        public string[] RoomNames;
+        public int[] Headcounts;
+
+        public ReceivingRoomList()
+        {
+            RoomNames = new string[RoomManager.MaxRoomCount];
+            Headcounts = new int[RoomManager.MaxRoomCount];
         }
     }
 }
