@@ -1,8 +1,11 @@
 fileFormatVersion: 2
-guid: 90dd7750b4ab9ea4eba59a4374af994a
+guid: e81c58307d3ae3145a86ee4dca0e6a43
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable:
+  - first:
+      74: 49431982584873514
+    second: Armature|_T_Pose
   - first:
       74: -8945691123924629249
     second: Armature|Idle
