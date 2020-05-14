@@ -48,15 +48,6 @@ public class RoomManager
         {
             GameObject room = _roomList.transform.Find("Room" + i).gameObject;
 
-            // 위치 및 크기만 재조정
-            if(!isUpdate)
-            {
-                room.transform.localPosition = new Vector3(0, -Screen.height / (MaxRoomCount + 1) * (i + 1), 0);
-                room.transform.localScale = new Vector3(Screen.height / 376f, Screen.height / 376f, 1);
-
-                continue;
-            }
-
             Text index = room.transform.Find("Room Index").gameObject.GetComponent<Text>();
             Text name = room.transform.Find("Room Name").gameObject.GetComponent<Text>();
             Text headcount = room.transform.Find("Room Headcount").gameObject.GetComponent<Text>();

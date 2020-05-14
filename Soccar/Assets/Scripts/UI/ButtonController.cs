@@ -31,4 +31,29 @@ public class ButtonController : MonoBehaviour
         Destroy(inputIdField.gameObject);
         Destroy(loginButton.gameObject);
     }
+
+    public void OnClickRefresh()
+    {
+        try
+        {
+            NetworkManager.Send("room_list", LobbyManager.PlayerId);
+        }
+        catch(NullReferenceException e)
+        {
+            Debug.LogError("OnClickRefresh: Send 실패");
+        }
+    }
+
+    public void OnClickCreateRoom()
+    {
+        GameObject createRoomPanel = GameObject.Find("Create Room Panel");
+        
+        // 방만들기 패널 활성화(애니메이션)
+        createRoomPanel.SetActive(true);
+    }
+
+    public void OnClickEnterRoom()
+    {
+
+    }
 }
