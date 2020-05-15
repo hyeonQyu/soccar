@@ -2,11 +2,7 @@ var port = Number(process.argv.slice(2));
 const GAME_START = 'start';
 const REQUEST_PLAYER_INDEX = 'req';
 
-var io = require('socket.io');
-
-io.listen(port, function() {
-    console.log();
-});
+var io = require('socket.io').listen(port);
 
 const totalPlayer = 4;
 var playerIndex = 0;
@@ -53,7 +49,7 @@ sendingPosition.BallPositions = ballsPositions;
 
 io.on('connection', function(socket) {
 
-    console.log("Connect");
+    console.log("Connect in child");
 
     socket.on('start_button', function(data) {
         console.log('start_button ' + data);
