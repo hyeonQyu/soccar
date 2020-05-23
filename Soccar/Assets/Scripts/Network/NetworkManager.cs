@@ -25,10 +25,12 @@ public class NetworkManager
     public static string RequestPlayerIndex { get; set; }
 
     RoomManager _roomManager;
+    Room _room;
 
-    public NetworkManager(bool isGameScene, RoomManager roomManager = null)
+    public NetworkManager(bool isGameScene, RoomManager roomManager = null, Room room = null)
     {
         _roomManager = roomManager;
+        _room = room;
         SetWebSocket(isGameScene);
     }
 
@@ -101,8 +103,19 @@ public class NetworkManager
             _socket.On("room_list", (string data) =>
             {
                 data = ToJsonFormat(data);
+
+                // 로비에서 보이는 방 리스트를 업데이트
                 Packet.ReceivingRoomList receivingRoomList = JsonUtility.FromJson<Packet.ReceivingRoomList>(data);
-                _roomManager.SetRoomInfo(receivingRoomList);
+                _roomManager.SetRoomList(receivingRoomList);
+            });
+
+            _socket.On("room_info", (string data) =>
+            {
+                data = ToJsonFormat(data);
+
+                // 방 안에서 보이는 방 정보를 업데이트
+                Packet.ReceivingRoomInfo receivingRoomInfo = JsonUtility.FromJson<Packet.ReceivingRoomInfo>(data);
+                _room.SetRoomInfo(receivingRoomInfo);
             });
         }  
     }

@@ -7,11 +7,21 @@ public class Room
 {
     public string Name { get; private set; }
     public int Headcount { get; private set; }
+    public string[] PlayerNames { get; private set; }
+
+    public Room() { }
 
     public Room(string name, int headcount)
     {
         Name = name;
         Headcount = headcount;
+    }
+
+    // 현재 방 정보 업데이트
+    public void SetRoomInfo(Packet.ReceivingRoomInfo receivingRoomInfo)
+    {
+        Name = receivingRoomInfo.RoomName;
+        PlayerNames = receivingRoomInfo.PlayerNames;
     }
 }
 
@@ -28,7 +38,7 @@ public class RoomManager
     }
 
     // 대기방 정보 업데이트
-    public void SetRoomInfo(Packet.ReceivingRoomList receivingRoomList)
+    public void SetRoomList(Packet.ReceivingRoomList receivingRoomList)
     {
         Rooms = new List<Room>();
 

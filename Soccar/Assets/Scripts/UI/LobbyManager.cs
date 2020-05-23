@@ -20,6 +20,7 @@ public class LobbyManager : MonoBehaviour
 
     private NetworkManager _networkManager;
     private RoomManager _roomManager;
+    private Room _room;
 
     public static string PlayerId { get; set; }
 
@@ -30,7 +31,8 @@ public class LobbyManager : MonoBehaviour
         logoAnimator.SetBool("isDestroy", true);
 
         _roomManager = new RoomManager(_roomList);
-        _networkManager = new NetworkManager(false, _roomManager);
+        _room = new Room();
+        _networkManager = new NetworkManager(false, _roomManager, _room);
     }
 
     // Update is called once per frame

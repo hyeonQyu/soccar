@@ -91,4 +91,11 @@ public class Packet
             Headcounts = new int[RoomManager.MaxRoomCount];
         }
     }
+
+    // 현재 입장한 방 정보 수신
+    public class ReceivingRoomInfo
+    {
+        public string RoomName;
+        public string[] PlayerNames;
+    }
 }
