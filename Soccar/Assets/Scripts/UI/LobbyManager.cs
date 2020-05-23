@@ -14,6 +14,8 @@ public class LobbyManager : MonoBehaviour
     private Image _pressAnyKey;
     [SerializeField]
     private GameObject _roomList;
+    [SerializeField]
+    private GameObject _roomPanel;
 
     public static bool IsLogoDestroyed { set; get; }
     private bool _isOnLobby;
@@ -31,7 +33,7 @@ public class LobbyManager : MonoBehaviour
         logoAnimator.SetBool("isDestroy", true);
 
         _roomManager = new RoomManager(_roomList);
-        _room = new Room();
+        _room = new Room(_roomPanel);
         _networkManager = new NetworkManager(false, _roomManager, _room);
     }
 

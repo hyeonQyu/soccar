@@ -8,8 +8,12 @@ public class Room
     public string Name { get; private set; }
     public int Headcount { get; private set; }
     public string[] PlayerNames { get; private set; }
+    public GameObject RoomPanel { get; private set; }
 
-    public Room() { }
+    public Room(GameObject roomPanel)
+    {
+        RoomPanel = roomPanel;
+    }
 
     public Room(string name, int headcount)
     {
@@ -22,6 +26,14 @@ public class Room
     {
         Name = receivingRoomInfo.RoomName;
         PlayerNames = receivingRoomInfo.PlayerNames;
+
+        ShowRoom();
+    }
+
+    private void ShowRoom()
+    {
+        RoomPanel.transform.Find("Room Name").GetComponent<Text>().text = Name;
+        // 방에 접속한 플레이어 목록 업데이트
     }
 }
 

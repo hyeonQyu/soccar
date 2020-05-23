@@ -98,4 +98,30 @@ public class Packet
         public string RoomName;
         public string[] PlayerNames;
     }
+
+    // 방 입장 전송
+    public class SendingEnterRoom
+    {
+        public string RoomName;
+        public string PlayerName;
+
+        public SendingEnterRoom(string roomName, string playerName)
+        {
+            RoomName = roomName;
+            PlayerName = playerName;
+        }
+    }
+
+    // 방 퇴장 전송
+    public class SendingExitRoom
+    {
+        public string RoomName;
+        public string PlayerName;
+
+        public SendingExitRoom(string roomName, string playerName)
+        {
+            RoomName = roomName;
+            PlayerName = playerName;
+        }
+    }
 }

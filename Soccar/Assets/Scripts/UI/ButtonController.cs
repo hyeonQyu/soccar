@@ -6,11 +6,6 @@ using UnityEngine.UI;
 
 public class ButtonController : MonoBehaviour
 {
-    // 로그인 관련
-    private GameObject _loginPanel;
-    private InputField _inputIdField;
-    private Button _loginButton;
-
     // 방만들기 관련
     private GameObject _createRoomPanel;
     private InputField _inputRoomName;
@@ -20,10 +15,6 @@ public class ButtonController : MonoBehaviour
 
     public void Start()
     {
-        _loginPanel = GameObject.Find("Login Panel");
-        _inputIdField = GameObject.Find("Input ID Field").GetComponent<InputField>();
-        _loginButton = GameObject.Find("Login Button").GetComponent<Button>();
-
         _createRoomPanel = GameObject.Find("Create Room Panel");
         _inputRoomName = _createRoomPanel.transform.Find("InputField").GetComponent<InputField>();
 
@@ -32,9 +23,13 @@ public class ButtonController : MonoBehaviour
 
     public void OnClickLogin()
     {
-        if(_inputIdField.text.Equals(""))
+        GameObject loginPanel = GameObject.Find("Login Panel");
+        InputField inputIdField = GameObject.Find("Input ID Field").GetComponent<InputField>();
+        Button loginButton = GameObject.Find("Login Button").GetComponent<Button>();
+
+        if(inputIdField.text.Equals(""))
             return;
-        LobbyManager.PlayerId = _inputIdField.text;
+        LobbyManager.PlayerId = inputIdField.text;
 
         // 로그인과 동시에 게임 방 리스트 요청
         try
@@ -47,9 +42,9 @@ public class ButtonController : MonoBehaviour
         }
 
         // 로그인 패널 소멸
-        _loginPanel.GetComponent<Animator>().SetBool("isDestroy", true);
-        Destroy(_inputIdField.gameObject);
-        Destroy(_loginButton.gameObject);
+        loginPanel.GetComponent<Animator>().SetBool("isDestroy", true);
+        Destroy(inputIdField.gameObject);
+        Destroy(loginButton.gameObject);
     }
 
     public void OnClickRefresh()
@@ -88,6 +83,7 @@ public class ButtonController : MonoBehaviour
 
         // 방 패널 켜기
         _roomPanel.GetComponent<Animator>().Play("Enter Room");
+        _createRoomPanel.GetComponent<Animator>().Play("Destroy Room Panel");
     }
 
     // 방만들기 패널 안의 Cancel 버튼
@@ -99,11 +95,36 @@ public class ButtonController : MonoBehaviour
 
     public void OnClickEnterRoom()
     {
+        string roomName = transform.Find("Room Name").GetComponent<Text>().text;
 
+        Packet.SendingEnterRoom sendingEnterRoom = new Packet.SendingEnterRoom(roomName, LobbyManager.PlayerId);
+        try
+        {
+            NetworkManager.Send<Packet.SendingEnterRoom>("enter_room", sendingEnterRoom);
+        }
+        catch(NullReferenceException e)
+        {
+            Debug.LogError("OnClickEnterRoom: Send 실패");
+        }
+
+        // 방 패널 켜기
+        _roomPanel.GetComponent<Animator>().Play("Enter Room");
     }
 
     public void OnClickExitRoom()
     {
+        string roomName = _roomPanel.transform.Find("Room Name").GetComponent<Text>().text;
 
+        Packet.SendingExitRoom sendingExitRoom = new Packet.SendingExitRoom(roomName, LobbyManager.PlayerId);
+        try
+        {
+            NetworkManager.Send<Packet.SendingExitRoom>("exit_room", sendingExitRoom);
+        }
+        catch(NullReferenceException e)
+        {
+            Debug.LogError("OnClickExitRoom: Send 실패");
+        }
+
+        _roomPanel.GetComponent<Animator>().Play("Exit Room");
     }
 }

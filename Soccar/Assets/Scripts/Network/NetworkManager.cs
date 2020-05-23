@@ -24,8 +24,8 @@ public class NetworkManager
     public static string GameStart { get; private set; }
     public static string RequestPlayerIndex { get; set; }
 
-    RoomManager _roomManager;
-    Room _room;
+    private RoomManager _roomManager;
+    private Room _room;
 
     public NetworkManager(bool isGameScene, RoomManager roomManager = null, Room room = null)
     {
