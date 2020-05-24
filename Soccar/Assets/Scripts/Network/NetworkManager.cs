@@ -100,6 +100,7 @@ public class NetworkManager
         else
         {
             /* 서버로부터 메시지 수신 */
+            // 로그인 시 첫 화면, 새로고침 버튼 클릭 시
             _socket.On("room_list", (string data) =>
             {
                 data = ToJsonFormat(data);
@@ -109,6 +110,7 @@ public class NetworkManager
                 _roomManager.SetRoomList(receivingRoomList);
             });
 
+            // 방 생성, 방 입장, 대기 중인 방에 다른 플레이어가 들어올 때
             _socket.On("room_info", (string data) =>
             {
                 data = ToJsonFormat(data);

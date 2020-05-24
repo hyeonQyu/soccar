@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Room
 {
+    private const int MaxPlayerPerRoom = 6;
     public string Name { get; private set; }
     public int Headcount { get; private set; }
     public string[] PlayerNames { get; private set; }
@@ -34,6 +35,12 @@ public class Room
     {
         RoomPanel.transform.Find("Room Name").GetComponent<Text>().text = Name;
         // 방에 접속한 플레이어 목록 업데이트
+        GameObject playerList = RoomPanel.transform.Find("Player List").gameObject;
+        //for(int i = 0; i < MaxPlayerPerRoom; i++)
+        //{
+        //    GameObject player = playerList.transform.Find("Player" + i).gameObject;
+        //    player.transform.Find("Name Background").Find("Name").GetComponent<Text>().text = PlayerNames[i];
+        //}
     }
 }
 
