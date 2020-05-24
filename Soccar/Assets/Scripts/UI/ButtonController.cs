@@ -72,9 +72,11 @@ public class ButtonController : MonoBehaviour
         string roomName = _inputRoomName.text;
         if(roomName.Equals(""))
             return;
+
+        Packet.SendingEnterRoom sendingCreateRoom = new Packet.SendingEnterRoom(roomName, LobbyManager.PlayerId);        
         try
         {
-            NetworkManager.Send("create_room", roomName);
+            NetworkManager.Send<Packet.SendingEnterRoom>("create_room", sendingCreateRoom);
         }
         catch(NullReferenceException e)
         {
