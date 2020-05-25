@@ -96,10 +96,10 @@ public class ButtonController : MonoBehaviour
             return;
         }
 
-        Packet.SendingEnterRoom sendingCreateRoom = new Packet.SendingEnterRoom(roomName, LobbyManager.PlayerName);        
+        Packet.SendingCreateRoom sendingCreateRoom = new Packet.SendingCreateRoom(roomName, LobbyManager.PlayerName);        
         try
         {
-            NetworkManager.Send<Packet.SendingEnterRoom>("create_room", sendingCreateRoom);
+            NetworkManager.Send<Packet.SendingCreateRoom>("create_room", sendingCreateRoom);
         }
         catch(NullReferenceException e)
         {
@@ -120,11 +120,17 @@ public class ButtonController : MonoBehaviour
 
     public void OnClickEnterRoom()
     {
-        string roomName = transform.Find("Room Name").GetComponent<Text>().text;
-        if(roomName.Length == 0)
+        int roomKey = -1;
+        try
+        {
+            roomKey = int.Parse(transform.Find("Room Key").GetComponent<Text>().text);
+        }
+        catch(FormatException e)
+        {
             return;
+        }
 
-        Packet.SendingEnterRoom sendingEnterRoom = new Packet.SendingEnterRoom(roomName, LobbyManager.PlayerName);
+        Packet.SendingEnterRoom sendingEnterRoom = new Packet.SendingEnterRoom(roomKey, LobbyManager.PlayerName);
         try
         {
             NetworkManager.Send<Packet.SendingEnterRoom>("enter_room", sendingEnterRoom);
@@ -140,9 +146,9 @@ public class ButtonController : MonoBehaviour
 
     public void OnClickExitRoom()
     {
-        string roomName = _roomPanel.transform.Find("Room Name").GetComponent<Text>().text;
+        int roomKey = int.Parse(_roomPanel.transform.Find("Room Key").GetComponent<Text>().text);
 
-        Packet.SendingExitRoom sendingExitRoom = new Packet.SendingExitRoom(roomName, LobbyManager.PlayerName);
+        Packet.SendingExitRoom sendingExitRoom = new Packet.SendingExitRoom(roomKey, LobbyManager.PlayerName);
         try
         {
             NetworkManager.Send<Packet.SendingExitRoom>("exit_room", sendingExitRoom);

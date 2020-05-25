@@ -183,7 +183,7 @@ io.on('connection', function(socket) {
         }
         else { // flag == 0 방이 가득 참 or flag ==  -1 해당 방 이름이 존재하지 않음
             var datas = ROOM_LIST.stringifyRoomList();
-            socket.emit('fail_enter_room');
+            socket.emit('fail_enter_room', "");
             socket.emit('room_list', datas);
         }
     });
