@@ -34,7 +34,7 @@ public class LobbyManager : MonoBehaviour
 
         _roomManager = new RoomManager(_roomList);
         _room = new Room(_roomPanel);
-        _networkManager = new NetworkManager(false, _roomManager, _room);
+        _networkManager = new NetworkManager(false, _roomManager, _room, _roomPanel);
     }
 
     // Update is called once per frame

@@ -26,11 +26,14 @@ public class NetworkManager
 
     private RoomManager _roomManager;
     private Room _room;
+    private GameObject _roomPanel;
 
-    public NetworkManager(bool isGameScene, RoomManager roomManager = null, Room room = null)
+    public NetworkManager(bool isGameScene, RoomManager roomManager = null, Room room = null, GameObject roomPanel = null)
     {
         _roomManager = roomManager;
         _room = room;
+        _roomPanel = roomPanel;
+
         SetWebSocket(isGameScene);
     }
 
@@ -118,6 +121,12 @@ public class NetworkManager
                 // 방 안에서 보이는 방 정보를 업데이트
                 Packet.ReceivingRoomInfo receivingRoomInfo = JsonUtility.FromJson<Packet.ReceivingRoomInfo>(data);
                 _room.SetRoomInfo(receivingRoomInfo);
+            });
+
+            // 방 입장 시 꽉 찬 방
+            _socket.On("room_full", (string data) =>
+            {
+                _roomPanel.GetComponent<Animator>().Play("Exit Room");
             });
         }  
     }
