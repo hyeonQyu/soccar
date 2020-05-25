@@ -37,6 +37,7 @@ public class Room
 
     private void ShowRoom()
     {
+        RoomPanel.transform.Find("Room Key").GetComponent<Text>().text = Key.ToString();
         RoomPanel.transform.Find("Room Name").GetComponent<Text>().text = Name;
         // 방에 접속한 플레이어 목록 업데이트
         GameObject playerList = RoomPanel.transform.Find("Player List").gameObject;
