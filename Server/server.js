@@ -18,7 +18,7 @@ app.get('/', function(req, res) {
 
 });
 
-const totalPlayer = 4;
+const maxPlayer = 2;
 var playerIndex = 0;
 
 // 방 정보
@@ -46,6 +46,9 @@ RoomList.prototype.addPlayer = function(roomName, playerName){
     var roomIndex = this.findRoom(roomName);
 
     if(roomIndex >  -1){
+        if(this.rooms[roomIndex].playerCounts == maxPlayer){
+            return 0;
+        }
         this.rooms[roomIndex].playerNames[this.rooms[roomIndex].playerCounts] = playerName;
         this.rooms[roomIndex].playerCounts++;
         return true;
@@ -166,12 +169,20 @@ io.on('connection', function(socket) {
         //for debugging
         console.log('in enter_room');
 
-        if(roomlist.addPlayer(data.RoomName, data.PlayerName) > -1){
+        var flag;
+        flag = roomlist.addPlayer(data.RoomName, data.PlayerName)
+        if(flag > 0){  // flag == true
             socket.join(data.RoomName);
 
             var datas = roomList.stringifyRoomInfo(data.RoomName);
             console.log(datas);
             socket.emit('room_info', datas);
+        }
+        else if(flag == 0){ // the room is full !
+            socket.emit('room_full');
+        }
+        else{
+            // flag == -1 방 이름이 존재하지 않는 경우
         }
     });
 
