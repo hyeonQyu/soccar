@@ -98,6 +98,8 @@ public class ButtonController : MonoBehaviour
     public void OnClickEnterRoom()
     {
         string roomName = transform.Find("Room Name").GetComponent<Text>().text;
+        if(roomName.Length == 0)
+            return;
 
         Packet.SendingEnterRoom sendingEnterRoom = new Packet.SendingEnterRoom(roomName, LobbyManager.PlayerId);
         try
