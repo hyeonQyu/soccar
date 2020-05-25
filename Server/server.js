@@ -18,37 +18,43 @@ app.get('/', function(req, res) {
 
 });
 
-const MAX_PLAYER = 3;
+const MAX_PLAYER = 2;
+var ROOM_KEY = 0;
 
 // 방 정보
 var Room = function(){
+    this.roomKey;
     this.roomName;
-    this.playerNames=[]
+    this.playerKeys=[];
+    this.playerNames=[];
     this.playerCounts = 0;
 }
 
 // RoomList 정의 및 method 생성
 var RoomList = function(){
-    this.rooms = []
+    this.rooms = [];
     this.pos = 0;
     this.listSize = 0;
 }
-RoomList.prototype.createRoom = function(roomName, playerName){
+RoomList.prototype.createRoom = function(roomKey, roomName, playerKey, playerName){
     var room = new Room();
+    room.roomKey = roomKey;
     room.roomName = roomName;
+    room.playerKeys[0] = playerKey;
     room.playerNames[0] = playerName;
     room.playerCounts = 1;
     this.rooms.push(room);
     this.listSize++;
 }
-RoomList.prototype.addPlayer = function(roomName, playerName){
-    var roomIndex = this.findRoom(roomName);
+RoomList.prototype.addPlayer = function(roomKey, playerKey, playerName){
+    var roomIndex = this.findRoom(roomKey);
 
     if(roomIndex >  -1){
         if(this.rooms[roomIndex].playerCounts == MAX_PLAYER){
             return 0;
         }
-        this.rooms[roomIndex].playerNames[this.rooms[roomIndex].playerCounts] = playerName;
+        this.rooms[roomIndex].playerKeys[this.rooms[roomIndex].playerCounts] = playerKey;
+        this.rooms[roomIndex].playerName[this.rooms[roomIndex].playerCounts] = playerName;
         this.rooms[roomIndex].playerCounts++;
         return true;
     }
@@ -56,13 +62,13 @@ RoomList.prototype.addPlayer = function(roomName, playerName){
         return -1;
     }
 }
-RoomList.prototype.removePlayer = function(roomName, playerName){
-    roomIndex = this.findRoom(roomName);
+RoomList.prototype.removePlayer = function(roomKey, playerKey){
+    roomIndex = this.findRoom(roomKey);
 
     if(roomIndex > -1){
         var playerPos = 0;
         for(; playerPos < this.rooms[roomIndex].playerCounts; playerPos++){
-            if(this.rooms[roomIndex].playerNames[playerPos] == playerName){
+            if(this.rooms[roomIndex].playerKeys[playerPos] == playerKey){
                 break;
             }
             if(playerPos == this.rooms[roomIndex].playerCounts -1){ // Not found!
@@ -70,6 +76,7 @@ RoomList.prototype.removePlayer = function(roomName, playerName){
             }
         }
         this.rooms[roomIndex].playerNames.splice(playerPos,1);
+        this.rooms[roomIndex].playerKeys.splice(playerPos,1);
         this.rooms[roomIndex].playerCounts--;
         if(this.rooms[roomIndex].playerCounts == 0){
             this.rooms.splice(roomIndex,1);
@@ -81,8 +88,8 @@ RoomList.prototype.removePlayer = function(roomName, playerName){
         return -1;
     }
 }
-RoomList.prototype.getNames = function(roomName){
-    var roomIndex = this.findRoom(roomName);
+RoomList.prototype.getNames = function(roomKey){
+    var roomIndex = this.findRoom(roomKey);
 
     if(roomIndex > -1){
         return this.rooms[roomIndex].playerNames;
@@ -90,17 +97,17 @@ RoomList.prototype.getNames = function(roomName){
     else
         return null;
 }
-RoomList.prototype.findRoom = function(roomName){
+RoomList.prototype.findRoom = function(roomKey){
     var i = 0;
     for(;i<this.listSize;i++){
-        if(this.rooms[i].roomName == roomName){
+        if(this.rooms[i].roomKey == roomKey){
             return i;
         }
     }
     return -1;
 }
-RoomList.prototype.removeRoom = function(roomName){
-    var removePos = this.findRoom(roomName);
+RoomList.prototype.removeRoom = function(roomKey){
+    var removePos = this.findRoom(roomKey);
 
     if(removePos > -1){
         this.rooms.splice(removePos,1);
@@ -110,22 +117,30 @@ RoomList.prototype.removeRoom = function(roomName){
     return -1;
 }
 RoomList.prototype.stringifyRoomList = function(){
+    var RoomKeys = [];
     var RoomNames = [];
     var Headcounts = [];
     for(var i = 0; i < this.listSize; i++){
+        RoomKeys.push(this.rooms[i].roomKey);
         RoomNames.push(this.rooms[i].roomName);
         Headcounts.push(this.rooms[i].playerCounts);
     }
     var sendingData = new Object();
+    sendingData.RoomKeys = RoomKeys;
     sendingData.RoomNames = RoomNames;
     sendingData.Headcounts = Headcounts;
     return JSON.stringify(sendingData);
 }
-RoomList.prototype.stringifyRoomInfo = function(roomName){
-    var sendingData = new Object();
-    sendingData.RoomName = roomName;
-    sendingData.PlayerNames = this.getNames(roomName);
-    return JSON.stringify(sendingData);
+RoomList.prototype.stringifyRoomInfo = function(roomKey){
+    var roomIndex = ROOM_LIST.findRoom(roomKey);
+
+    if(roomIndex > -1){
+        var sendingData = new Object();
+        sendingData.RoomKey = roomKey;
+        sendingData.RoomName = this.rooms[roomIndex].roomName;
+        sendingData.PlayerNames = this.getNames(roomKey);
+        return JSON.stringify(sendingData);
+    }
 }
 RoomList.prototype.length = function(){
     return this.listSize;
@@ -159,13 +174,13 @@ io.on('connection', function(socket) {
         //for debugging
         console.log('in create_room');
 
-        ROOM_LIST.createRoom(data.RoomName, data.PlayerName);
-        socket.join(data.RoomName);
-        console.log('received  datas = ' + data);
+        ROOM_LIST.createRoom(ROOM_KEY, data.RoomName, socket.id, data.PlayerName);
+        socket.join(ROOM_KEY);
 
-        var datas = ROOM_LIST.stringifyRoomInfo(data.RoomName);
+        var datas = ROOM_LIST.stringifyRoomInfo(ROOM_KEY);
         console.log(datas);
         socket.emit('room_info', datas);
+        ROOM_KEY = ROOM_KEY + 1;
     });
 
     socket.on('enter_room', function(data){
@@ -173,15 +188,15 @@ io.on('connection', function(socket) {
         console.log('in enter_room');
 
         var flag;
-        flag = ROOM_LIST.addPlayer(data.RoomName, data.PlayerName)
+        flag = ROOM_LIST.addPlayer(data.RoomKey, socket.id, data.PlayerName)
         if(flag > 0){  // flag == true
-            socket.join(data.RoomName);
+            socket.join(data.RoomKey);
 
-            var datas = ROOM_LIST.stringifyRoomInfo(data.RoomName);
+            var datas = ROOM_LIST.stringifyRoomInfo(data.RoomKey);
             console.log(datas);
             socket.emit('room_info', datas);
         }
-        else { // flag == 0 방이 가득 참 or flag ==  -1 해당 방 이름이 존재하지 않음
+        else { // flag == 0 방이 가득 참 or flag ==  -1 해당 방이 존재하지 않음
             var datas = ROOM_LIST.stringifyRoomList();
             socket.emit('fail_enter_room', "");
             socket.emit('room_list', datas);
@@ -192,22 +207,22 @@ io.on('connection', function(socket) {
         //for debugging
         console.log('in exit_room');
 
-        if(ROOM_LIST.removePlayer(data.RoomName, data.PlayerName) > -1){
-            console.log(data.PlayerName + ' player exit ' + data.RoomName + ' room!');
-            socket.leave(data.RoomName);
+        if(ROOM_LIST.removePlayer(data.RoomKey, socket.id) > -1){
+            console.log(data.PlayerName + ' player exit ' + data.RoomKey + ' room!');
+            socket.leave(data.RoomKey);
 
             // 방을 나간 플레이어에게만
-            var aroomList = ROOM_LIST.stringifyRoomList();
-            socket.emit('room_list', ROOM_LIST);
+            var roomList = ROOM_LIST.stringifyRoomList();
+            socket.emit('room_list', roomList);
 
             // 플레이어가 나간 방의 다른 플레이어들에게
-            var roomInfo = ROOM_LIST.stringifyRoomInfo(data.RoomName);
-            io.sockets.in(data.RoomName).emit('room_info', roomInfo);
+            var roomInfo = ROOM_LIST.stringifyRoomInfo(data.RoomKey);
+            io.sockets.in(data.RoomKey).emit('room_info', roomInfo);
         }
     });
 
     socket.on('room_info', function(data) {
-        var datas = ROOM_LIST.stringifyRoomInfo(data.RoomName);
+        var datas = ROOM_LIST.stringifyRoomInfo(data.RoomKey);
         console.log(datas);
         socket.emit('room_info', datas);
     });
