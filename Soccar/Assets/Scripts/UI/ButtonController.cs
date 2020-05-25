@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class ButtonController : MonoBehaviour
 {
+    // 경고 창
+    private GameObject _alertPanel;
+    private Text _alertMessage;
+
     // 방만들기 관련
     private GameObject _createRoomPanel;
     private InputField _inputRoomName;
@@ -15,6 +19,9 @@ public class ButtonController : MonoBehaviour
 
     public void Start()
     {
+        _alertPanel = GameObject.Find("Alert Panel");
+        _alertMessage = _alertPanel.transform.Find("Message").gameObject.GetComponent<Text>();
+
         _createRoomPanel = GameObject.Find("Create Room Panel");
         _inputRoomName = _createRoomPanel.transform.Find("InputField").GetComponent<InputField>();
 
@@ -29,12 +36,20 @@ public class ButtonController : MonoBehaviour
 
         if(inputIdField.text.Equals(""))
             return;
-        LobbyManager.PlayerId = inputIdField.text;
+        LobbyManager.PlayerName = inputIdField.text;
+
+        // 닉네임은 알파벳과 숫자만 가능
+        if(!IsAlphabetNumeric(LobbyManager.PlayerName))
+        {
+            _alertMessage.text = "You can use only alphabetic and numeric nicknames";
+            _alertPanel.GetComponent<Animator>().Play("Open Alert");
+            return;
+        }
 
         // 로그인과 동시에 게임 방 리스트 요청
         try
         {
-            NetworkManager.Send("room_list", LobbyManager.PlayerId);
+            NetworkManager.Send("room_list", LobbyManager.PlayerName);
         }
         catch(NullReferenceException e)
         {
@@ -51,7 +66,7 @@ public class ButtonController : MonoBehaviour
     {
         try
         {
-            NetworkManager.Send("room_list", LobbyManager.PlayerId);
+            NetworkManager.Send("room_list", LobbyManager.PlayerName);
         }
         catch(NullReferenceException e)
         {
@@ -73,7 +88,15 @@ public class ButtonController : MonoBehaviour
         if(roomName.Equals(""))
             return;
 
-        Packet.SendingEnterRoom sendingCreateRoom = new Packet.SendingEnterRoom(roomName, LobbyManager.PlayerId);        
+        // 방 이름은 알파벳과 숫자만 가능
+        if(!IsAlphabetNumeric(roomName))
+        {
+            _alertMessage.text = "You can use only alphabetic and numeric room names";
+            _alertPanel.GetComponent<Animator>().Play("Open Alert");
+            return;
+        }
+
+        Packet.SendingEnterRoom sendingCreateRoom = new Packet.SendingEnterRoom(roomName, LobbyManager.PlayerName);        
         try
         {
             NetworkManager.Send<Packet.SendingEnterRoom>("create_room", sendingCreateRoom);
@@ -101,7 +124,7 @@ public class ButtonController : MonoBehaviour
         if(roomName.Length == 0)
             return;
 
-        Packet.SendingEnterRoom sendingEnterRoom = new Packet.SendingEnterRoom(roomName, LobbyManager.PlayerId);
+        Packet.SendingEnterRoom sendingEnterRoom = new Packet.SendingEnterRoom(roomName, LobbyManager.PlayerName);
         try
         {
             NetworkManager.Send<Packet.SendingEnterRoom>("enter_room", sendingEnterRoom);
@@ -119,7 +142,7 @@ public class ButtonController : MonoBehaviour
     {
         string roomName = _roomPanel.transform.Find("Room Name").GetComponent<Text>().text;
 
-        Packet.SendingExitRoom sendingExitRoom = new Packet.SendingExitRoom(roomName, LobbyManager.PlayerId);
+        Packet.SendingExitRoom sendingExitRoom = new Packet.SendingExitRoom(roomName, LobbyManager.PlayerName);
         try
         {
             NetworkManager.Send<Packet.SendingExitRoom>("exit_room", sendingExitRoom);
@@ -130,5 +153,26 @@ public class ButtonController : MonoBehaviour
         }
 
         _roomPanel.GetComponent<Animator>().Play("Exit Room");
+    }
+
+    public void OnClickAlertOk()
+    {
+        _alertPanel.GetComponent<Animator>().Play("Close Alert");
+    }
+
+    private bool IsAlphabetNumeric(string str)
+    {
+        bool isAvaliableStr = true;
+        // 닉네임은 영어와 숫자만 허용
+        foreach(char c in str)
+        {
+            if(('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') || (0 <= c - '0' && c - '0' <= 9))
+                continue;
+
+            isAvaliableStr = false;
+            break;
+        }
+
+        return isAvaliableStr;
     }
 }
