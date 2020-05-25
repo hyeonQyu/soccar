@@ -54,7 +54,7 @@ RoomList.prototype.addPlayer = function(roomKey, playerKey, playerName){
             return 0;
         }
         this.rooms[roomIndex].playerKeys[this.rooms[roomIndex].playerCounts] = playerKey;
-        this.rooms[roomIndex].playerName[this.rooms[roomIndex].playerCounts] = playerName;
+        this.rooms[roomIndex].playerNames[this.rooms[roomIndex].playerCounts] = playerName;
         this.rooms[roomIndex].playerCounts++;
         return true;
     }
