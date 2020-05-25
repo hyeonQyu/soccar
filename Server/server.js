@@ -18,7 +18,7 @@ app.get('/', function(req, res) {
 
 });
 
-const maxPlayer = 2;
+const MAX_PLAYER = 2;
 var playerIndex = 0;
 
 // 방 정보
@@ -46,7 +46,7 @@ RoomList.prototype.addPlayer = function(roomName, playerName){
     var roomIndex = this.findRoom(roomName);
 
     if(roomIndex >  -1){
-        if(this.rooms[roomIndex].playerCounts == maxPlayer){
+        if(this.rooms[roomIndex].playerCounts == MAX_PLAYER){
             return 0;
         }
         this.rooms[roomIndex].playerNames[this.rooms[roomIndex].playerCounts] = playerName;
@@ -133,7 +133,7 @@ RoomList.prototype.clear = function(){
     this.pos = 0;
 }
 
-var roomlist = new RoomList();
+var ROOM_LIST = new RoomList();
 
 port = ['9091'];
 var child = cp.fork("game_server.js", port);
@@ -146,7 +146,7 @@ io.on('connection', function(socket) {
         // for debugging
         console.log('in room_list');
 
-        var datas = roomList.stringifyRoomList();
+        var datas = ROOM_LIST.stringifyRoomList();
         console.log(datas);
         socket.emit('room_list', datas);
     });
@@ -156,11 +156,11 @@ io.on('connection', function(socket) {
         //for debugging
         console.log('in create_room');
 
-        roomlist.createRoom(data.RoomName, data.PlayerName);
+        ROOM_LIST.createRoom(data.RoomName, data.PlayerName);
         socket.join(data.RoomName);
         console.log('received  datas = ' + data);
 
-        var datas = roomList.stringifyRoomInfo(data.RoomName);
+        var datas = ROOM_LIST.stringifyRoomInfo(data.RoomName);
         console.log(datas);
         socket.emit('room_info', datas);
     });
@@ -170,16 +170,18 @@ io.on('connection', function(socket) {
         console.log('in enter_room');
 
         var flag;
-        flag = roomlist.addPlayer(data.RoomName, data.PlayerName)
+        flag = ROOM_LIST.addPlayer(data.RoomName, data.PlayerName)
         if(flag > 0){  // flag == true
             socket.join(data.RoomName);
 
-            var datas = roomList.stringifyRoomInfo(data.RoomName);
+            var datas = ROOM_LIST.stringifyRoomInfo(data.RoomName);
             console.log(datas);
             socket.emit('room_info', datas);
         }
         else if(flag == 0){ // the room is full !
+            var datas = ROOM_LIST.stringifyRoomList();
             socket.emit('room_full');
+            socket.emit('room_list', datas);
         }
         else{
             // flag == -1 방 이름이 존재하지 않는 경우
@@ -195,17 +197,17 @@ io.on('connection', function(socket) {
             socket.leave(data.RoomName);
 
             // 방을 나간 플레이어에게만
-            var roomList = roomList.stringifyRoomList();
-            socket.emit('room_list', roomList);
+            var aroomList = ROOM_LIST.stringifyRoomList();
+            socket.emit('room_list', ROOM_LIST);
 
             // 플레이어가 나간 방의 다른 플레이어들에게
-            var roomInfo = roomList.stringifyRoomInfo(data.RoomName);
+            var roomInfo = ROOM_LIST.stringifyRoomInfo(data.RoomName);
             io.sockets.in(data.RoomName).emit('room_info', roomInfo);
         }
     });
 
     socket.on('room_info', function(data) {
-        var datas = roomlist.stringifyRoomInfo(data.RoomName);
+        var datas = ROOM_LIST.stringifyRoomInfo(data.RoomName);
         console.log(datas);
         socket.emit('room_info', datas);
     });
