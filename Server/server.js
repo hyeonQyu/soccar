@@ -72,6 +72,10 @@ RoomList.prototype.removePlayer = function(roomName, playerName){
         }
         this.rooms[roomIndex].playerNames.splice(playerIndex,1);
         this.rooms[roomIndex].playerCounts--;
+        if(this.rooms[roomIndex].playerCounts == 0){
+            this.rooms.splice(roomIndex,1);
+            this.listSize--;
+        }
         return true;
     }
     else{
@@ -178,13 +182,10 @@ io.on('connection', function(socket) {
             console.log(datas);
             socket.emit('room_info', datas);
         }
-        else if(flag == 0){ // the room is full !
+        else { // flag == 0 방이 가득 참 or flag ==  -1 해당 방 이름이 존재하지 않음
             var datas = ROOM_LIST.stringifyRoomList();
-            socket.emit('room_full');
+            socket.emit('fail_enter_room');
             socket.emit('room_list', datas);
-        }
-        else{
-            // flag == -1 방 이름이 존재하지 않는 경우
         }
     });
 

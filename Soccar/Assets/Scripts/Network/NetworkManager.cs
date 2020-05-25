@@ -124,7 +124,7 @@ public class NetworkManager
             });
 
             // 방 입장 시 꽉 찬 방
-            _socket.On("room_full", (string data) =>
+            _socket.On("fail_enter_room", (string data) =>
             {
                 _roomPanel.GetComponent<Animator>().Play("Exit Room");
             });
