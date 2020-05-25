@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using socket.io;
+using UnityEngine.UI;
 
 public class NetworkManager
 {
@@ -28,11 +29,18 @@ public class NetworkManager
     private Room _room;
     private GameObject _roomPanel;
 
-    public NetworkManager(bool isGameScene, RoomManager roomManager = null, Room room = null, GameObject roomPanel = null)
+    // 경고 창
+    private GameObject _alertPanel;
+    private Text _alertMessage;
+
+    public NetworkManager(bool isGameScene, LobbyNetworkLinker lobbyNetworkLinker = null)
     {
-        _roomManager = roomManager;
-        _room = room;
-        _roomPanel = roomPanel;
+        _roomManager = lobbyNetworkLinker.RoomManager;
+        _room = lobbyNetworkLinker.Room;
+        _roomPanel = lobbyNetworkLinker.RoomPanel;
+
+        _alertPanel = lobbyNetworkLinker.AlertPanel;
+        _alertMessage = _alertPanel.transform.Find("Message").GetComponent<Text>();
 
         SetWebSocket(isGameScene);
     }
@@ -127,6 +135,8 @@ public class NetworkManager
             _socket.On("fail_enter_room", (string data) =>
             {
                 _roomPanel.GetComponent<Animator>().Play("Exit Room");
+                _alertMessage.text = "You cannot enter this room because it room is full or does not exist now";
+                _alertPanel.GetComponent<Animator>().Play("Open Alert");
             });
         }  
     }

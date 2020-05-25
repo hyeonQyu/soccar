@@ -16,10 +16,13 @@ public class LobbyManager : MonoBehaviour
     private GameObject _roomList;
     [SerializeField]
     private GameObject _roomPanel;
+    [SerializeField]
+    private GameObject _alertPanel;
 
     public static bool IsLogoDestroyed { set; get; }
     private bool _isOnLobby;
 
+    private LobbyNetworkLinker _lobbyNetworkLinker;
     private NetworkManager _networkManager;
     private RoomManager _roomManager;
     private Room _room;
@@ -34,7 +37,10 @@ public class LobbyManager : MonoBehaviour
 
         _roomManager = new RoomManager(_roomList);
         _room = new Room(_roomPanel);
-        _networkManager = new NetworkManager(false, _roomManager, _room, _roomPanel);
+
+        _lobbyNetworkLinker = new LobbyNetworkLinker(_roomManager, _room, _roomPanel, _alertPanel);
+
+        _networkManager = new NetworkManager(false, _lobbyNetworkLinker);
     }
 
     // Update is called once per frame
