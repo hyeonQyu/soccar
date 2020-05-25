@@ -43,15 +43,37 @@ RoomList.prototype.createRoom = function(roomName, playerName){
     this.listSize++;
 }
 RoomList.prototype.addPlayer = function(roomName, playerName){
-    var i = 0;
-    for(;i<this.listSize;i++){
-        if(this.rooms[i].roomName == roomName){
-            this.rooms[i].playerNames[this.rooms[i].playerCounts] = playerName;
-            this.rooms[i].playerCounts++;
-            return i;
-        }
+    var roomIndex = this.findRoom(roomName);
+
+    if(roomIndex >  -1){
+        this.rooms[roomIndex].playerNames[this.rooms[roomIndex].playerCounts] = playerName;
+        this.rooms[roomIndex].playerCounts++;
+        return true;
     }
-    retrun -1;
+    else{
+        return -1;
+    }
+}
+RoomList.prototype.removePlayer = function(roomName, playerName){
+    roonIndex = this.findRoom(roomName);
+
+    if(roomIndex > -1){
+        var playerIndex = 0;
+        for(; playerIndex < this.rooms[roomIndex].playerCounts; playerIndex++){
+            if(this.rooms[roomIndex].playerNames[playerIndex] == playerName){
+                break;
+            }
+            if(playerIndex == this.rooms[roomIndex].playerCounts -1){ // Not found!
+                return -1;
+            }
+        }
+        this.rooms[roomIndex].playerNames.splice(playerIndex,1);
+        this.rooms[roomIndex].playerCounts--;
+        return true;
+    }
+    else{
+        return -1;
+    }
 }
 RoomList.prototype.getNames = function(roomName){
     var roomIndex = this.findRoom(roomName);
@@ -79,7 +101,25 @@ RoomList.prototype.removeRoom = function(roomName){
         this.listSize--;
         return true;
     }
-    return false;
+    return -1;
+}
+RoomList.prototype.stringifyRoomList = function(){
+    var RoomNames = [];
+    var Headcounts = [];
+    for(var i = 0; i < this.listSize; i++){
+        RoomNames.push(this.rooms[i].roomName);
+        Headcounts.push(this.rooms[i].playerCounts);
+    }
+    var sendingData = new Object();
+    sendingData.RoomNames = RoomNames;
+    sendingData.Headcounts = Headcounts;
+    return JSON.stringify(sendingData);
+}
+RoomList.prototype.stringifyRoomInfo = function(roomName){
+    var sendingData = new Object();
+    sendingData.RoomName = roomName;
+    sendingData.PlayerNames = this.getNames(roomName);
+    return JSON.stringify(sendingData);
 }
 RoomList.prototype.length = function(){
     return this.listSize;
@@ -92,8 +132,6 @@ RoomList.prototype.clear = function(){
 
 var roomlist = new RoomList();
 
-roomlist.createRoom('firstRoom', 'Lee');
-
 port = ['9091'];
 var child = cp.fork("game_server.js", port);
 
@@ -102,60 +140,61 @@ io.on('connection', function(socket) {
     console.log("Connect");
 
     socket.on('room_list', function(data) {
-        // for Debuging
+        // for debugging
         console.log('in room_list');
 
-        var RoomNames = [];
-        var Headcounts = [];
-        for(var i = 0; i < roomlist.listSize; i++){
-            RoomNames.push(roomlist.rooms[i].roomName);
-            Headcounts.push(roomlist.rooms[i].playerCounts);
-        }
-        var sendingData = new Object();
-        sendingData.RoomNames = RoomNames;
-        sendingData.Headcounts = Headcounts;
-
-        var datas = JSON.stringify(sendingData);
+        var datas = roomList.stringifyRoomList();
         console.log(datas);
         socket.emit('room_list', datas);
     });
 
 
     socket.on('create_room', function(data) {
-        //for debuging
+        //for debugging
         console.log('in create_room');
 
         roomlist.createRoom(data.RoomName, data.PlayerName);
-        var sendingData = new Object();
-        sendingData.RoomName = data.RoomName;
-        sendingData.PlayerNames = roomlist.getNames(data.RoomName);
+        socket.join(data.RoomName);
+        console.log('received  datas = ' + data);
 
-        var datas = JSON.stringify(sendingData);
+        var datas = roomList.stringifyRoomInfo(data.RoomName);
         console.log(datas);
         socket.emit('room_info', datas);
     });
 
     socket.on('enter_room', function(data){
-        //for debuging
+        //for debugging
         console.log('in enter_room');
 
-        roomlist.addPlayer(data.RoomName, data.PlayerName);
-        var sendingData = new Object();
-        sendingData.RoomName = data.RoomName;
-        sendingData.PlayerNames = roomlist.getNames(data.RoomName);
+        if(roomlist.addPlayer(data.RoomName, data.PlayerName) > -1){
+            socket.join(data.RoomName);
 
-        var datas = JSON.stringify(sendingData);
-        console.log(datas);
-        socket.emit('room_info', datas);
+            var datas = roomList.stringifyRoomInfo(data.RoomName);
+            console.log(datas);
+            socket.emit('room_info', datas);
+        }
     });
 
+    socket.on('exit_room', function(data){
+        //for debugging
+        console.log('in exit_room');
+
+        if(removePlayer(data.RoomName, data.PlayerName) > -1){
+            console.log(data.PlayerName + ' player exit ' + data.RoomName + ' room!');
+            socket.leave(data.RoomName);
+
+            // 방을 나간 플레이어에게만
+            var roomList = roomList.stringifyRoomList();
+            socket.emit('room_list', roomList);
+
+            // 플레이어가 나간 방의 다른 플레이어들에게
+            var roomInfo = roomList.stringifyRoomInfo(data.RoomName);
+            io.sockets.in(data.RoomName).emit('room_info', roomInfo);
+        }
+    });
 
     socket.on('room_info', function(data) {
-        var sendingData = new Object();
-        sendingData.RoomName = data.RoomName;
-        sendingData.PlayerNames = roomlist.getNames(data.RoomName);
-
-        var datas = JSON.stringify(sendingData);
+        var datas = roomlist.stringifyRoomInfo(data.RoomName);
         console.log(datas);
         socket.emit('room_info', datas);
     });
