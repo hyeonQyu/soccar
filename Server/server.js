@@ -18,7 +18,7 @@ app.get('/', function(req, res) {
 
 });
 
-const MAX_PLAYER = 2;
+const MAX_PLAYER = 3;
 
 // 방 정보
 var Room = function(){
@@ -57,7 +57,7 @@ RoomList.prototype.addPlayer = function(roomName, playerName){
     }
 }
 RoomList.prototype.removePlayer = function(roomName, playerName){
-    roonIndex = this.findRoom(roomName);
+    roomIndex = this.findRoom(roomName);
 
     if(roomIndex > -1){
         var playerPos = 0;
@@ -97,7 +97,7 @@ RoomList.prototype.findRoom = function(roomName){
             return i;
         }
     }
-    retrun -1;
+    return -1;
 }
 RoomList.prototype.removeRoom = function(roomName){
     var removePos = this.findRoom(roomName);
@@ -139,7 +139,7 @@ RoomList.prototype.clear = function(){
 var ROOM_LIST = new RoomList();
 
 port = ['9091'];
-var child = cp.fork("game_server.js", port);
+//var child = cp.fork("game_server.js", port);
 
 io.on('connection', function(socket) {
 
@@ -192,7 +192,7 @@ io.on('connection', function(socket) {
         //for debugging
         console.log('in exit_room');
 
-        if(removePlayer(data.RoomName, data.PlayerName) > -1){
+        if(ROOM_LIST.removePlayer(data.RoomName, data.PlayerName) > -1){
             console.log(data.PlayerName + ' player exit ' + data.RoomName + ' room!');
             socket.leave(data.RoomName);
 
