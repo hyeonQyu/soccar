@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class Room
 {
     private const int MaxPlayerPerRoom = 6;
+
+    public int Key { get; private set; }
     public string Name { get; private set; }
     public int Headcount { get; private set; }
     public string[] PlayerNames { get; private set; }
@@ -16,8 +18,9 @@ public class Room
         RoomPanel = roomPanel;
     }
 
-    public Room(string name, int headcount)
+    public Room(int key, string name, int headcount)
     {
+        Key = key;
         Name = name;
         Headcount = headcount;
     }
@@ -25,6 +28,7 @@ public class Room
     // 현재 방 정보 업데이트
     public void SetRoomInfo(Packet.ReceivingRoomInfo receivingRoomInfo)
     {
+        Key = receivingRoomInfo.RoomKey;
         Name = receivingRoomInfo.RoomName;
         PlayerNames = receivingRoomInfo.PlayerNames;
 
@@ -64,7 +68,7 @@ public class RoomManager
         int roomCount = receivingRoomList.RoomNames.Length;
         for(int i = 0; i < roomCount; i++)
         {
-            Rooms.Add(new Room(receivingRoomList.RoomNames[i], receivingRoomList.Headcounts[i]));
+            Rooms.Add(new Room(receivingRoomList.RoomKeys[i], receivingRoomList.RoomNames[i], receivingRoomList.Headcounts[i]));
         }
 
         ShowRoomList(true);
@@ -77,20 +81,20 @@ public class RoomManager
         {
             GameObject room = _roomList.transform.Find("Room" + i).gameObject;
 
-            Text index = room.transform.Find("Room Index").gameObject.GetComponent<Text>();
+            Text key = room.transform.Find("Room Key").gameObject.GetComponent<Text>();
             Text name = room.transform.Find("Room Name").gameObject.GetComponent<Text>();
             Text headcount = room.transform.Find("Room Headcount").gameObject.GetComponent<Text>();
 
             if(i >= Rooms.Count)
             {
-                index.text = "";
+                key.text = "";
                 name.text = "";
                 headcount.text = "";
 
                 continue;
             }
 
-            index.text = (i + 1).ToString();
+            key.text = Rooms[i].Key.ToString();
             name.text = Rooms[i].Name;
             headcount.text = Rooms[i].Headcount.ToString() + "/6";
         }

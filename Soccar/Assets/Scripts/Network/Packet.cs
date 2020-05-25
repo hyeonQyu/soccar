@@ -82,11 +82,13 @@ public class Packet
     // 대기중인 방 정보 수신
     public class ReceivingRoomList
     {
+        public int[] RoomKeys;
         public string[] RoomNames;
         public int[] Headcounts;
 
         public ReceivingRoomList()
         {
+            RoomKeys = new int[RoomManager.MaxRoomCount];
             RoomNames = new string[RoomManager.MaxRoomCount];
             Headcounts = new int[RoomManager.MaxRoomCount];
         }
@@ -95,19 +97,33 @@ public class Packet
     // 현재 입장한 방 정보 수신
     public class ReceivingRoomInfo
     {
+        public int RoomKey;
         public string RoomName;
         public string[] PlayerNames;
+    }
+
+    // 방 생성
+    public class SendingCreateRoom
+    {
+        public string RoomName;
+        public string PlayerName;
+
+        public SendingCreateRoom(string roomName, string playerName)
+        {
+            RoomName = roomName;
+            PlayerName = playerName;
+        }
     }
 
     // 방 입장 전송
     public class SendingEnterRoom
     {
-        public string RoomName;
+        public int RoomKey;
         public string PlayerName;
 
-        public SendingEnterRoom(string roomName, string playerName)
+        public SendingEnterRoom(int roomKey, string playerName)
         {
-            RoomName = roomName;
+            RoomKey = roomKey;
             PlayerName = playerName;
         }
     }
@@ -115,12 +131,12 @@ public class Packet
     // 방 퇴장 전송
     public class SendingExitRoom
     {
-        public string RoomName;
+        public int RoomKey;
         public string PlayerName;
 
-        public SendingExitRoom(string roomName, string playerName)
+        public SendingExitRoom(int roomKey, string playerName)
         {
-            RoomName = roomName;
+            RoomKey = roomKey;
             PlayerName = playerName;
         }
     }

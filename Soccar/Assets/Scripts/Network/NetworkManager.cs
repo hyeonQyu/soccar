@@ -7,7 +7,7 @@ public class NetworkManager
     /* 서버 접속에 관한 요소 */
     //private const string Url = "http://10.21.20.20:9090";
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-    private const string Url = "http://10.21.20.21:9090/";
+    private const string Url = "http://15.164.220.253:9090/";
 #elif UNITY_WEBGL
     private const string Url = "http://15.164.220.253:9090/";
 #endif
@@ -123,7 +123,7 @@ public class NetworkManager
                 _room.SetRoomInfo(receivingRoomInfo);
             });
 
-            // 방 입장 시 꽉 찬 방
+            // 방 입장 실패(꽉찬 방, 게임이 시작한 방, 사라진 방)
             _socket.On("fail_enter_room", (string data) =>
             {
                 _roomPanel.GetComponent<Animator>().Play("Exit Room");
