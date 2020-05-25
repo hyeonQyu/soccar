@@ -19,7 +19,6 @@ app.get('/', function(req, res) {
 });
 
 const MAX_PLAYER = 2;
-var playerIndex = 0;
 
 // 방 정보
 var Room = function(){
@@ -61,16 +60,16 @@ RoomList.prototype.removePlayer = function(roomName, playerName){
     roonIndex = this.findRoom(roomName);
 
     if(roomIndex > -1){
-        var playerIndex = 0;
-        for(; playerIndex < this.rooms[roomIndex].playerCounts; playerIndex++){
-            if(this.rooms[roomIndex].playerNames[playerIndex] == playerName){
+        var playerPos = 0;
+        for(; playerPos < this.rooms[roomIndex].playerCounts; playerPos++){
+            if(this.rooms[roomIndex].playerNames[playerPos] == playerName){
                 break;
             }
-            if(playerIndex == this.rooms[roomIndex].playerCounts -1){ // Not found!
+            if(playerPos == this.rooms[roomIndex].playerCounts -1){ // Not found!
                 return -1;
             }
         }
-        this.rooms[roomIndex].playerNames.splice(playerIndex,1);
+        this.rooms[roomIndex].playerNames.splice(playerPos,1);
         this.rooms[roomIndex].playerCounts--;
         if(this.rooms[roomIndex].playerCounts == 0){
             this.rooms.splice(roomIndex,1);
