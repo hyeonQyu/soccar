@@ -7,22 +7,44 @@ public class Room
 {
     private const int MaxPlayerPerRoom = 6;
 
+    // 실제 정보
     public int Key { get; private set; }
     public string Name { get; private set; }
     public int Headcount { get; private set; }
     public string[] PlayerNames { get; private set; }
-    public GameObject RoomPanel { get; private set; }
 
+    // UI에 관련된 요소
+    public GameObject RoomPanel { get; private set; }
+    private GameObject _playerList;
+    private GameObject[] _players = new GameObject[MaxPlayerPerRoom];
+    private Text[] _playerNames = new Text[MaxPlayerPerRoom];
+    private RawImage[] _playerCharacters = new RawImage[MaxPlayerPerRoom];
+
+    // 방 패널 출력을 위한 객체 생성자
     public Room(GameObject roomPanel)
     {
         RoomPanel = roomPanel;
+        InitializePlayersUiComponents();
     }
 
+    // 로비 패널 출력을 위한 객체 생성자
     public Room(int key, string name, int headcount)
     {
         Key = key;
         Name = name;
         Headcount = headcount;
+    }
+
+    // 방 패널의 UI 요소 초기화
+    private void InitializePlayersUiComponents()
+    {
+        _playerList = RoomPanel.transform.Find("Player List").gameObject;
+        for(int i = 0; i < MaxPlayerPerRoom; i++)
+        {
+            _players[i] = _playerList.transform.Find("Player" + i).gameObject;
+            _playerNames[i] = _players[i].transform.Find("Name Background").Find("Name").GetComponent<Text>();
+            _playerCharacters[i] = _players[i].transform.Find("Character").GetComponent<RawImage>();
+        }
     }
 
     // 현재 방 정보 업데이트
@@ -39,13 +61,21 @@ public class Room
     {
         RoomPanel.transform.Find("Room Key").GetComponent<Text>().text = Key.ToString();
         RoomPanel.transform.Find("Room Name").GetComponent<Text>().text = Name;
+
         // 방에 접속한 플레이어 목록 업데이트
-        GameObject playerList = RoomPanel.transform.Find("Player List").gameObject;
-        //for(int i = 0; i < MaxPlayerPerRoom; i++)
-        //{
-        //    GameObject player = playerList.transform.Find("Player" + i).gameObject;
-        //    player.transform.Find("Name Background").Find("Name").GetComponent<Text>().text = PlayerNames[i];
-        //}
+        int i;
+        // 현재 방에 있는 플레이어
+        for(i = 0; i < PlayerNames.Length; i++)
+        {
+            _playerNames[i].text = PlayerNames[i];
+            _playerCharacters[i].texture = Resources.Load<Texture>("Waiting Players/Waiting Player" + i);
+        }
+        // 빈 셀
+        for(; i < MaxPlayerPerRoom; i++)
+        {
+            _playerNames[i].text = "";
+            _playerCharacters[i].texture = null;
+        }
     }
 }
 
