@@ -195,6 +195,7 @@ io.on('connection', function(socket) {
             var datas = ROOM_LIST.stringifyRoomInfo(data.RoomKey);
             console.log(datas);
             socket.emit('room_info', datas);
+            io.sockets.in(data.RoomKey).emit('room_info', datas);
         }
         else { // flag == 0 방이 가득 참 or flag ==  -1 해당 방이 존재하지 않음
             var datas = ROOM_LIST.stringifyRoomList();
