@@ -13,7 +13,7 @@ public class Room
     public int Headcount { get; private set; }
     public string[] PlayerNames { get; private set; }
 
-    // UI에 관련된 요소
+    // 방 패널 UI에 관련된 요소
     public GameObject RoomPanel { get; private set; }
     private GameObject _playerList;
     private GameObject[] _players = new GameObject[MaxPlayerPerRoom];
@@ -81,14 +81,33 @@ public class Room
 
 public class RoomManager
 {
-    public List<Room> Rooms { get; private set; }
-    private GameObject _roomList;
-
     public const int MaxRoomCount = 5;
+    public List<Room> Rooms { get; private set; }
+
+    // 로비 패널 UI에 관련된 요소
+    private GameObject _roomList;
+    private GameObject[] _rooms = new GameObject[MaxRoomCount];
+    private Text[] _roomKeys = new Text[MaxRoomCount];
+    private Text[] _roomNames = new Text[MaxRoomCount];
+    private Text[] _roomHeadcounts = new Text[MaxRoomCount];
 
     public RoomManager(GameObject roomList)
     {
         _roomList = roomList;
+        InitializeRoomsUiComponents();
+    }
+
+    // 로비 패널의 UI 요소 초기화
+    private void InitializeRoomsUiComponents()
+    {
+        for(int i = 0; i < MaxRoomCount; i++)
+        {
+            _rooms[i] = _roomList.transform.Find("Room" + i).gameObject;
+
+            _roomKeys[i] = _rooms[i].transform.Find("Room Key").gameObject.GetComponent<Text>();
+            _roomNames[i] = _rooms[i].transform.Find("Room Name").gameObject.GetComponent<Text>();
+            _roomHeadcounts[i] = _rooms[i].transform.Find("Room Headcount").gameObject.GetComponent<Text>();
+        }
     }
 
     // 대기방 정보 업데이트
@@ -108,26 +127,20 @@ public class RoomManager
     // UI에 업데이트
     public void ShowRoomList(bool isUpdate)
     {
-        for(int i = 0; i < MaxRoomCount; i++)
+        int i;
+        // 현재 대기 방
+        for(i = 0; i < Rooms.Count; i++)
         {
-            GameObject room = _roomList.transform.Find("Room" + i).gameObject;
-
-            Text key = room.transform.Find("Room Key").gameObject.GetComponent<Text>();
-            Text name = room.transform.Find("Room Name").gameObject.GetComponent<Text>();
-            Text headcount = room.transform.Find("Room Headcount").gameObject.GetComponent<Text>();
-
-            if(i >= Rooms.Count)
-            {
-                key.text = "";
-                name.text = "";
-                headcount.text = "";
-
-                continue;
-            }
-
-            key.text = Rooms[i].Key.ToString();
-            name.text = Rooms[i].Name;
-            headcount.text = Rooms[i].Headcount.ToString() + "/6";
+            _roomKeys[i].text = Rooms[i].Key.ToString();
+            _roomNames[i].text = Rooms[i].Name.ToString();
+            _roomHeadcounts[i].text = Rooms[i].Headcount.ToString() + "/6";
+        }
+        // 빈 셀
+        for(; i < MaxRoomCount; i++)
+        {
+            _roomKeys[i].text = "";
+            _roomNames[i].text = "";
+            _roomHeadcounts[i].text = "";
         }
     }
 }
