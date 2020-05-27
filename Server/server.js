@@ -132,13 +132,14 @@ RoomList.prototype.stringifyRoomList = function(){
     return JSON.stringify(sendingData);
 }
 RoomList.prototype.stringifyRoomInfo = function(roomKey){
-    var roomIndex = ROOM_LIST.findRoom(roomKey);
+    var roomIndex = this.findRoom(roomKey);
 
     if(roomIndex > -1){
         var sendingData = new Object();
         sendingData.RoomKey = roomKey;
         sendingData.RoomName = this.rooms[roomIndex].roomName;
-        sendingData.PlayerNames = this.getNames(roomKey);
+        sendingData.PlayerKeys = this.rooms[roomIndex].playerKeys;
+        sendingData.PlayerNames = this.rooms[roomIndex].playerNames;
         return JSON.stringify(sendingData);
     }
 }
@@ -194,14 +195,22 @@ io.on('connection', function(socket) {
 
             var datas = ROOM_LIST.stringifyRoomInfo(data.RoomKey);
             console.log(datas);
-            socket.emit('room_info', datas);
-            io.sockets.in(data.RoomKey).emit('room_info', datas);
+            io.sockets.in(data.RoomKey).emit('room_info', datas); // broadcast to all clients in room(data.RoomKey)
         }
         else { // flag == 0 방이 가득 참 or flag ==  -1 해당 방이 존재하지 않음
             var datas = ROOM_LIST.stringifyRoomList();
             socket.emit('fail_enter_room', "");
             socket.emit('room_list', datas);
         }
+    });
+
+    socket.on('chat', function(data){
+        var sendingData = new Object();
+        sendingData.PlayerKey = socket.id;
+        sendingData.Message = data.Message;
+        var datas = JSON.stringify(sendingData);
+
+        io.sockets.in(data.RoomKey).emit('chat', datas);
     });
 
     socket.on('exit_room', function(data){
