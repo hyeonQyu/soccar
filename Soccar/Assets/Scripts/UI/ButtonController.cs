@@ -17,6 +17,9 @@ public class ButtonController : MonoBehaviour
     // 방
     private GameObject _roomPanel;
 
+    // 메시지
+    private InputField _message;
+
     public void Start()
     {
         _alertPanel = GameObject.Find("Alert Panel");
@@ -26,6 +29,8 @@ public class ButtonController : MonoBehaviour
         _inputRoomName = _createRoomPanel.transform.Find("InputField").GetComponent<InputField>();
 
         _roomPanel = GameObject.Find("Room Panel");
+
+        _message = _roomPanel.transform.Find("Chat").Find("Message").GetComponent<InputField>();
     }
 
     public void OnClickLogin()
@@ -177,13 +182,12 @@ public class ButtonController : MonoBehaviour
 
     public void OnClickSendMessage()
     {
-        InputField message = GameObject.Find("Message").GetComponent<InputField>();
         string roomKey = _roomPanel.transform.Find("Room Key").GetComponent<Text>().text;
 
-        if(message.text.Equals(""))
+        if(_message.text.Equals(""))
             return;
 
-        Packet.SendingChat sendingChat = new Packet.SendingChat(roomKey, message.text);
+        Packet.SendingChat sendingChat = new Packet.SendingChat(roomKey, _message.text);
         try
         {
             NetworkManager.Send<Packet.SendingChat>("chat", sendingChat);
@@ -193,7 +197,7 @@ public class ButtonController : MonoBehaviour
             Debug.LogError("OnClickSendMesage: Send 실패");
         }
 
-        message.text = "";
+        _message.text = "";
     }
 
     private bool IsAlphabetNumeric(string str, bool isNickname)
