@@ -39,9 +39,9 @@ public class ButtonController : MonoBehaviour
         LobbyManager.PlayerName = inputIdField.text;
 
         // 닉네임은 알파벳과 숫자만 가능
-        if(!IsAlphabetNumeric(LobbyManager.PlayerName))
+        if(!IsAlphabetNumeric(LobbyManager.PlayerName, true))
         {
-            _alertMessage.text = "You can use only alphabetic and numeric nicknames";
+            _alertMessage.text = "You can use only alphabetic and numeric nicknames without space";
             _alertPanel.GetComponent<Animator>().Play("Open Alert");
             return;
         }
@@ -89,7 +89,7 @@ public class ButtonController : MonoBehaviour
             return;
 
         // 방 이름은 알파벳과 숫자만 가능
-        if(!IsAlphabetNumeric(roomName))
+        if(!IsAlphabetNumeric(roomName, false))
         {
             _alertMessage.text = "You can use only alphabetic and numeric room names";
             _alertPanel.GetComponent<Animator>().Play("Open Alert");
@@ -184,13 +184,17 @@ public class ButtonController : MonoBehaviour
         message.text = "";
     }
 
-    private bool IsAlphabetNumeric(string str)
+    private bool IsAlphabetNumeric(string str, bool isNickname)
     {
         bool isAvaliableStr = true;
         // 닉네임은 영어와 숫자만 허용
         foreach(char c in str)
         {
             if(('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') || (0 <= c - '0' && c - '0' <= 9))
+                continue;
+
+            // 방 이름은 공백 허용, 닉네임은 공백을 허용하지 않음
+            if(!isNickname && c == ' ')
                 continue;
 
             isAvaliableStr = false;
