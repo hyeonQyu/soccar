@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class LobbyManager : MonoBehaviour
 {
+    public const byte OnLoginPanel = 1;
+    public const byte OnLobbyPanel = 2;
+    public const byte OnRoomPanel = 3;
+
     [SerializeField]
     private Image _logoPanel;
     [SerializeField]
@@ -18,18 +22,26 @@ public class LobbyManager : MonoBehaviour
     private GameObject _roomPanel;
     [SerializeField]
     private GameObject _alertPanel;
+    [SerializeField]
+    private GameObject _buttonControllerObject;
 
     public static bool IsLogoDestroyed { set; get; }
     private bool _isOnLobby;
 
+    // 통신을 위한 요소
     private LobbyNetworkLinker _lobbyNetworkLinker;
     private NetworkManager _networkManager;
+
+    // 방 관리
     private RoomManager _roomManager;
     private Room _room;
 
     private Coroutine[] _showSpeechBubbleCoroutines = new Coroutine[Room.MaxPlayerPerRoom];
 
+    private ButtonController _buttonController;
+
     public static string PlayerName { get; set; }
+    public static byte CurrentPanel = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -41,8 +53,9 @@ public class LobbyManager : MonoBehaviour
         _room = new Room(_roomPanel);
 
         _lobbyNetworkLinker = new LobbyNetworkLinker(_roomManager, _room, _roomPanel, _alertPanel);
-
         _networkManager = new NetworkManager(false, _lobbyNetworkLinker);
+
+        _buttonController = _buttonControllerObject.GetComponent<ButtonController>();
     }
 
     // Update is called once per frame
@@ -55,6 +68,21 @@ public class LobbyManager : MonoBehaviour
             Animator mainScreenAnimator = _mainScreenPanel.GetComponent<Animator>();
             mainScreenAnimator.SetBool("isDestroy", true);
             _isOnLobby = true;
+
+            CurrentPanel = OnLoginPanel;
+        }
+
+        // Input Field가 있는 패널에서 엔터키 입력
+        if(Input.GetKeyDown(KeyCode.Return))
+        {
+            if(CurrentPanel == OnLoginPanel)
+            {
+                _buttonController.OnClickLogin();
+            }
+            else if(CurrentPanel == OnRoomPanel)
+            {
+                _buttonController.OnClickSendMessage();
+            }
         }
 
         // 채팅 말풍선

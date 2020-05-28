@@ -171,6 +171,9 @@ public class ButtonController : MonoBehaviour
         InputField message = GameObject.Find("Message").GetComponent<InputField>();
         string roomKey = _roomPanel.transform.Find("Room Key").GetComponent<Text>().text;
 
+        if(message.text.Equals(""))
+            return;
+
         Packet.SendingChat sendingChat = new Packet.SendingChat(roomKey, message.text);
         try
         {

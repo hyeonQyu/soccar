@@ -119,6 +119,8 @@ public class NetworkManager
                 // 로비에서 보이는 방 리스트를 업데이트
                 Packet.ReceivingRoomList receivingRoomList = JsonUtility.FromJson<Packet.ReceivingRoomList>(data);
                 _roomManager.SetRoomList(receivingRoomList);
+
+                LobbyManager.CurrentPanel = LobbyManager.OnLobbyPanel;
             });
 
             // 방 생성, 방 입장, 대기 중인 방에 다른 플레이어가 들어올 때
@@ -129,6 +131,8 @@ public class NetworkManager
                 // 방 안에서 보이는 방 정보를 업데이트
                 Packet.ReceivingRoomInfo receivingRoomInfo = JsonUtility.FromJson<Packet.ReceivingRoomInfo>(data);
                 _room.SetRoomInfo(receivingRoomInfo);
+
+                LobbyManager.CurrentPanel = LobbyManager.OnRoomPanel;
             });
 
             // 방 입장 실패(꽉찬 방, 게임이 시작한 방, 사라진 방)
