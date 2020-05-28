@@ -99,6 +99,7 @@ public class Packet
     {
         public int RoomKey;
         public string RoomName;
+        public string[] PlayerKeys;
         public string[] PlayerNames;
     }
 
@@ -138,6 +139,26 @@ public class Packet
         {
             RoomKey = roomKey;
             PlayerName = playerName;
+        }
+    }
+
+    // 채팅 수신
+    public class ReceivingChat
+    {
+        public string PlayerKey;
+        public string Message;
+    }
+
+    // 채팅 전송
+    public class SendingChat
+    {
+        public string RoomKey;
+        public string Message;
+
+        public SendingChat(string roomKey, string message)
+        {
+            RoomKey = roomKey;
+            Message = message;
         }
     }
 }

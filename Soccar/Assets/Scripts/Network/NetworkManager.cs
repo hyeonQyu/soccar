@@ -138,6 +138,15 @@ public class NetworkManager
                 _alertMessage.text = "You cannot enter this room because it room is full or does not exist now";
                 _alertPanel.GetComponent<Animator>().Play("Open Alert");
             });
+
+            // 채팅 수신
+            _socket.On("chat", (string data) =>
+            {
+                data = ToJsonFormat(data);
+
+                Packet.ReceivingChat receivingChat = JsonUtility.FromJson<Packet.ReceivingChat>(data);
+                _room.ShowSpeechBubble(receivingChat);
+            });
         }  
     }
 

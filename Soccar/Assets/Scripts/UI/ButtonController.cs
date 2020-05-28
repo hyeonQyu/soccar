@@ -166,6 +166,24 @@ public class ButtonController : MonoBehaviour
         _alertPanel.GetComponent<Animator>().Play("Close Alert");
     }
 
+    public void OnClickSendMessage()
+    {
+        InputField message = GameObject.Find("Message").GetComponent<InputField>();
+        string roomKey = _roomPanel.transform.Find("Room Key").GetComponent<Text>().text;
+
+        Packet.SendingChat sendingChat = new Packet.SendingChat(roomKey, message.text);
+        try
+        {
+            NetworkManager.Send<Packet.SendingChat>("chat", sendingChat);
+        }
+        catch(NullReferenceException e)
+        {
+            Debug.LogError("OnClickSendMesage: Send 실패");
+        }
+
+        message.text = "";
+    }
+
     private bool IsAlphabetNumeric(string str)
     {
         bool isAvaliableStr = true;

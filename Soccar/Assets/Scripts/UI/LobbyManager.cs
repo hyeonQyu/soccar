@@ -27,6 +27,8 @@ public class LobbyManager : MonoBehaviour
     private RoomManager _roomManager;
     private Room _room;
 
+    private Coroutine[] _showSpeechBubbleCoroutines = new Coroutine[Room.MaxPlayerPerRoom];
+
     public static string PlayerName { get; set; }
 
     // Start is called before the first frame update
@@ -55,6 +57,28 @@ public class LobbyManager : MonoBehaviour
             _isOnLobby = true;
         }
 
-        /* 로비 */
+        // 채팅 말풍선
+        try
+        {
+            for(int i = 0; i < _room.PlayerKeys.Length; i++)
+            {
+                if(_room.IsSpeeching[i])
+                {
+                    _room.IsSpeeching[i] = false;
+
+                    if(_showSpeechBubbleCoroutines[i] != null)
+                        StopCoroutine(_showSpeechBubbleCoroutines[i]);
+                    _showSpeechBubbleCoroutines[i] = StartCoroutine(ShowSpeechBubbleOnRoomPanel(i));
+                }
+            }
+        }
+        catch(NullReferenceException e) { }
+    }
+
+    private IEnumerator ShowSpeechBubbleOnRoomPanel(int i)
+    {
+        // 말풍선을 4초 후 사라지게 만듦
+        yield return new WaitForSeconds(4);
+        _room.SpeechBubble[i].transform.localScale = new Vector3(0, 0, 0);
     }
 }
