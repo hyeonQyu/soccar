@@ -84,6 +84,9 @@ public class ButtonController : MonoBehaviour
     // 방만들기 패널 안의 OK 버튼
     public void OnClickCreateRoomOk()
     {
+        if(LobbyManager.CurrentPanel == LobbyManager.OnRoomPanel)
+            return;
+
         string roomName = _inputRoomName.text;
         if(roomName.Equals(""))
             return;
@@ -120,6 +123,9 @@ public class ButtonController : MonoBehaviour
 
     public void OnClickEnterRoom()
     {
+        if(LobbyManager.CurrentPanel == LobbyManager.OnRoomPanel)
+            return;
+
         int roomKey = -1;
         try
         {
@@ -146,6 +152,9 @@ public class ButtonController : MonoBehaviour
 
     public void OnClickExitRoom()
     {
+        if(LobbyManager.CurrentPanel == LobbyManager.OnLobbyPanel)
+            return;
+
         int roomKey = int.Parse(_roomPanel.transform.Find("Room Key").GetComponent<Text>().text);
 
         Packet.SendingExitRoom sendingExitRoom = new Packet.SendingExitRoom(roomKey, LobbyManager.PlayerName);

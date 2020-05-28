@@ -24,6 +24,7 @@ public class LobbyManager : MonoBehaviour
     private GameObject _alertPanel;
     [SerializeField]
     private GameObject _buttonControllerObject;
+    private InputField _chatMessage;
 
     public static bool IsLogoDestroyed { set; get; }
     private bool _isOnLobby;
@@ -55,6 +56,7 @@ public class LobbyManager : MonoBehaviour
         _lobbyNetworkLinker = new LobbyNetworkLinker(_roomManager, _room, _roomPanel, _alertPanel);
         _networkManager = new NetworkManager(false, _lobbyNetworkLinker);
 
+        _chatMessage = _roomPanel.transform.Find("Chat").Find("Message").GetComponent<InputField>();
         _buttonController = _buttonControllerObject.GetComponent<ButtonController>();
     }
 
@@ -81,6 +83,7 @@ public class LobbyManager : MonoBehaviour
             }
             else if(CurrentPanel == OnRoomPanel)
             {
+                _roomPanel.transform.Find("Chat").Find("Message").GetComponent<InputField>().ActivateInputField();
                 _buttonController.OnClickSendMessage();
             }
         }
