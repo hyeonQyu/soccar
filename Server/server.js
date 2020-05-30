@@ -7,8 +7,6 @@ var compression = require('compression');
 
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
-// io.set('heartbeat timeout', 2000);
-// io.set('heartbeat interval', 1000)
 
 const cp = require('child_process');
 const path = require('path');
@@ -21,7 +19,7 @@ app.get('/', function(req, res) {
 });
 
 const MAX_PLAYER = 6;
-var ROOM_KEY = 0;
+var ROOM_KEY = 1;
 
 // 방 정보
 var Room = function(){
@@ -161,6 +159,8 @@ port = ['9091'];
 
 io.on('connection', function(socket) {
 
+    var roomKey = 0;
+
     console.log("Connect");
 
     socket.on('room_list', function(data) {
@@ -179,6 +179,7 @@ io.on('connection', function(socket) {
 
         ROOM_LIST.createRoom(ROOM_KEY, data.RoomName, socket.id, data.PlayerName);
         socket.join(ROOM_KEY);
+        roomKey = ROOM_KEY;
 
         var datas = ROOM_LIST.stringifyRoomInfo(ROOM_KEY);
         console.log(datas);
@@ -194,6 +195,7 @@ io.on('connection', function(socket) {
         flag = ROOM_LIST.addPlayer(data.RoomKey, socket.id, data.PlayerName)
         if(flag > 0){  // flag == true
             socket.join(data.RoomKey);
+            roomKey = data.RoomKey;
 
             var datas = ROOM_LIST.stringifyRoomInfo(data.RoomKey);
             console.log(datas);
@@ -222,6 +224,7 @@ io.on('connection', function(socket) {
         if(ROOM_LIST.removePlayer(data.RoomKey, socket.id) > -1){
             console.log(data.PlayerName + ' player exit ' + data.RoomKey + ' room!');
             socket.leave(data.RoomKey);
+            roomKey = 0;
 
             // 방을 나간 플레이어에게만
             var roomList = ROOM_LIST.stringifyRoomList();
@@ -239,9 +242,23 @@ io.on('connection', function(socket) {
         socket.emit('room_info', datas);
     });
 
-    socket.on('heart_beat', function(data){
-        console.log("in heart_beat");
-        socket.emit('heart_beat', "");
+    socket.on('disconnect', function(data){
+        if(roomKey !=0 && ROOM_LIST.removePlayer(roomKey, socket.id) > -1){
+            console.log(socket.id + ' player disconnected in ' + roomKey + ' room!');
+            socket.leave(roomKey);
+
+            // 방을 나간 플레이어에게만
+            var roomList = ROOM_LIST.stringifyRoomList();
+            socket.emit('room_list', roomList);
+
+            // 플레이어가 나간 방의 다른 플레이어들에게
+            var roomInfo = ROOM_LIST.stringifyRoomInfo(roomKey);
+            io.sockets.in(roomKey).emit('room_info', roomInfo);
+            roomKey = 0;
+        }
+        else{
+            console.log(socket.id + ' player disconnected.');
+        }
     });
 
 
