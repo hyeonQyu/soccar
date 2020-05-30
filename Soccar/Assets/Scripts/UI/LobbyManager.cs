@@ -26,6 +26,9 @@ public class LobbyManager : MonoBehaviour
     private GameObject _buttonControllerObject;
     [SerializeField]
     private GameObject _networkManagerObject;
+    [SerializeField]
+    private GameObject _sceneMediumObject;
+
     private InputField _chatMessage;
 
     public static bool IsLogoDestroyed { set; get; }
@@ -58,7 +61,7 @@ public class LobbyManager : MonoBehaviour
 
         _lobbyNetworkLinker = new LobbyNetworkLinker(_roomManager, _room, _roomPanel, _alertPanel);
         _networkManager = _networkManagerObject.GetComponent<NetworkManager>();
-        _networkManager.SetWebSocket(false, 9090, _lobbyNetworkLinker);
+        _networkManager.SetWebSocket(false, _sceneMediumObject.GetComponent<SceneMedium>(), _lobbyNetworkLinker);
 
         _chatMessage = _roomPanel.transform.Find("Message").GetComponent<InputField>();
         _buttonController = _buttonControllerObject.GetComponent<ButtonController>();

@@ -31,16 +31,14 @@ public class NetworkManager : MonoBehaviour
     private Text _alertMessage;
 
     // 씬 전환을 위한 객체
-    [SerializeField]
-    private GameObject SceneMediumObject;
     private SceneMedium _sceneMedium;
 
     // Start 함수에서 호출되어야 함
-    public void SetWebSocket(bool isGameScene, int port, LobbyNetworkLinker lobbyNetworkLinker = null)
+    public void SetWebSocket(bool isGameScene, SceneMedium sceneMedium, LobbyNetworkLinker lobbyNetworkLinker = null)
     {
-        string url = Ip + port;
+        _sceneMedium = sceneMedium;
+        string url = Ip + _sceneMedium.Port;
         _socket = Socket.Connect(url);
-        _sceneMedium = SceneMediumObject.GetComponent<SceneMedium>();
 
         // 게임
         if(isGameScene)

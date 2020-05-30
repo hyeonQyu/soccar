@@ -10,5 +10,6 @@ public class SceneMedium : MonoBehaviour
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
+        Port = 9090;
     }
 }

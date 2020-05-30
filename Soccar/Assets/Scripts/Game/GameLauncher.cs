@@ -27,8 +27,7 @@ public class GameLauncher : MonoBehaviour
         RoutineScheduler = GetComponent<RoutineScheduler>();
         PlayerController.SetPlayers();
 
-        _sceneMedium = GameObject.Find("Scene Medium").GetComponent<SceneMedium>();
-        _networkManager.SetWebSocket(true, _sceneMedium.Port);
+        _networkManager.SetWebSocket(true, GameObject.Find("Scene Medium").GetComponent<SceneMedium>());
         PlayerController.NetworkManager = _networkManager;
 
         _frameCount = 0;
