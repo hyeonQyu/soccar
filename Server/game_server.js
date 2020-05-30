@@ -1,4 +1,4 @@
-var port = Number(process.argv.slice(2));
+var port = Number(process.argv.slice(2,3));
 var totalPlayer = Number(process.argv.slice(3));
 const GAME_START = 'start';
 const REQUEST_PLAYER_INDEX = 'req';
