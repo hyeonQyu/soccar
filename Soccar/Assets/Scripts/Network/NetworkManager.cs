@@ -142,7 +142,7 @@ public class NetworkManager : MonoBehaviour
             _socket.On("fail_enter_room", (string data) =>
             {
                 _roomPanel.GetComponent<Animator>().Play("Exit Room");
-                _alertMessage.text = "You cannot enter this room because it room is full or does not exist now.";
+                _alertMessage.text = "You cannot enter this room because it room is full or game is already started or does not exist now.";
                 _alertPanel.GetComponent<Animator>().Play("Open Alert");
             });
 

@@ -253,7 +253,7 @@ io.on('connection', function(socket) {
     });
 
     socket.on('start_game', function(data){
-        var roomIndex = ROOM_LIST.findRoom(data.RoomKey);
+        var roomIndex = ROOM_LIST.findRoom(data);
         if(roomIndex >  -1){
             if(ROOM_LIST.rooms[roomIndex].playerCounts < MIN_PLAYER){
                 socket.emit("fail_start_game", "");
@@ -268,7 +268,8 @@ io.on('connection', function(socket) {
                 sendingData.Port = PORT;
                 sendingData.Headcount = ROOM_LIST.rooms[roomIndex].playerCounts;
                 var datas = JSON.stringify(sendingData);
-                io.sockets.in(data.RoomKey).emit('start_game',datas);
+                io.sockets.in(data).emit('start_game',datas);
+                ROOM_LIST.removeRoom(data);
                 PORT += 1;
             }
         }
