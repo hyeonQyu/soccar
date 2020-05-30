@@ -2,6 +2,8 @@
 
 public class GameLauncher : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject _networkManagerObject;
     private NetworkManager _networkManager;
     private SceneMedium _sceneMedium;
     public static RoutineScheduler RoutineScheduler { get; private set; }
@@ -27,6 +29,7 @@ public class GameLauncher : MonoBehaviour
         RoutineScheduler = GetComponent<RoutineScheduler>();
         PlayerController.SetPlayers();
 
+        _networkManager = _networkManagerObject.GetComponent<NetworkManager>();
         _networkManager.SetWebSocket(true, GameObject.Find("Scene Medium").GetComponent<SceneMedium>());
         PlayerController.NetworkManager = _networkManager;
 
