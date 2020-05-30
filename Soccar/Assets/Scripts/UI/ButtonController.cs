@@ -54,6 +54,7 @@ public class ButtonController : MonoBehaviour
         // 로그인과 동시에 게임 방 리스트 요청
         try
         {
+            NetworkManager.Send("heart_beat", "");
             NetworkManager.Send("room_list", LobbyManager.PlayerName);
         }
         catch(NullReferenceException e)

@@ -58,8 +58,6 @@ public class LobbyManager : MonoBehaviour
 
         _chatMessage = _roomPanel.transform.Find("Chat").Find("Message").GetComponent<InputField>();
         _buttonController = _buttonControllerObject.GetComponent<ButtonController>();
-
-        NetworkManager.Send("heart_beat", "");
     }
 
     // Update is called once per frame
