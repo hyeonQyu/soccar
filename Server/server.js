@@ -156,9 +156,6 @@ RoomList.prototype.clear = function(){
 
 var ROOM_LIST = new RoomList();
 
-port = ['9091'];
-var child = cp.fork("game_server.js", port);
-
 io.on('connection', function(socket) {
 
     var roomKey = 0;
@@ -259,10 +256,10 @@ io.on('connection', function(socket) {
                 socket.emit("fail_start_game", "");
             }
             else{
-                var arg = [];
-                arg.push(JSON.stringify(PORT));
-                arg.push(JSON.stringify(ROOM_LIST.rooms[roomIndex].playerCounts));
-                var child = cp.fork("game_server.js", arg);
+                var argv = [];
+                argv.push(JSON.stringify(PORT));
+                argv.push(JSON.stringify(ROOM_LIST.rooms[roomIndex].playerCounts));
+                var child = cp.fork("game_server.js", argv);
 
                 var sendingData = new Object();
                 sendingData.Port = PORT;
