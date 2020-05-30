@@ -3,7 +3,12 @@ guid: 3c00f758bd735cf44be07429beb81d55
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SoccerBall
+    second: {fileID: 2100000, guid: 37079d3486763064ea662bd01408c0d5, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
