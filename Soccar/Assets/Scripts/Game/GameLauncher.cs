@@ -3,6 +3,7 @@
 public class GameLauncher : MonoBehaviour
 {
     private NetworkManager _networkManager;
+    private SceneMedium _sceneMedium;
     public static RoutineScheduler RoutineScheduler { get; private set; }
 
     private static bool _isClickedStart;
@@ -25,7 +26,9 @@ public class GameLauncher : MonoBehaviour
     {
         RoutineScheduler = GetComponent<RoutineScheduler>();
         PlayerController.SetPlayers();
-        _networkManager.SetWebSocket(true);
+
+        _sceneMedium = GameObject.Find("Scene Medium").GetComponent<SceneMedium>();
+        _networkManager.SetWebSocket(true, _sceneMedium.Port);
         PlayerController.NetworkManager = _networkManager;
 
         _frameCount = 0;

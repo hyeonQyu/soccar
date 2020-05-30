@@ -9,9 +9,9 @@ public class NetworkManager : MonoBehaviour
     /* 서버 접속에 관한 요소 */
     //private const string Url = "http://10.21.20.20:9090";
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-    private const string Url = "http://15.164.220.253:9090/";
+    private const string Ip = "http://15.164.220.253:";
 #elif UNITY_WEBGL
-    private const string Url = "http://15.164.220.253:9090/";
+    private const string Ip = "http://15.164.220.253:";
 #endif
     private Socket _socket;
 
@@ -36,9 +36,10 @@ public class NetworkManager : MonoBehaviour
     private SceneMedium _sceneMedium;
 
     // Start 함수에서 호출되어야 함
-    public void SetWebSocket(bool isGameScene, LobbyNetworkLinker lobbyNetworkLinker = null)
+    public void SetWebSocket(bool isGameScene, int port, LobbyNetworkLinker lobbyNetworkLinker = null)
     {
-        _socket = Socket.Connect(Url);
+        string url = Ip + port;
+        _socket = Socket.Connect(url);
         _sceneMedium = SceneMediumObject.GetComponent<SceneMedium>();
 
         // 게임
