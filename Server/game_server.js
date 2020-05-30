@@ -1,10 +1,13 @@
 var port = Number(process.argv.slice(2));
+var totalPlayer = Number(process.argv.slice(3));
 const GAME_START = 'start';
 const REQUEST_PLAYER_INDEX = 'req';
 
 var io = require('socket.io').listen(port);
 
-const totalPlayer = 4;
+
+console.log('PortNum='+port+' room starts game, Total_Player='+totalPlayer);
+
 var playerIndex = 0;
 
 var timestamp = [];
