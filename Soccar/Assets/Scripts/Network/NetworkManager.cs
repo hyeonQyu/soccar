@@ -164,6 +164,7 @@ public class NetworkManager : MonoBehaviour
                 _sceneMedium.Headcount = receivingGameStart.Headcount;
 
                 SceneManager.LoadScene("GoalTestScene");
+                Send("disconnection", "");
             });
 
             // 게임 시작 실패(인원수가 적음)
