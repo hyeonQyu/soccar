@@ -7,6 +7,8 @@ var compression = require('compression');
 
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
+io.set('heartbeat timeout', 2000);
+io.set('heartbeat interval', 1000)
 
 const cp = require('child_process');
 const path = require('path');
@@ -18,7 +20,7 @@ app.get('/', function(req, res) {
 
 });
 
-const MAX_PLAYER = 2;
+const MAX_PLAYER = 6;
 var ROOM_KEY = 0;
 
 // 방 정보
@@ -156,94 +158,110 @@ var ROOM_LIST = new RoomList();
 
 port = ['9091'];
 //var child = cp.fork("game_server.js", port);
+try{
+    io.on('connection', function(socket) {
+        var test_var = 0;
 
-io.on('connection', function(socket) {
+        console.log("Connect");
 
-    console.log("Connect");
+        socket.on('room_list', function(data) {
+            // for debugging
+            console.log('in room_list');
 
-    socket.on('room_list', function(data) {
-        // for debugging
-        console.log('in room_list');
+            test_var += 1;
+            console.log(socket.id + " -> " +test_var);
 
-        var datas = ROOM_LIST.stringifyRoomList();
-        console.log(datas);
-        socket.emit('room_list', datas);
-    });
+            var datas = ROOM_LIST.stringifyRoomList();
+            console.log(datas);
+            socket.emit('room_list', datas);
+        });
 
 
-    socket.on('create_room', function(data) {
-        //for debugging
-        console.log('in create_room');
+        socket.on('create_room', function(data) {
+            //for debugging
+            console.log('in create_room');
 
-        ROOM_LIST.createRoom(ROOM_KEY, data.RoomName, socket.id, data.PlayerName);
-        socket.join(ROOM_KEY);
+            ROOM_LIST.createRoom(ROOM_KEY, data.RoomName, socket.id, data.PlayerName);
+            socket.join(ROOM_KEY);
 
-        var datas = ROOM_LIST.stringifyRoomInfo(ROOM_KEY);
-        console.log(datas);
-        socket.emit('room_info', datas);
-        ROOM_KEY = ROOM_KEY + 1;
-    });
+            var datas = ROOM_LIST.stringifyRoomInfo(ROOM_KEY);
+            console.log(datas);
+            socket.emit('room_info', datas);
+            ROOM_KEY = ROOM_KEY + 1;
+        });
 
-    socket.on('enter_room', function(data){
-        //for debugging
-        console.log('in enter_room');
+        socket.on('enter_room', function(data){
+            //for debugging
+            console.log('in enter_room');
 
-        var flag;
-        flag = ROOM_LIST.addPlayer(data.RoomKey, socket.id, data.PlayerName)
-        if(flag > 0){  // flag == true
-            socket.join(data.RoomKey);
+            var flag;
+            flag = ROOM_LIST.addPlayer(data.RoomKey, socket.id, data.PlayerName)
+            if(flag > 0){  // flag == true
+                socket.join(data.RoomKey);
 
+                var datas = ROOM_LIST.stringifyRoomInfo(data.RoomKey);
+                console.log(datas);
+                io.sockets.in(data.RoomKey).emit('room_info', datas); // broadcast to all clients in room(data.RoomKey)
+            }
+            else { // flag == 0 방이 가득 참 or flag ==  -1 해당 방이 존재하지 않음
+                var datas = ROOM_LIST.stringifyRoomList();
+                socket.emit('fail_enter_room', "");
+                socket.emit('room_list', datas);
+            }
+        });
+
+        socket.on('chat', function(data){
+            var sendingData = new Object();
+            sendingData.PlayerKey = socket.id;
+            sendingData.Message = data.Message;
+            var datas = JSON.stringify(sendingData);
+
+            io.sockets.in(data.RoomKey).emit('chat', datas);
+        });
+
+        socket.on('exit_room', function(data){
+            //for debugging
+            console.log('in exit_room');
+
+            if(ROOM_LIST.removePlayer(data.RoomKey, socket.id) > -1){
+                console.log(data.PlayerName + ' player exit ' + data.RoomKey + ' room!');
+                socket.leave(data.RoomKey);
+
+                // 방을 나간 플레이어에게만
+                var roomList = ROOM_LIST.stringifyRoomList();
+                socket.emit('room_list', roomList);
+
+                // 플레이어가 나간 방의 다른 플레이어들에게
+                var roomInfo = ROOM_LIST.stringifyRoomInfo(data.RoomKey);
+                io.sockets.in(data.RoomKey).emit('room_info', roomInfo);
+            }
+        });
+
+        socket.on('room_info', function(data) {
             var datas = ROOM_LIST.stringifyRoomInfo(data.RoomKey);
             console.log(datas);
-            io.sockets.in(data.RoomKey).emit('room_info', datas); // broadcast to all clients in room(data.RoomKey)
-        }
-        else { // flag == 0 방이 가득 참 or flag ==  -1 해당 방이 존재하지 않음
-            var datas = ROOM_LIST.stringifyRoomList();
-            socket.emit('fail_enter_room', "");
-            socket.emit('room_list', datas);
-        }
+            socket.emit('room_info', datas);
+        });
+
+        socket.on('close_socket', function(data){
+            console.log(socket.id + "is disconnected");
+        });
+
+        socket.on('heart_beat', function(data){
+            console.log("in heart_beat");
+            socket.emit('heart_beat', "");
+        });
+
+
     });
 
-    socket.on('chat', function(data){
-        var sendingData = new Object();
-        sendingData.PlayerKey = socket.id;
-        sendingData.Message = data.Message;
-        var datas = JSON.stringify(sendingData);
-
-        io.sockets.in(data.RoomKey).emit('chat', datas);
+    server.listen(9090, function() {
+        console.log('Socket IO server listening on port 9090');
     });
-
-    socket.on('exit_room', function(data){
-        //for debugging
-        console.log('in exit_room');
-
-        if(ROOM_LIST.removePlayer(data.RoomKey, socket.id) > -1){
-            console.log(data.PlayerName + ' player exit ' + data.RoomKey + ' room!');
-            socket.leave(data.RoomKey);
-
-            // 방을 나간 플레이어에게만
-            var roomList = ROOM_LIST.stringifyRoomList();
-            socket.emit('room_list', roomList);
-
-            // 플레이어가 나간 방의 다른 플레이어들에게
-            var roomInfo = ROOM_LIST.stringifyRoomInfo(data.RoomKey);
-            io.sockets.in(data.RoomKey).emit('room_info', roomInfo);
-        }
-    });
-
-    socket.on('room_info', function(data) {
-        var datas = ROOM_LIST.stringifyRoomInfo(data.RoomKey);
-        console.log(datas);
-        socket.emit('room_info', datas);
-    });
-
-
-});
-
-server.listen(9090, function() {
-    console.log('Socket IO server listening on port 9090');
-});
-
+}
+catch (ex){
+    console.log("Exception : "+ JSON.stringify(ex));
+}
 
 
 
