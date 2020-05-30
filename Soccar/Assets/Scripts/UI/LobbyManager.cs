@@ -56,7 +56,7 @@ public class LobbyManager : MonoBehaviour
         _lobbyNetworkLinker = new LobbyNetworkLinker(_roomManager, _room, _roomPanel, _alertPanel);
         _networkManager = new NetworkManager(false, _lobbyNetworkLinker);
 
-        _chatMessage = _roomPanel.transform.Find("Chat").Find("Message").GetComponent<InputField>();
+        _chatMessage = _roomPanel.transform.Find("Message").GetComponent<InputField>();
         _buttonController = _buttonControllerObject.GetComponent<ButtonController>();
     }
 

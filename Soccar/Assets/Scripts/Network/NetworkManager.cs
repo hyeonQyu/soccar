@@ -151,11 +151,6 @@ public class NetworkManager
                 Packet.ReceivingChat receivingChat = JsonUtility.FromJson<Packet.ReceivingChat>(data);
                 _room.ShowSpeechBubble(receivingChat);
             });
-
-            _socket.On("heart_beat", (string data) =>
-            {
-                Send("heart_beat", "");
-            });
         }  
     }
 

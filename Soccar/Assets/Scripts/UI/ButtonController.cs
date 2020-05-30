@@ -30,7 +30,7 @@ public class ButtonController : MonoBehaviour
 
         _roomPanel = GameObject.Find("Room Panel");
 
-        _message = _roomPanel.transform.Find("Chat").Find("Message").GetComponent<InputField>();
+        _message = _roomPanel.transform.Find("Message").GetComponent<InputField>();
     }
 
     public void OnClickLogin()
@@ -54,7 +54,6 @@ public class ButtonController : MonoBehaviour
         // 로그인과 동시에 게임 방 리스트 요청
         try
         {
-            NetworkManager.Send("heart_beat", "");
             NetworkManager.Send("room_list", LobbyManager.PlayerName);
         }
         catch(NullReferenceException e)
@@ -199,6 +198,11 @@ public class ButtonController : MonoBehaviour
         }
 
         _message.text = "";
+    }
+
+    public void OnClickGameStart()
+    {
+
     }
 
     private bool IsAlphabetNumeric(string str, bool isNickname)
