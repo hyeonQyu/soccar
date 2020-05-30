@@ -25,7 +25,9 @@ public class GameLauncher : MonoBehaviour
     {
         RoutineScheduler = GetComponent<RoutineScheduler>();
         PlayerController.SetPlayers();
-        _networkManager = new NetworkManager(true);
+        _networkManager.SetWebSocket(true);
+        PlayerController.NetworkManager = _networkManager;
+
         _frameCount = 0;
 
         Balls[0] = GameObject.Find("Ball1");
@@ -43,21 +45,21 @@ public class GameLauncher : MonoBehaviour
             Debug.Log("==시작 버튼 눌림");
 
             // 게임 시작 버튼이 눌렸음을 서버에 전송
-            NetworkManager.Send("start_button", "start");
+            _networkManager.Send("start_button", "start");
 
             _isClickedStart = false;
-            NetworkManager.RequestPlayerIndex = "req";
+            _networkManager.RequestPlayerIndex = "req";
             return;
         }
 
         // 게임 시작 Ack를 맨 처음에 제대로 수신하면
-        if (NetworkManager.GameStart == "start" && PlayerController.PlayerIndex == 99)
+        if (_networkManager.GameStart == "start" && PlayerController.PlayerIndex == 99)
         {
             Debug.Log("==플레이어 인덱스 주세요");
             // Player Index 요청
-            NetworkManager.Send("request_player_index", NetworkManager.RequestPlayerIndex);
+            _networkManager.Send("request_player_index", _networkManager.RequestPlayerIndex);
 
-            NetworkManager.RequestPlayerIndex = "";
+            _networkManager.RequestPlayerIndex = "";
             return;
         }
 
@@ -89,12 +91,5 @@ public class GameLauncher : MonoBehaviour
             //    NetworkManager.Send<Packet.BallsPosition>("ball_position", NetworkManager.BallsPosition);
             //}
         }
-    }
-
-    private void OnDestroy()
-    {
-        ButtonControl.Destroy();
-        NetworkManager.Destroy();
-        PlayerController.Destroy();
     }
 }

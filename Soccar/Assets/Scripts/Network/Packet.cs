@@ -161,4 +161,10 @@ public class Packet
             Message = message;
         }
     }
+
+    public class ReceivingGameStart 
+    {
+        public int Port;
+        public int Headcount;
+    }
 }

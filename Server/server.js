@@ -19,7 +19,9 @@ app.get('/', function(req, res) {
 });
 
 const MAX_PLAYER = 6;
+const MIN_PLAYER = 3;
 var ROOM_KEY = 1;
+var PORT = 9091;
 
 // 방 정보
 var Room = function(){
@@ -155,7 +157,7 @@ RoomList.prototype.clear = function(){
 var ROOM_LIST = new RoomList();
 
 port = ['9091'];
-//var child = cp.fork("game_server.js", port);
+var child = cp.fork("game_server.js", port);
 
 io.on('connection', function(socket) {
 
@@ -163,9 +165,17 @@ io.on('connection', function(socket) {
 
     console.log("Connect");
 
-    socket.on('room_list', function(data) {
+    socket.on('login', function(data){
+        socket.emit('login', socket.id);
+
+        var datas = ROOM_LIST.stringifyRoomList();
+        console.log(datas);
+        socket.emit('room_list', datas);
+    });
+
+    socket.on('refresh', function(data) {
         // for debugging
-        console.log('in room_list');
+        console.log('in refresh');
 
         var datas = ROOM_LIST.stringifyRoomList();
         console.log(datas);
@@ -241,6 +251,28 @@ io.on('connection', function(socket) {
         console.log(datas);
         socket.emit('room_info', datas);
     });
+
+    socket.on('start_game', function(data){
+        var roomIndex = ROOM_LIST.findRoom(data.RoomKey);
+        if(roomIndex >  -1){
+            if(ROOM_LIST.rooms[roomIndex].playerCounts < MIN_PLAYER){
+                socket.emit("fail_start_game", "");
+            }
+            else{
+                var arg = [];
+                arg.push(JSON.stringify(PORT));
+                arg.push(JSON.stringify(ROOM_LIST.rooms[roomIndex].playerCounts));
+                var child = cp.fork("game_server.js", arg);
+
+                var sendingData = new Object();
+                sendingData.Port = PORT;
+                sendingData.Headcount = ROOM_LIST.rooms[roomIndex].playerCounts;
+                var datas = JSON.stringify(sendingData);
+                io.sockets.in(data.RoomKey).emit('start_game',datas);
+                PORT += 1;
+            }
+        }
+    })
 
     socket.on('disconnect', function(data){
         if(roomKey !=0 && ROOM_LIST.removePlayer(roomKey, socket.id) > -1){

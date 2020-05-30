@@ -16,9 +16,12 @@ public class ButtonController : MonoBehaviour
 
     // 방
     private GameObject _roomPanel;
+    private Text _roomKey;
 
     // 메시지
     private InputField _message;
+
+    private NetworkManager _networkManager;
 
     public void Start()
     {
@@ -29,8 +32,11 @@ public class ButtonController : MonoBehaviour
         _inputRoomName = _createRoomPanel.transform.Find("InputField").GetComponent<InputField>();
 
         _roomPanel = GameObject.Find("Room Panel");
+        _roomKey = _roomPanel.transform.Find("Room Key").GetComponent<Text>();
 
         _message = _roomPanel.transform.Find("Message").GetComponent<InputField>();
+
+        _networkManager = GameObject.Find("Network Manager").GetComponent<NetworkManager>();
     }
 
     public void OnClickLogin()
@@ -46,20 +52,13 @@ public class ButtonController : MonoBehaviour
         // 닉네임은 알파벳과 숫자만 가능
         if(!IsAlphabetNumeric(LobbyManager.PlayerName, true))
         {
-            _alertMessage.text = "You can use only alphabetic and numeric nicknames without space";
+            _alertMessage.text = "You can use only alphabetic and numeric nicknames without space.";
             _alertPanel.GetComponent<Animator>().Play("Open Alert");
             return;
         }
 
         // 로그인과 동시에 게임 방 리스트 요청
-        try
-        {
-            NetworkManager.Send("room_list", LobbyManager.PlayerName);
-        }
-        catch(NullReferenceException e)
-        {
-            Debug.LogError("OnClickLogin: Send 실패");
-        }
+        _networkManager.Send("login", LobbyManager.PlayerName);
 
         // 로그인 패널 소멸
         loginPanel.GetComponent<Animator>().SetBool("isDestroy", true);
@@ -69,14 +68,7 @@ public class ButtonController : MonoBehaviour
 
     public void OnClickRefresh()
     {
-        try
-        {
-            NetworkManager.Send("room_list", LobbyManager.PlayerName);
-        }
-        catch(NullReferenceException e)
-        {
-            Debug.LogError("OnClickRefresh: Send 실패");
-        }
+        _networkManager.Send("refresh", LobbyManager.PlayerName);
     }
 
     public void OnClickCreateRoom()
@@ -99,20 +91,13 @@ public class ButtonController : MonoBehaviour
         // 방 이름은 알파벳과 숫자만 가능
         if(!IsAlphabetNumeric(roomName, false))
         {
-            _alertMessage.text = "You can use only alphabetic and numeric room names";
+            _alertMessage.text = "You can use only alphabetic and numeric room names.";
             _alertPanel.GetComponent<Animator>().Play("Open Alert");
             return;
         }
 
-        Packet.SendingCreateRoom sendingCreateRoom = new Packet.SendingCreateRoom(roomName, LobbyManager.PlayerName);        
-        try
-        {
-            NetworkManager.Send<Packet.SendingCreateRoom>("create_room", sendingCreateRoom);
-        }
-        catch(NullReferenceException e)
-        {
-            Debug.LogError("OnClickCreateRoomOk: Send 실패");
-        }
+        Packet.SendingCreateRoom sendingCreateRoom = new Packet.SendingCreateRoom(roomName, LobbyManager.PlayerName);
+        _networkManager.Send<Packet.SendingCreateRoom>("create_room", sendingCreateRoom);
 
         // 방 패널 켜기
         _roomPanel.GetComponent<Animator>().Play("Enter Room");
@@ -142,14 +127,7 @@ public class ButtonController : MonoBehaviour
         }
 
         Packet.SendingEnterRoom sendingEnterRoom = new Packet.SendingEnterRoom(roomKey, LobbyManager.PlayerName);
-        try
-        {
-            NetworkManager.Send<Packet.SendingEnterRoom>("enter_room", sendingEnterRoom);
-        }
-        catch(NullReferenceException e)
-        {
-            Debug.LogError("OnClickEnterRoom: Send 실패");
-        }
+        _networkManager.Send<Packet.SendingEnterRoom>("enter_room", sendingEnterRoom);
 
         // 방 패널 켜기
         _roomPanel.GetComponent<Animator>().Play("Enter Room");
@@ -163,14 +141,7 @@ public class ButtonController : MonoBehaviour
         int roomKey = int.Parse(_roomPanel.transform.Find("Room Key").GetComponent<Text>().text);
 
         Packet.SendingExitRoom sendingExitRoom = new Packet.SendingExitRoom(roomKey, LobbyManager.PlayerName);
-        try
-        {
-            NetworkManager.Send<Packet.SendingExitRoom>("exit_room", sendingExitRoom);
-        }
-        catch(NullReferenceException e)
-        {
-            Debug.LogError("OnClickExitRoom: Send 실패");
-        }
+        _networkManager.Send<Packet.SendingExitRoom>("exit_room", sendingExitRoom);
 
         _roomPanel.GetComponent<Animator>().Play("Exit Room");
     }
@@ -188,21 +159,14 @@ public class ButtonController : MonoBehaviour
             return;
 
         Packet.SendingChat sendingChat = new Packet.SendingChat(roomKey, _message.text);
-        try
-        {
-            NetworkManager.Send<Packet.SendingChat>("chat", sendingChat);
-        }
-        catch(NullReferenceException e)
-        {
-            Debug.LogError("OnClickSendMesage: Send 실패");
-        }
+        _networkManager.Send<Packet.SendingChat>("chat", sendingChat);
 
         _message.text = "";
     }
 
     public void OnClickGameStart()
     {
-
+        _networkManager.Send("start_game", _roomKey.text);
     }
 
     private bool IsAlphabetNumeric(string str, bool isNickname)
