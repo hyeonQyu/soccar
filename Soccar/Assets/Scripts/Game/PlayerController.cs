@@ -19,6 +19,8 @@ public static class PlayerController
     private static float _runSpeed;
     private static float _playerSpeed;
 
+    public static NetworkManager NetworkManager { private get; set; }
+
     // 99 = 서버로 부터 값을 받지 않음.
     private static int _playerIndex = 99;
     public static int PlayerIndex
@@ -68,8 +70,6 @@ public static class PlayerController
     {
         // 상대 좌표
         Vector3 myPosition = new Vector3(0, 0, 0);
-
-        NetworkManager.MyPosition.Position = myPosition;
 
         if (Input.GetKey(KeyCode.LeftShift))
         {
@@ -159,18 +159,11 @@ public static class PlayerController
 
         if (_isMoved)
         {
-            /* 움직임 변경      Lerp
-            NetworkManager.MyPosition.Position = myPosition;
-            NetworkManager.Send<Packet.PersonalPosition>("relative_position", NetworkManager.MyPosition);
-            */
-
             // 자신의 분신을 움직임
             Move(myPosition);
 
             _isMoved = false;
         }
-
-        //NetworkManager.Send<Packet.PersonalPosition>("relative_position", NetworkManager.MyPosition);
     }
 
     // 공 + 절대좌표 전송

@@ -21,6 +21,7 @@ public class Room
     private Text[] _playerKeys = new Text[MaxPlayerPerRoom];
     private Text[] _playerNames = new Text[MaxPlayerPerRoom];
     private RawImage[] _playerCharacters = new RawImage[MaxPlayerPerRoom];
+    private Button _gameStartButton;
 
     // 채팅 요소
     public Image[] SpeechBubble { get; set; }
@@ -61,6 +62,8 @@ public class Room
             SpeechBubble[i] = _players[i].transform.Find("Speech Bubble").GetComponent<Image>();
             SpeechMessage[i] = SpeechBubble[i].transform.Find("Speech Message").GetComponent<Text>();
         }
+
+        _gameStartButton = RoomPanel.transform.Find("Game Start Button").GetComponent<Button>();
     }
 
     // 현재 방 정보 업데이트
@@ -96,6 +99,11 @@ public class Room
             _playerNames[i].text = "";
             _playerCharacters[i].texture = null;
         }
+
+        if(LobbyManager.SocketId.Equals(PlayerKeys[0]))
+            _gameStartButton.interactable = true;
+        else
+            _gameStartButton.interactable = false;
     }
 
     public void ShowSpeechBubble(Packet.ReceivingChat receivingChat)
