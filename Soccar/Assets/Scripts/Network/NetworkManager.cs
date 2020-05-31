@@ -9,7 +9,7 @@ public class NetworkManager : MonoBehaviour
     /* 서버 접속에 관한 요소 */
     //private const string Url = "http://10.21.20.20:9090";
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-    private const string Ip = "http://15.164.220.253:";
+    private const string Ip = "http://localhost:";
 #elif UNITY_WEBGL
     private const string Ip = "http://15.164.220.253:";
 #endif
@@ -163,8 +163,14 @@ public class NetworkManager : MonoBehaviour
                 _sceneMedium.Port = receivingGameStart.Port;
                 _sceneMedium.Headcount = receivingGameStart.Headcount;
 
-                SceneManager.LoadScene("GoalTestScene");
+                // 로비 서버와 연결 해제
                 Send("disconnection", "");
+
+                // 웹소켓 관련 요소 삭제
+                Destroy(GameObject.Find("(singleton) socket.io.SocketManager"));
+                Destroy(GameObject.Find("MainThreadDispatcher"));
+
+                SceneManager.LoadScene("GoalTestScene");
             });
 
             // 게임 시작 실패(인원수가 적음)

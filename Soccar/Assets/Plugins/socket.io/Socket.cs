@@ -23,6 +23,16 @@ namespace socket.io {
             return socket;
         }
 
+        public static Socket Reconnect(string url)
+        {
+            var socket = new GameObject(string.Format("socket.io - {0}", url)).AddComponent<Socket>();
+            socket.transform.SetParent(SocketManager.Instance.transform, false);
+            socket.Url = new Uri(url);
+
+            SocketManager.Instance.Reconnect(socket, 10);
+            return socket;
+        }
+
         #region On/Off methods
 
         public void On(string eventName, Action<string> callback) {
