@@ -291,7 +291,11 @@ io.on('connection', function(socket) {
         }
     });
 
-
+    socket.on('disconnection', function(data){
+        console.log('in disconnection');
+        socket.disconnect(true);
+    });
+    
 });
 
 server.listen(9090, function() {
