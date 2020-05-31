@@ -19,7 +19,7 @@ app.get('/', function(req, res) {
 });
 
 const MAX_PLAYER = 6;
-const MIN_PLAYER = 3;
+const MIN_PLAYER = 1;
 var ROOM_KEY = 1;
 var PORT = 9091;
 
