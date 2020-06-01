@@ -55,7 +55,7 @@ io.on('connection', function(socket) {
 
     socket.on('player_index', function(data) {
         console.log('player_index ' + data);
-        socket.emit(data);
+        socket.emit('player_index', data);
     });
 
     socket.on('relative_position', function(data) {

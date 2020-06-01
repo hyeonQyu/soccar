@@ -15,14 +15,18 @@ public class GameLauncher : MonoBehaviour
 
     public static GameObject[] Balls = new GameObject[2];
 
+    private int _frame = 0;
+
     // Start is called before the first frame update
     void Start()
     {
         RoutineScheduler = GetComponent<RoutineScheduler>();
         PlayerController.SetPlayers();
 
+        _sceneMedium = GameObject.Find("Scene Medium").GetComponent<SceneMedium>();
+
         _networkManager = _networkManagerObject.GetComponent<NetworkManager>();
-        _networkManager.SetWebSocket(true, GameObject.Find("Scene Medium").GetComponent<SceneMedium>());
+        _networkManager.SetWebSocket(true, _sceneMedium);
         PlayerController.NetworkManager = _networkManager;
 
         PlayerController.PlayerIndex = 99;
@@ -35,6 +39,9 @@ public class GameLauncher : MonoBehaviour
     void Update()
     {
         //Debug.Log(NetworkManager.GetTimestamp());
+        _frame++;
+        if(_frame < 180)
+            return;
 
         if(!PlayerController.IsPlayersInitialized)
         {

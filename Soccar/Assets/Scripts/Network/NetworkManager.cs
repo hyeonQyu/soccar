@@ -50,7 +50,6 @@ public class NetworkManager : MonoBehaviour
             _socket.On("player_index", (string data) =>
             {
                 PlayerController.PlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
-                Debug.Log("Received Player Index: " + PlayerController.PlayerIndex);
             });
 
             // 상대좌표 + 공
