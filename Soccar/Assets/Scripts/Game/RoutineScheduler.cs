@@ -57,7 +57,7 @@ public class RoutineScheduler : MonoBehaviour
 
             for(int j = 0; j < destPositions.Length; j++)
             {
-                GameLauncher.Balls[i].transform.position = Vector3.Lerp(prePositions[i], destPositions[i], t);
+                GameLauncher.Balls[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
             }
 
             yield return new WaitForSeconds(0.002f);

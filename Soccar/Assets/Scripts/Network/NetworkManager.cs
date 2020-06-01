@@ -9,7 +9,7 @@ public class NetworkManager : MonoBehaviour
     /* 서버 접속에 관한 요소 */
     //private const string Url = "http://10.21.20.20:9090";
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-    private const string Ip = "http://10.21.20.62:";
+    private const string Ip = "http://localhost:";
 #elif UNITY_WEBGL
     private const string Ip = "http://15.164.220.253:";
 #endif
