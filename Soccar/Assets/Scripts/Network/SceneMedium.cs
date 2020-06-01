@@ -6,6 +6,8 @@ public class SceneMedium : MonoBehaviour
 {
     public int Port { get; set; }
     public int Headcount { get; set; }
+    public int PlayerIndex { get; set; }
+    public string PlayerName { get; set; }
 
     void Awake()
     {

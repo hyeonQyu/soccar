@@ -1,17 +1,11 @@
 var port = Number(process.argv.slice(2,3));
 var totalPlayer = Number(process.argv.slice(3));
-const GAME_START = 'start';
-const REQUEST_PLAYER_INDEX = 'req';
 
 var express = require('express');
 var app = express();
 
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
-//var io = require('socket.io').listen(port);
-
-
-console.log('PortNum='+port+' room starts game, Total_Player='+totalPlayer);
 
 var playerIndex = 0;
 
@@ -59,23 +53,9 @@ io.on('connection', function(socket) {
 
     console.log("Connect in child");
 
-    socket.on('start_button', function(data) {
-        console.log('start_button ' + data);
-
-        if(data == GAME_START) {
-            socket.emit('start_button', GAME_START);
-        }
-    });
-
-    socket.on('request_player_index', function(data) {
-        console.log('request_player_index ' + data);
-
-        if(data == REQUEST_PLAYER_INDEX) {
-            // 클라이언트에게 플레이어 인덱스 전송
-            var playerIndexString = playerIndex.toString();
-            socket.emit('request_player_index', playerIndexString);
-            playerIndex++;
-        }
+    socket.on('player_index', function(data) {
+        console.log('player_index ' + data);
+        socket.emit(data);
     });
 
     socket.on('relative_position', function(data) {
@@ -155,5 +135,5 @@ io.on('connection', function(socket) {
 });
 
 server.listen(port, function(){
-    console.log('game server listening on port ' + port);
+    console.log('Game server listening on port ' + port);
 })

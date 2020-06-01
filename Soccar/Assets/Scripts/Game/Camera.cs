@@ -38,7 +38,7 @@ public class Camera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(PlayerController.IsPlayerInitialized && _isFirstRun)
+        if(PlayerController.IsPlayersInitialized && _isFirstRun)
         {
             transform.eulerAngles = new Vector3(_angle, PlayerController.PlayerIndex * 90f, 0);
             _isFirstRun = false;

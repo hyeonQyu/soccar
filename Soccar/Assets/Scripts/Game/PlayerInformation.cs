@@ -4,31 +4,8 @@ using UnityEngine;
 
 public class PlayerInformation : MonoBehaviour
 {
-    private string _id;
-    public string ID
-    {
-        set
-        {
-            _id = value;
-        }
-        get
-        {
-            return _id;
-        }
-    }
-
-    private int _score = 0;
-    public int Score
-    {
-        get
-        {
-            return _score;
-        }
-        set
-        {
-            _score = value;
-        }
-    }
+    public string PlayerName { get; set; }
+    public int Score { get; set; }
 
     private Vector3 _lastReceivedPosition;
     public Vector3 LastReceivedPosition
@@ -45,20 +22,20 @@ public class PlayerInformation : MonoBehaviour
         PlayerInformation concederPlayer = conceder.GetComponent<PlayerInformation>();
 
         // 득점자는 +2점, 실점자는 -1점
-        if(concederPlayer.ID != _id)
+        if(!concederPlayer.PlayerName.Equals(PlayerName))
         {
-            _score += 2;
+            Score += 2;
             // 득점에 대한 메시지 
-            Debug.Log("득점자: " + _id + "   실점자: " + concederPlayer.ID);
+            Debug.Log("득점자: " + PlayerName + "   실점자: " + concederPlayer.PlayerName);
         }
         // 자책골, 자책골은 득점으로 인정하지 않음
         else
         {
             // 자책골에 대한 메시지
-            Debug.Log(_id + "의 자책골");
+            Debug.Log(PlayerName + "의 자책골");
         }
         concederPlayer.Score--;
 
-        Debug.Log(_id + ": " + _score + "    " + concederPlayer.ID + ": " + concederPlayer.Score);
+        Debug.Log(PlayerName + ": " + Score + "    " + concederPlayer.PlayerName + ": " + concederPlayer.PlayerName);
     }
 }

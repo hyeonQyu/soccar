@@ -47,16 +47,10 @@ public class NetworkManager : MonoBehaviour
             RequestPlayerIndex = "";
 
             /* 서버로부터 메시지 수신 */
-            _socket.On("start_button", (string data) =>
-            {
-                GameStart = data.Substring(1, 5);
-                Debug.Log("==Game Start Message: " + GameStart);
-            });
-
-            _socket.On("request_player_index", (string data) =>
+            _socket.On("player_index", (string data) =>
             {
                 PlayerController.PlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
-                Debug.Log("==Received Player Index: " + PlayerController.PlayerIndex);
+                Debug.Log("Received Player Index: " + PlayerController.PlayerIndex);
             });
 
             // 상대좌표 + 공
@@ -162,6 +156,8 @@ public class NetworkManager : MonoBehaviour
                 Packet.ReceivingGameStart receivingGameStart = JsonUtility.FromJson<Packet.ReceivingGameStart>(data);
                 _sceneMedium.Port = receivingGameStart.Port;
                 _sceneMedium.Headcount = receivingGameStart.Headcount;
+                _sceneMedium.PlayerIndex = _room.GetPlayerIndex();
+                _sceneMedium.PlayerName = LobbyManager.PlayerName;
 
                 // 로비 서버와 연결 해제
                 Send("disconnection", "");

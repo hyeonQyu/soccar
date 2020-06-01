@@ -166,5 +166,6 @@ public class Packet
     {
         public int Port;
         public int Headcount;
+        public int PlayerIndex;
     }
 }

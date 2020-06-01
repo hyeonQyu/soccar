@@ -48,7 +48,7 @@ public class LobbyManager : MonoBehaviour
 
     public static string SocketId { get; set; }
     public static string PlayerName { get; set; }
-    public static byte CurrentPanel = 0;
+    public static byte CurrentPanel { get; set; }
 
     // Start is called before the first frame update
     void Start()
@@ -65,6 +65,8 @@ public class LobbyManager : MonoBehaviour
 
         _chatMessage = _roomPanel.transform.Find("Message").GetComponent<InputField>();
         _buttonController = _buttonControllerObject.GetComponent<ButtonController>();
+
+        CurrentPanel = 0;
     }
 
     // Update is called once per frame

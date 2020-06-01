@@ -22,26 +22,11 @@ public static class PlayerController
     public static NetworkManager NetworkManager { private get; set; }
 
     // 99 = 서버로 부터 값을 받지 않음.
-    private static int _playerIndex = 99;
-    public static int PlayerIndex
-    {
-        get
-        {
-            return _playerIndex;
-        }
-        set
-        {
-            _playerIndex = value;
-        }
-    }
+    public static int PlayerIndex { get; set; }
 
     // 움직임 발생시 true로 변환하여 서버로 패킷전송
     private static bool _isMoved = false;
-    private static bool _isPlayersInitialized = false;
-    public static bool IsPlayerInitialized
-    {
-        get { return _isPlayersInitialized; }
-    }
+    public static bool IsPlayersInitialized { get; private set; }
 
     public static void SetPlayers()
     {
@@ -57,13 +42,13 @@ public static class PlayerController
         AlterEgo = GameObject.Find("Alter Ego");
     }
 
-    public static void InitializePlayer()
+    public static void InitializePlayer(string playerName)
     {
-        Player = Players[_playerIndex];
+        Player = Players[PlayerIndex];
         AlterEgo.transform.position = Player.transform.position;
-        Player.GetComponent<PlayerInformation>().ID = ButtonControl.InputID.text;
+        Player.GetComponent<PlayerInformation>().PlayerName = playerName;
 
-        _isPlayersInitialized = true;
+        IsPlayersInitialized = true;
     }
 
     public static void InputRelativePosition()
@@ -82,7 +67,7 @@ public static class PlayerController
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            switch (_playerIndex)
+            switch (PlayerIndex)
             {
                 case 0:
                     myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
@@ -101,7 +86,7 @@ public static class PlayerController
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            switch (_playerIndex)
+            switch (PlayerIndex)
             {
                 case 0:
                     myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
@@ -120,7 +105,7 @@ public static class PlayerController
         }
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            switch (_playerIndex)
+            switch (PlayerIndex)
             {
                 case 0:
                     myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
@@ -139,7 +124,7 @@ public static class PlayerController
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            switch (_playerIndex)
+            switch (PlayerIndex)
             {
                 case 0:
                     myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
@@ -196,7 +181,7 @@ public static class PlayerController
             // 원래는 모두를 움직여주어야 함
             for(int i = 0; i < 4; i++)
             {
-                if(i == _playerIndex)
+                if(i == PlayerIndex)
                     continue;
                 Vector3 movingPosition = playersPositionsFromServer[i];
                 Players[i].transform.Translate(movingPosition);
