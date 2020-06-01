@@ -121,4 +121,9 @@ public class LobbyManager : MonoBehaviour
         yield return new WaitForSeconds(4);
         _room.SpeechBubble[i].transform.localScale = new Vector3(0, 0, 0);
     }
+
+    private void OnApplicationQuit()
+    {
+        _networkManager.Send("disconnection", "");
+    }
 }
