@@ -65,7 +65,7 @@ public static class PlayerController
         float piTheta = theta * Mathf.PI / 180;
 
         rightVector = new Vector3(Mathf.Cos(piTheta), 0, Mathf.Sin(piTheta));   // (1,0,0)vector 회전
-        leftVector = new Vector3(-Mathf.Cos(piTheta), 0, Mathf.Sin(piTheta));  // (-1,0,0)vector 회전
+        leftVector = new Vector3(-Mathf.Cos(piTheta), 0, -Mathf.Sin(piTheta));  // (-1,0,0)vector 회전
         forwardVector = new Vector3(-Mathf.Sin(piTheta), 0, Mathf.Cos(piTheta));  // (0,0,1)vector 회전
         backwardVector = new Vector3(Mathf.Sin(piTheta), 0, -Mathf.Cos(piTheta));  // (0,0,-1)vector 회전
 
