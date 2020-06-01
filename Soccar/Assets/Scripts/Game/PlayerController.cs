@@ -60,10 +60,11 @@ public static class PlayerController
     {
         // set direction vector
         theta = (360f / GameLauncher.Headcount) * PlayerIndex;
+        
         rightVector = new Vector3(Mathf.Cos(theta), 0, Mathf.Sign(theta));
-        leftVector = new Vector3(-Mathf.Cos(theta), 0, -Mathf.Sign(theta));
+        leftVector = new Vector3(Mathf.Cos(theta+180), 0, Mathf.Sign(theta+180));
         forwardVector = new Vector3(Mathf.Cos(90+theta), 0, Mathf.Sign(90+theta));
-        backwardVector = new Vector3(-Mathf.Cos(90+theta), 0, -Mathf.Sign(90+theta));
+        backwardVector = new Vector3(Mathf.Cos(270+theta), 0, Mathf.Sign(270+theta));
 
         Player = Players[PlayerIndex];
         AlterEgo.transform.position = Player.transform.position;
