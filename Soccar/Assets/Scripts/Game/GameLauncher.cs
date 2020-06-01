@@ -2,6 +2,9 @@
 
 public class GameLauncher : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject _loadingGameScenePanel;
+
     // 네트워크
     [SerializeField]
     private GameObject _networkManagerObject;
@@ -16,8 +19,6 @@ public class GameLauncher : MonoBehaviour
     public static GameObject[] Balls = new GameObject[2];
 
     public static int Headcount;
-
-    private int _frame = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -42,9 +43,10 @@ public class GameLauncher : MonoBehaviour
     void Update()
     {
         //Debug.Log(NetworkManager.GetTimestamp());
-        _frame++;
-        if(_frame < 180)
+        // 로딩 씬이 사라질 때까지 대기
+        if(_loadingGameScenePanel.transform.localScale.x != 0)
             return;
+        Destroy(_loadingGameScenePanel);
 
         if(!PlayerController.IsPlayersInitialized)
         {
