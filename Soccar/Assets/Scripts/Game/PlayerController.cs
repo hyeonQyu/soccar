@@ -59,12 +59,15 @@ public static class PlayerController
     public static void InitializePlayer(string playerName)
     {
         // set direction vector
-        theta = (360f / GameLauncher.Headcount) * PlayerIndex;
-        
-        rightVector = new Vector3(Mathf.Cos(theta), 0, Mathf.Sign(theta));
-        leftVector = new Vector3(Mathf.Cos(theta+180), 0, Mathf.Sign(theta+180));
-        forwardVector = new Vector3(Mathf.Cos(90+theta), 0, Mathf.Sign(90+theta));
-        backwardVector = new Vector3(Mathf.Cos(270+theta), 0, Mathf.Sign(270+theta));
+        theta = - (360f / GameLauncher.Headcount) * PlayerIndex; // 반시계방향으로 값이 증가됨.
+        Debug.Log("theta = " + theta);
+
+        rightVector = new Vector3(Mathf.Cos(theta), 0, Mathf.Sin(theta));   // (1,0,0)vector 회전
+        leftVector = new Vector3(-Mathf.Cos(theta), 0, Mathf.Sin(theta));  // (-1,0,0)vector 회전
+        forwardVector = new Vector3(-Mathf.Sin(theta), 0, Mathf.Cos(theta));  // (0,0,1)vector 회전
+        backwardVector = new Vector3(Mathf.Sin(theta), 0, -Mathf.Cos(theta));  // (0,0,-1)vector 회전
+
+        Debug.Log("r=" + rightVector + " l=" + leftVector + " f=" + forwardVector + " b=" + backwardVector);
 
         Player = Players[PlayerIndex];
         AlterEgo.transform.position = Player.transform.position;

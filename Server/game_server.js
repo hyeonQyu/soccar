@@ -102,7 +102,7 @@ io.on('connection', function(socket) {
             sendingPosition.BallPositions = ballsPositions;
             sendingPosition.PlayerPositions = playersPositions[1].Positions;
             var datas = JSON.stringify(sendingPosition);
-            console.log('절대' + datas);
+            //console.log('절대' + datas);
 
             io.emit('absolute_position', datas);
             for(var i = 0; i < totalPlayer; i++){

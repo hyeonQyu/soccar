@@ -37,13 +37,10 @@ public class RoutineScheduler : MonoBehaviour
 
             for(int j = 0; j < destPositions.Length; j++)
             {
-                Debug.Log("i + j " + i + " " + j);
                 //if(j == PlayerController.PlayerIndex)
                 //    continue;
 
-                Debug.Log("before: " + PlayerController.Players[j].transform.position);
                 PlayerController.Players[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
-                Debug.Log("after: " + PlayerController.Players[j].transform.position);
             }
 
             yield return new WaitForSeconds(0.002f);
