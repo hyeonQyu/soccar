@@ -10,8 +10,8 @@ public class RoutineScheduler : MonoBehaviour
     public void StartMoving(Packet.ReceivingPositions receivingPositions)
     {
         // 현재 공, 플레이어 위치 저장
-        Vector3[] currentPlayerPositions = new Vector3[4];
-        for(int i = 0; i < 4; i++)
+        Vector3[] currentPlayerPositions = new Vector3[GameLauncher.Headcount];
+        for(int i = 0; i < GameLauncher.Headcount; i++)
         {
             currentPlayerPositions[i] = PlayerController.Players[i].transform.position;
         }

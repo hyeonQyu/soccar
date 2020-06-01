@@ -15,15 +15,18 @@ public class GameLauncher : MonoBehaviour
 
     public static GameObject[] Balls = new GameObject[2];
 
+    public static int Headcount;
+
     private int _frame = 0;
 
     // Start is called before the first frame update
     void Start()
     {
+        _sceneMedium = GameObject.Find("Scene Medium").GetComponent<SceneMedium>();
+        Headcount = _sceneMedium.Headcount;
+
         RoutineScheduler = GetComponent<RoutineScheduler>();
         PlayerController.SetPlayers();
-
-        _sceneMedium = GameObject.Find("Scene Medium").GetComponent<SceneMedium>();
 
         _networkManager = _networkManagerObject.GetComponent<NetworkManager>();
         _networkManager.SetWebSocket(true, _sceneMedium);

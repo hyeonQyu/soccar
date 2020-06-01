@@ -19,6 +19,13 @@ public static class PlayerController
     private static float _runSpeed;
     private static float _playerSpeed;
 
+    private static float theta;
+
+    private static Vector3 rightVector;
+    private static Vector3 leftVector;
+    private static Vector3 forwardVector;
+    private static Vector3 backwardVector;
+
     public static NetworkManager NetworkManager { private get; set; }
 
     // 99 = 서버로 부터 값을 받지 않음.
@@ -33,17 +40,31 @@ public static class PlayerController
         _walkSpeed = 10;
         _runSpeed = _walkSpeed * 2;
 
-        Players = new GameObject[4];
-        Players[0] = GameObject.Find("Player1");
-        Players[1] = GameObject.Find("Player2");
-        Players[2] = GameObject.Find("Player3");
-        Players[3] = GameObject.Find("Player4");
+        Players = new GameObject[GameLauncher.Headcount];
+        for(int i =0; i < 6; i++)
+        {
+            if (i < GameLauncher.Headcount)
+            {
+                Players[i] = GameObject.Find("Player" + i.ToString());
+            }
+            else
+            {
+                GameObject.Find("Player" + i.ToString()).SetActive(false);
+            }
+        }
 
         AlterEgo = GameObject.Find("Alter Ego");
     }
 
     public static void InitializePlayer(string playerName)
     {
+        // set direction vector
+        theta = (360f / GameLauncher.Headcount) * PlayerIndex;
+        rightVector = new Vector3(Mathf.Cos(theta), 0, Mathf.Sign(theta));
+        leftVector = new Vector3(-Mathf.Cos(theta), 0, -Mathf.Sign(theta));
+        forwardVector = new Vector3(Mathf.Cos(90+theta), 0, Mathf.Sign(90+theta));
+        backwardVector = new Vector3(-Mathf.Cos(90+theta), 0, -Mathf.Sign(90+theta));
+
         Player = Players[PlayerIndex];
         AlterEgo.transform.position = Player.transform.position;
         Player.GetComponent<PlayerInformation>().PlayerName = playerName;
@@ -67,78 +88,26 @@ public static class PlayerController
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            switch (PlayerIndex)
-            {
-                case 0:
-                    myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
-                    break;
-                case 1:
-                    myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
-                    break;
-                case 2:
-                    myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
-                    break;
-                case 3:
-                    myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
-                    break;
-            }
+            myPosition += (leftVector * _playerSpeed * Time.deltaTime);
+
             _isMoved = true;
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            switch (PlayerIndex)
-            {
-                case 0:
-                    myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
-                    break;
-                case 1:
-                    myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
-                    break;
-                case 2:
-                    myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
-                    break;
-                case 3:
-                    myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
-                    break;
-            }
+            myPosition += (rightVector * _playerSpeed * Time.deltaTime);
+
             _isMoved = true;
         }
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            switch (PlayerIndex)
-            {
-                case 0:
-                    myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
-                    break;
-                case 1:
-                    myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
-                    break;
-                case 2:
-                    myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
-                    break;
-                case 3:
-                    myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
-                    break;
-            }
+            myPosition += (forwardVector * _playerSpeed * Time.deltaTime);
+
             _isMoved = true;
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            switch (PlayerIndex)
-            {
-                case 0:
-                    myPosition += (Vector3.back * _playerSpeed * Time.deltaTime);
-                    break;
-                case 1:
-                    myPosition += (Vector3.left * _playerSpeed * Time.deltaTime);
-                    break;
-                case 2:
-                    myPosition += (Vector3.forward * _playerSpeed * Time.deltaTime);
-                    break;
-                case 3:
-                    myPosition += (Vector3.right * _playerSpeed * Time.deltaTime);
-                    break;
-            }
+            myPosition += (backwardVector * _playerSpeed * Time.deltaTime);
+
             _isMoved = true;
         }
 
@@ -179,7 +148,7 @@ public static class PlayerController
         if(type == Relative)
         {
             // 원래는 모두를 움직여주어야 함
-            for(int i = 0; i < 4; i++)
+            for(int i = 0; i < GameLauncher.Headcount; i++)
             {
                 if(i == PlayerIndex)
                     continue;
@@ -189,7 +158,7 @@ public static class PlayerController
         }
         else if(type == Absolute)
         {
-            for(int i = 0; i < 4; i++)
+            for(int i = 0; i < GameLauncher.Headcount; i++)
             {
                 Vector3 movingPosition = playersPositionsFromServer[i];
                 Vector3.Lerp(Players[i].transform.position, movingPosition, 1);
