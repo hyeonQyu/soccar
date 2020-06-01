@@ -19,12 +19,12 @@ public static class PlayerController
     private static float _runSpeed;
     private static float _playerSpeed;
 
-    private static float theta;
+    public static float theta { get; private set; }
 
-    private static Vector3 rightVector;
-    private static Vector3 leftVector;
-    private static Vector3 forwardVector;
-    private static Vector3 backwardVector;
+    public static Vector3 rightVector { get; private set; }
+    public static Vector3 leftVector { get; private set; }
+    public static Vector3 forwardVector { get; private set; }
+    public static Vector3 backwardVector { get; private set; }
 
     public static NetworkManager NetworkManager { private get; set; }
 
