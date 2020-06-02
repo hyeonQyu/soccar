@@ -13,6 +13,7 @@ public static class PlayerController
     // 현재 컨트롤하는 플레이어
     public static GameObject Player { get; private set; }
     public static GameObject AlterEgo { get; private set; }
+    public static MiniMapManager MiniMapManager { get; set; }
 
     // 속도
     private static float _walkSpeed;
@@ -41,15 +42,20 @@ public static class PlayerController
         _runSpeed = _walkSpeed * 2;
 
         Players = new GameObject[GameLauncher.Headcount];
+        MiniMapManager = new MiniMapManager(GameLauncher.Headcount);
         for(int i =0; i < 6; i++)
         {
+            string suffix = i.ToString();
+
             if (i < GameLauncher.Headcount)
             {
-                Players[i] = GameObject.Find("Player" + i.ToString());
+                Players[i] = GameObject.Find("Player" + suffix);
+                MiniMapManager.Players[i] = MiniMapManager.MiniMapGround.transform.Find("Mini Map Player" + suffix).gameObject;
             }
             else
             {
-                GameObject.Find("Player" + i.ToString()).SetActive(false);
+                GameObject.Find("Player" + suffix).SetActive(false);
+                MiniMapManager.MiniMapGround.transform.Find("Mini Map Player" + suffix).gameObject.SetActive(false);
             }
         }
 

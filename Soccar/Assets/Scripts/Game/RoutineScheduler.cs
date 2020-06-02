@@ -23,8 +23,7 @@ public class RoutineScheduler : MonoBehaviour
 
         // 플레이어와 공 움직임
         _movePlayersCoroutine = StartCoroutine(MovePlayers(currentPlayerPositions, receivingPositions.PlayerPositions));
-        if(PlayerController.PlayerIndex != 0)
-            _moveBallsCoroutine = StartCoroutine(MoveBalls(currentBallPositions, receivingPositions.BallPositions));
+        _moveBallsCoroutine = StartCoroutine(MoveBalls(currentBallPositions, receivingPositions.BallPositions));
     }
 
     private IEnumerator MovePlayers(Vector3[] prePositions, Vector3[] destPositions)
@@ -41,6 +40,8 @@ public class RoutineScheduler : MonoBehaviour
                 //    continue;
 
                 PlayerController.Players[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
+                Vector3 newVector = new Vector3(PlayerController.Players[j].transform.position.x, 163, PlayerController.Players[j].transform.position.z);
+                PlayerController.MiniMapManager.Players[j].transform.position = newVector;
             }
 
             yield return new WaitForSeconds(0.002f);
@@ -57,7 +58,10 @@ public class RoutineScheduler : MonoBehaviour
 
             for(int j = 0; j < destPositions.Length; j++)
             {
-                GameLauncher.Balls[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
+                if(PlayerController.PlayerIndex != 0)
+                    GameLauncher.Balls[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
+                Vector3 newVector = new Vector3(GameLauncher.Balls[j].transform.position.x, 165, GameLauncher.Balls[j].transform.position.z);
+                PlayerController.MiniMapManager.Balls[j].transform.position = newVector;
             }
 
             yield return new WaitForSeconds(0.002f);
