@@ -19,12 +19,12 @@ public static class PlayerController
     private static float _runSpeed;
     private static float _playerSpeed;
 
-    public static float theta { get; private set; }
+    public static float Theta { get; private set; }
 
-    public static Vector3 rightVector { get; private set; }
-    public static Vector3 leftVector { get; private set; }
-    public static Vector3 forwardVector { get; private set; }
-    public static Vector3 backwardVector { get; private set; }
+    public static Vector3 RightVector { get; private set; }
+    public static Vector3 LeftVector { get; private set; }
+    public static Vector3 ForwardVector { get; private set; }
+    public static Vector3 BackwardVector { get; private set; }
 
     public static NetworkManager NetworkManager { private get; set; }
 
@@ -59,17 +59,17 @@ public static class PlayerController
     public static void InitializePlayer(string playerName)
     {
         // set direction vector
-        theta = (360f / GameLauncher.Headcount) * PlayerIndex;
-        Debug.Log("theta = " + theta);
+        Theta = (360f / GameLauncher.Headcount) * PlayerIndex;
+        Debug.Log("theta = " + Theta);
 
-        float piTheta = theta * Mathf.PI / 180;
+        float piTheta = Theta * Mathf.PI / 180;
 
-        rightVector = new Vector3(Mathf.Cos(piTheta), 0, Mathf.Sin(piTheta));   // (1,0,0)vector 회전
-        leftVector = new Vector3(-Mathf.Cos(piTheta), 0, -Mathf.Sin(piTheta));  // (-1,0,0)vector 회전
-        forwardVector = new Vector3(-Mathf.Sin(piTheta), 0, Mathf.Cos(piTheta));  // (0,0,1)vector 회전
-        backwardVector = new Vector3(Mathf.Sin(piTheta), 0, -Mathf.Cos(piTheta));  // (0,0,-1)vector 회전
+        RightVector = new Vector3(Mathf.Cos(piTheta), 0, Mathf.Sin(piTheta));   // (1,0,0)vector 회전
+        LeftVector = new Vector3(-Mathf.Cos(piTheta), 0, -Mathf.Sin(piTheta));  // (-1,0,0)vector 회전
+        ForwardVector = new Vector3(-Mathf.Sin(piTheta), 0, Mathf.Cos(piTheta));  // (0,0,1)vector 회전
+        BackwardVector = new Vector3(Mathf.Sin(piTheta), 0, -Mathf.Cos(piTheta));  // (0,0,-1)vector 회전
 
-        Debug.Log("r=" + rightVector + " l=" + leftVector + " f=" + forwardVector + " b=" + backwardVector);
+        Debug.Log("r=" + RightVector + " l=" + LeftVector + " f=" + ForwardVector + " b=" + BackwardVector);
 
         Player = Players[PlayerIndex];
         AlterEgo.transform.position = Player.transform.position;
@@ -94,25 +94,25 @@ public static class PlayerController
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            myPosition += (leftVector * _playerSpeed * Time.deltaTime);
+            myPosition += (LeftVector * _playerSpeed * Time.deltaTime);
 
             _isMoved = true;
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            myPosition += (rightVector * _playerSpeed * Time.deltaTime);
+            myPosition += (RightVector * _playerSpeed * Time.deltaTime);
 
             _isMoved = true;
         }
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            myPosition += (forwardVector * _playerSpeed * Time.deltaTime);
+            myPosition += (ForwardVector * _playerSpeed * Time.deltaTime);
 
             _isMoved = true;
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            myPosition += (backwardVector * _playerSpeed * Time.deltaTime);
+            myPosition += (BackwardVector * _playerSpeed * Time.deltaTime);
 
             _isMoved = true;
         }

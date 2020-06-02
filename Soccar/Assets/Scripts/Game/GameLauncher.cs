@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class GameLauncher : MonoBehaviour
 {
@@ -13,12 +15,18 @@ public class GameLauncher : MonoBehaviour
     // 씬 매개체
     private SceneMedium _sceneMedium;
 
+    // 시간 표시(초 단위, 5분)
+    [SerializeField]
+    private Text _txtTime;
+    private float _time = 300;
+    private int _seconds = 300;
+
     // 플레이어 움직임 보간에 사용
     public static RoutineScheduler RoutineScheduler { get; private set; }
 
-    public static GameObject[] Balls = new GameObject[2];
+    public static GameObject[] Balls { get; private set; }
 
-    public static int Headcount;
+    public static int Headcount { get; private set; }
 
     // Start is called before the first frame update
     void Start()
@@ -35,19 +43,18 @@ public class GameLauncher : MonoBehaviour
 
         PlayerController.PlayerIndex = 99;
 
+        Balls = new GameObject[2];
         Balls[0] = GameObject.Find("Ball1");
         Balls[1] = GameObject.Find("Ball2");
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         //Debug.Log(NetworkManager.GetTimestamp());
-        // 로딩 씬이 사라질 때까지 대기
-        if(_loadingGameScenePanel.transform.localScale.x != 0)
+        // 소켓 연결시까지 대기
+        if(!_networkManager.Socket.IsConnected)
             return;
-        Destroy(_loadingGameScenePanel);
-
+        
         if(!PlayerController.IsPlayersInitialized)
         {
             // Player Index 세팅
@@ -62,8 +69,27 @@ public class GameLauncher : MonoBehaviour
             return;
         }
 
+        // 로딩 씬이 사라질 때까지 대기
+        try
+        {
+            if(_loadingGameScenePanel.transform.localScale.x != 0)
+                return;
+            Destroy(_loadingGameScenePanel);
+        }
+        catch(Exception e) { }
+
+        // 경기 시작 휘슬이 울린 후 타이머 시작
+        _time -= Time.deltaTime;
+        _seconds = (int)Math.Round(_time);
+        _txtTime.text = (_seconds / 60).ToString() + ":" + ToDoubleDigit((_seconds % 60).ToString());
+
         // 움직임 입력
         PlayerController.InputRelativePosition();
         PlayerController.InputAbsolutePostion();
+    }
+
+    private string ToDoubleDigit(string str)
+    {
+        return str.Length == 2 ? str : "0" + str;
     }
 }
