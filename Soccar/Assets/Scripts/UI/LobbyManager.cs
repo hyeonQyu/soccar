@@ -38,6 +38,9 @@ public class LobbyManager : MonoBehaviour
     private LobbyNetworkLinker _lobbyNetworkLinker;
     private NetworkManager _networkManager;
 
+    // 사운드
+    private Sound _sound;
+
     // 방 관리
     private RoomManager _roomManager;
     private Room _room;
@@ -63,6 +66,8 @@ public class LobbyManager : MonoBehaviour
         _networkManager = _networkManagerObject.GetComponent<NetworkManager>();
         _networkManager.SetWebSocket(false, _sceneMediumObject.GetComponent<SceneMedium>(), _lobbyNetworkLinker);
 
+        _sound = new Sound(false);
+
         _chatMessage = _roomPanel.transform.Find("Message").GetComponent<InputField>();
         _buttonController = _buttonControllerObject.GetComponent<ButtonController>();
 
@@ -81,6 +86,7 @@ public class LobbyManager : MonoBehaviour
             _isOnLobby = true;
 
             CurrentPanel = OnLoginPanel;
+            _sound.BackgroundMusic.Play();
         }
 
         // Input Field가 있는 패널에서 엔터키 입력

@@ -12,6 +12,9 @@ public class GameLauncher : MonoBehaviour
     private GameObject _networkManagerObject;
     private NetworkManager _networkManager;
 
+    // 사운드 관리
+    private Sound _sound;
+
     // 씬 매개체
     private SceneMedium _sceneMedium;
 
@@ -20,6 +23,8 @@ public class GameLauncher : MonoBehaviour
     private Text _txtTime;
     private float _time = 300;
     private int _seconds = 300;
+
+    private bool _isKickOff;
 
     // 플레이어 움직임 보간에 사용
     public static RoutineScheduler RoutineScheduler { get; private set; }
@@ -40,6 +45,8 @@ public class GameLauncher : MonoBehaviour
         _networkManager = _networkManagerObject.GetComponent<NetworkManager>();
         _networkManager.SetWebSocket(true, _sceneMedium);
         PlayerController.NetworkManager = _networkManager;
+
+        _sound = new Sound(true);
 
         PlayerController.PlayerIndex = 99;
 
@@ -80,6 +87,14 @@ public class GameLauncher : MonoBehaviour
             Destroy(_loadingGameScenePanel);
         }
         catch(Exception e) { }
+
+        // 경기 시작 휘슬을 울림
+        if(!_isKickOff)
+        {
+            _sound.Whistle.Play();
+            _isKickOff = true;
+            return;
+        }
 
         // 경기 시작 휘슬이 울린 후 타이머 시작
         _time -= Time.deltaTime;
