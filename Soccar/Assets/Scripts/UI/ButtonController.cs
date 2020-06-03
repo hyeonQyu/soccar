@@ -21,6 +21,9 @@ public class ButtonController : MonoBehaviour
     // 메시지
     private InputField _message;
 
+    // 사운드
+    private AudioSource _buttonClickSound;
+
     private NetworkManager _networkManager;
 
     public void Start()
@@ -36,11 +39,15 @@ public class ButtonController : MonoBehaviour
 
         _message = _roomPanel.transform.Find("Message").GetComponent<InputField>();
 
+        _buttonClickSound = GameObject.Find("Button Click Sound").GetComponent<AudioSource>();
+
         _networkManager = GameObject.Find("Network Manager").GetComponent<NetworkManager>();
     }
 
     public void OnClickLogin()
     {
+        _buttonClickSound.Play();
+
         GameObject loginPanel = GameObject.Find("Login Panel");
         InputField inputIdField = GameObject.Find("Input ID Field").GetComponent<InputField>();
         Button loginButton = GameObject.Find("Login Button").GetComponent<Button>();
@@ -68,11 +75,14 @@ public class ButtonController : MonoBehaviour
 
     public void OnClickRefresh()
     {
+        _buttonClickSound.Play();
         _networkManager.Send("refresh", LobbyManager.PlayerName);
     }
 
     public void OnClickCreateRoom()
     {
+        _buttonClickSound.Play();
+
         // 방만들기 패널 활성화(애니메이션)
         _inputRoomName.text = "";
         _createRoomPanel.GetComponent<Animator>().Play("Create Room Panel");
@@ -81,6 +91,8 @@ public class ButtonController : MonoBehaviour
     // 방만들기 패널 안의 OK 버튼
     public void OnClickCreateRoomOk()
     {
+        _buttonClickSound.Play();
+
         if(LobbyManager.CurrentPanel == LobbyManager.OnRoomPanel)
             return;
 
@@ -107,12 +119,16 @@ public class ButtonController : MonoBehaviour
     // 방만들기 패널 안의 Cancel 버튼
     public void OnClickCreateRoomCancel()
     {
+        _buttonClickSound.Play();
+
         // 방만들기 패널 비활성화(애니메이션)
         _createRoomPanel.GetComponent<Animator>().Play("Destroy Room Panel");  
     }
 
     public void OnClickEnterRoom()
     {
+        _buttonClickSound.Play();
+
         if(LobbyManager.CurrentPanel == LobbyManager.OnRoomPanel)
             return;
 
@@ -135,6 +151,8 @@ public class ButtonController : MonoBehaviour
 
     public void OnClickExitRoom()
     {
+        _buttonClickSound.Play();
+
         if(LobbyManager.CurrentPanel == LobbyManager.OnLobbyPanel)
             return;
 
@@ -148,6 +166,8 @@ public class ButtonController : MonoBehaviour
 
     public void OnClickAlertOk()
     {
+        _buttonClickSound.Play();
+
         _alertPanel.GetComponent<Animator>().Play("Close Alert");
     }
 
@@ -166,6 +186,7 @@ public class ButtonController : MonoBehaviour
 
     public void OnClickGameStart()
     {
+        _buttonClickSound.Play();
         _networkManager.Send("start_game", _roomKey.text);
     }
 
