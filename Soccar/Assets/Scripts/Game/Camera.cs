@@ -40,7 +40,7 @@ public class Camera : MonoBehaviour
     {
         if(PlayerController.IsPlayersInitialized && _isFirstRun)
         {
-            transform.eulerAngles = new Vector3(_angle, PlayerController.Theta, 0);
+            transform.eulerAngles = new Vector3(_angle, -PlayerController.Theta, 0);
             _isFirstRun = false;
             Debug.Log("==카메라 세팅됨");
         }
