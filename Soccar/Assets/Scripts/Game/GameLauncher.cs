@@ -68,6 +68,7 @@ public class GameLauncher : MonoBehaviour
 
             // Player Index를 받은 후 플레이어 초기화
             PlayerController.InitializePlayer(_sceneMedium.PlayerName);
+            PlayerController.InitializeGoalPost();
             return;
         }
 

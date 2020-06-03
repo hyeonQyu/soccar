@@ -90,13 +90,13 @@ public static class PlayerController
         GoalPost = new GameObject[GameLauncher.Headcount];
         float theta = 360 / GameLauncher.Headcount;
         float piTheta;
-        for (int i = 0; i < GameLauncher.Headcount; i++)
+        for (int i = 0; i < 6; i++)
         {
             string suffix = i.ToString();
 
             if (i < GameLauncher.Headcount)
             {
-                GoalPost[i] = GameObject.Find("GoalPost " + suffix);
+                GoalPost[i] = GameObject.Find("Goal Post" + suffix);
                 piTheta = theta * Mathf.PI / 180 * i;
                 Vector3 backwardVector = new Vector3(Mathf.Sin(piTheta), 0, -Mathf.Cos(piTheta)); // 현재 골대의 back_ward 방향벡터 구하기
                 GoalPost[i].transform.position = backwardVector * 55;
@@ -108,9 +108,11 @@ public static class PlayerController
             }
             else
             {
-                GameObject.Find("GoalPost " + suffix).SetActive(false);
+                GameObject.Find("Goal Post" + suffix).SetActive(false);
             }
         }
+        AlterEgo.transform.position = Player.transform.position;
+        AlterEgo.transform.eulerAngles = Player.transform.eulerAngles;
     }
 
     public static void InputRelativePosition()
