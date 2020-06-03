@@ -14,6 +14,7 @@ public static class PlayerController
     public static GameObject Player { get; private set; }
     public static GameObject AlterEgo { get; private set; }
     public static MiniMapManager MiniMapManager { get; set; }
+    public static GameObject[] GoalPost { get; set; }
 
     // 속도
     private static float _walkSpeed;
@@ -82,6 +83,15 @@ public static class PlayerController
         Player.GetComponent<PlayerInformation>().PlayerName = playerName;
 
         IsPlayersInitialized = true;
+    }
+
+    public static void InitializeGoalPost()
+    {
+        GoalPost = new GameObject[GameLauncher.Headcount];
+        for(int i = 0; i < GameLauncher.Headcount; i++)
+        {
+            //GoalPost[i] = 
+        }
     }
 
     public static void InputRelativePosition()
