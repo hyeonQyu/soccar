@@ -38,4 +38,16 @@ public class PlayerInformation : MonoBehaviour
 
         Debug.Log(PlayerName + ": " + Score + "    " + concederPlayer.PlayerName + ": " + concederPlayer.PlayerName);
     }
+
+    // 캐릭터에 충돌 발생 시 분신을 캐릭터 위치로 옮김
+    private void OnCollisionEnter(Collision collision)
+    {
+        GameObject other = collision.gameObject;
+
+        if(other.tag.Equals("Ground") || other.tag.Equals("Ball"))
+            return;
+
+        PlayerController.AlterEgo.transform.position = gameObject.transform.position;
+        Debug.Log("Collision " + other.tag);
+    }
 }

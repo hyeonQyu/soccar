@@ -103,7 +103,7 @@ public static class PlayerController
                 GoalPost[i].transform.eulerAngles = new Vector3(0, -theta * i, 0);
 
                 // Set Player Position & Rotation (골대 위치 초기화하는 김에 플레이어도 같이 함)
-                Players[i].transform.position = backwardVector * 45 + new Vector3(0, 3, 0);
+                Players[i].transform.position = backwardVector * 45 + new Vector3(0, 3.3f, 0);
                 Players[i].transform.eulerAngles = new Vector3(0, -theta * i, 0);
             }
             else
