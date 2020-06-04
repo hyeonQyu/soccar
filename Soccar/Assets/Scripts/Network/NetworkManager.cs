@@ -65,6 +65,19 @@ public class NetworkManager : MonoBehaviour
                 GameLauncher.RoutineScheduler.StartMoving(receivingPositions);
                 //PlayerController.Move(receivingPositions.PlayerPositions, PlayerController.Absolute);
             });
+
+            Socket.On("kick_off", (string data) =>
+            {
+                GameLauncher.IsReadyToKickOff = true;
+            });
+
+            Socket.On("disconnection", (string data) =>
+            {
+                int disconnectPlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
+
+                PlayerController.Players[disconnectPlayerIndex].SetActive(false);
+                PlayerController.GoalPosts[disconnectPlayerIndex].SetActive(false);
+            });
         }
 
         // 로비

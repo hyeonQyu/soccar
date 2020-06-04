@@ -24,6 +24,7 @@ public class GameLauncher : MonoBehaviour
     private float _time = 300;
     private int _seconds = 300;
 
+    public static bool IsReadyToKickOff;
     private bool _isKickOff;
 
     // 플레이어 움직임 보간에 사용
@@ -85,11 +86,13 @@ public class GameLauncher : MonoBehaviour
             if(_loadingGameScenePanel.transform.localScale.x != 0)
                 return;
             Destroy(_loadingGameScenePanel);
+
+            _networkManager.Send("complete_loading", PlayerController.PlayerIndex.ToString());
         }
         catch(Exception e) { }
 
         // 경기 시작 휘슬을 울림
-        if(!_isKickOff)
+        if(IsReadyToKickOff && !_isKickOff)
         {
             _sound.Whistle.Play();
             _isKickOff = true;
@@ -109,5 +112,10 @@ public class GameLauncher : MonoBehaviour
     private string ToDoubleDigit(string str)
     {
         return str.Length == 2 ? str : "0" + str;
+    }
+
+    private void OnApplicationQuit()
+    {
+        _networkManager.Send("disconnection", "");
     }
 }
