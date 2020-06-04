@@ -7,11 +7,10 @@ using UnityEngine.SceneManagement;
 public class NetworkManager : MonoBehaviour
 {
     /* 서버 접속에 관한 요소 */
-    //private const string Url = "http://10.21.20.20:9090";
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-    private const string Ip = "http://15.164.220.253:";
+    private const string Ip = "http://15.164.59.198:";
 #elif UNITY_WEBGL
-    private const string Ip = "http://15.164.220.253:";
+    private const string Ip = "http://15.164.59.198:";
 #endif
     public Socket Socket { get; private set; }
 
@@ -55,28 +54,6 @@ public class NetworkManager : MonoBehaviour
                 PlayerController.PlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
             });
 
-            // 상대좌표 + 공
-            Socket.On("relative_position", (string data) =>
-            {
-                //Debug.Log("FRAME " + GameLauncher.Frame + " 상대좌표");
-                //long timestamp = GetTimestamp();
-
-                data = ToJsonFormat(data);
-
-                // 캐릭터 이동
-                Packet.ReceivingPositions receivingPositions = JsonUtility.FromJson<Packet.ReceivingPositions>(data);
-                PlayerController.Move(receivingPositions.PlayerPositions, PlayerController.Relative);
-
-                if(PlayerController.PlayerIndex != 0)
-                {
-                    // 공 이동
-                    for(int i = 0; i < 2; i++)
-                    {
-                        GameLauncher.Balls[i].transform.position = receivingPositions.BallPositions[i];
-                    }
-                }
-            });
-
             // 절대 좌표 + 공
             Socket.On("absolute_position", (string data) =>
             {
@@ -87,6 +64,19 @@ public class NetworkManager : MonoBehaviour
                 GameLauncher.RoutineScheduler.StopMoving();
                 GameLauncher.RoutineScheduler.StartMoving(receivingPositions);
                 //PlayerController.Move(receivingPositions.PlayerPositions, PlayerController.Absolute);
+            });
+
+            Socket.On("kick_off", (string data) =>
+            {
+                GameLauncher.IsReadyToKickOff = true;
+            });
+
+            Socket.On("disconnection", (string data) =>
+            {
+                int disconnectPlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
+
+                PlayerController.Players[disconnectPlayerIndex].SetActive(false);
+                PlayerController.GoalPosts[disconnectPlayerIndex].SetActive(false);
             });
         }
 

@@ -14,7 +14,7 @@ public static class PlayerController
     public static GameObject Player { get; private set; }
     public static GameObject AlterEgo { get; private set; }
     public static MiniMapManager MiniMapManager { get; set; }
-    public static GameObject[] GoalPost { get; set; }
+    public static GameObject[] GoalPosts { get; set; }
 
     // 속도
     private static float _walkSpeed;
@@ -87,7 +87,7 @@ public static class PlayerController
 
     public static void InitializeGoalPost()
     {
-        GoalPost = new GameObject[GameLauncher.Headcount];
+        GoalPosts = new GameObject[GameLauncher.Headcount];
         float theta = 360 / GameLauncher.Headcount;
         float piTheta;
         for (int i = 0; i < 6; i++)
@@ -96,11 +96,11 @@ public static class PlayerController
 
             if (i < GameLauncher.Headcount)
             {
-                GoalPost[i] = GameObject.Find("Goal Post" + suffix);
+                GoalPosts[i] = GameObject.Find("Goal Post" + suffix);
                 piTheta = theta * Mathf.PI / 180 * i;
                 Vector3 backwardVector = new Vector3(Mathf.Sin(piTheta), 0, -Mathf.Cos(piTheta)); // 현재 골대의 back_ward 방향벡터 구하기
-                GoalPost[i].transform.position = backwardVector * 8.7f;
-                GoalPost[i].transform.eulerAngles = new Vector3(0, -theta * i, 0);
+                GoalPosts[i].transform.position = backwardVector * 8.7f;
+                GoalPosts[i].transform.eulerAngles = new Vector3(0, -theta * i, 0);
 
                 // Set Player Position & Rotation (골대 위치 초기화하는 김에 플레이어도 같이 함)
                 Players[i].transform.position = backwardVector * 6 + new Vector3(0, 0, 0);
@@ -178,36 +178,24 @@ public static class PlayerController
     // 자신의 분신을 움직임
     private static void Move(Vector3 movingPosition)
     {
+        // 경기장 밖을 벗어나면 움직이지 않음
+        if(IsOutOfStadium(AlterEgo.transform.position, movingPosition))
+            return;
+
         AlterEgo.transform.position += movingPosition;
         //Players[_playerIndex].transform.Translate(movingPosition);
     }
 
-    // 서버로부터 모든 플레이어의 위치를 받아 한꺼번에 움직임
-    public static void Move(Vector3[] playersPositionsFromServer, int type)
+    private static bool IsOutOfStadium(Vector3 alterEgoPosition, Vector3 movingPosition)
     {
-        //Vector3 myMovingPosition = playersPositionFromServer.Positions[_playerIndex];
-        //Players[_playerIndex].transform.position = myMovingPosition;
+        Vector2 alterEgoVector2 = new Vector2(alterEgoPosition.x, alterEgoPosition.z);
+        Vector2 movingVector2 = new Vector2(movingPosition.x, movingPosition.z);
 
-        if(type == Relative)
-        {
-            // 원래는 모두를 움직여주어야 함
-            for(int i = 0; i < GameLauncher.Headcount; i++)
-            {
-                if(i == PlayerIndex)
-                    continue;
-                Vector3 movingPosition = playersPositionsFromServer[i];
-                Players[i].transform.Translate(movingPosition);
-            }
-        }
-        else if(type == Absolute)
-        {
-            for(int i = 0; i < GameLauncher.Headcount; i++)
-            {
-                Vector3 movingPosition = playersPositionsFromServer[i];
-                Vector3.Lerp(Players[i].transform.position, movingPosition, 1);
-                Players[i].transform.position = movingPosition;
-            }
-        }
+        double radius = Vector2.Distance(alterEgoVector2 + movingVector2, new Vector2(0, 0));
+        if(radius > 11.3f)
+            return true;
+
+        return false;
     }
 
     public static void Destroy()
