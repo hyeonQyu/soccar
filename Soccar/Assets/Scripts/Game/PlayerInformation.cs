@@ -42,6 +42,9 @@ public class PlayerInformation : MonoBehaviour
     // 캐릭터에 충돌 발생 시 분신을 캐릭터 위치로 옮김
     private void OnCollisionEnter(Collision collision)
     {
+        if(gameObject.GetInstanceID() != PlayerController.Player.GetInstanceID())
+            return;
+
         GameObject other = collision.gameObject;
 
         if(other.tag.Equals("Ground") || other.tag.Equals("Ball"))
