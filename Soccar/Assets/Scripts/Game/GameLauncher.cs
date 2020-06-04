@@ -51,8 +51,8 @@ public class GameLauncher : MonoBehaviour
         PlayerController.PlayerIndex = 99;
 
         Balls = new GameObject[2];
-        Balls[0] = GameObject.Find("Ball1");
-        Balls[1] = GameObject.Find("Ball2");
+        Balls[0] = GameObject.Find("Ball0");
+        Balls[1] = GameObject.Find("Ball1");
         PlayerController.MiniMapManager.Balls[0] = PlayerController.MiniMapManager.MiniMapGround.transform.Find("Mini Map Ball0").gameObject;
         PlayerController.MiniMapManager.Balls[1] = PlayerController.MiniMapManager.MiniMapGround.transform.Find("Mini Map Ball1").gameObject;
     }
