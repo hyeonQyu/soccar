@@ -7,8 +7,6 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
-var playerIndex = 0;
-
 var timestamp = 0;
 
 var isFirst = true;
@@ -25,6 +23,13 @@ var playersPosition = new Object();
         positions.push(position);
     }
 playersPosition.Positions = positions;
+
+var indexToSocketId = [];
+for(var i = 0; i < totalPlayer; i++){
+    indexToSocketId.push('');
+}
+
+var loadedPlayerIndex = [];
 
 // 2개의 공 절대위치를 보관
 var ballsPositions = [];
@@ -46,8 +51,20 @@ io.on('connection', function(socket) {
     console.log("Connect in child");
 
     socket.on('player_index', function(data) {
+        var playerIndex = data;
+        indexToSocketId[playerIndex] = socket.id;
         console.log('player_index ' + data);
         socket.emit('player_index', data);
+    });
+
+    socket.on('complete_loading', function(data) {
+        var playerIndex = data;
+        if(loadedPlayerIndex.indexOf(playerIndex) == -1){
+            loadedPlayerIndex.push(playerIndex);
+        }
+        if(loadedPlayerIndex.length == totalPlayer){
+            io.emit('kick_off', '');
+        }
     });
 
     socket.on('absolute_position', function(data){
@@ -88,6 +105,22 @@ io.on('connection', function(socket) {
             timestamp = Date.now();
         }
     });
+
+    socket.on('disconnect', function(data){
+        var i;
+        for(i = 0; i < totalPlayer; i++){
+            if(indexToSocketId[i] == socket.id){
+                break;
+            }
+        }
+        console.log(i+"player is disconnected in "+ port+' '+socket.id);
+        socket.emit('disconnection', JSON.stringify(i));
+    });
+
+    socket.on('disconnection', function(data) {
+        console.log('in disconnection '+ socket.id);
+        socket.disconnect(true);
+    })
 
 });
 
