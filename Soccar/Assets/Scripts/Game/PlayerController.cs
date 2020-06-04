@@ -39,7 +39,7 @@ public static class PlayerController
 
     public static void SetPlayers()
     {
-        _walkSpeed = 10;
+        _walkSpeed = 2.5f;
         _runSpeed = _walkSpeed * 2;
 
         Players = new GameObject[GameLauncher.Headcount];
@@ -99,11 +99,11 @@ public static class PlayerController
                 GoalPost[i] = GameObject.Find("Goal Post" + suffix);
                 piTheta = theta * Mathf.PI / 180 * i;
                 Vector3 backwardVector = new Vector3(Mathf.Sin(piTheta), 0, -Mathf.Cos(piTheta)); // 현재 골대의 back_ward 방향벡터 구하기
-                GoalPost[i].transform.position = backwardVector * 55;
+                GoalPost[i].transform.position = backwardVector * 8.7f;
                 GoalPost[i].transform.eulerAngles = new Vector3(0, -theta * i, 0);
 
                 // Set Player Position & Rotation (골대 위치 초기화하는 김에 플레이어도 같이 함)
-                Players[i].transform.position = backwardVector * 45 + new Vector3(0, 3.3f, 0);
+                Players[i].transform.position = backwardVector * 6 + new Vector3(0, 0, 0);
                 Players[i].transform.eulerAngles = new Vector3(0, -theta * i, 0);
             }
             else
