@@ -75,8 +75,35 @@ public class NetworkManager : MonoBehaviour
             {
                 int disconnectPlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
 
-                PlayerController.Players[disconnectPlayerIndex].SetActive(false);
-                PlayerController.GoalPosts[disconnectPlayerIndex].SetActive(false);
+                PlayerController.IsConnectPlayers[disconnectPlayerIndex] = false;
+                GameLauncher.Headcount--;
+
+                // 게임에 혼자만 남음
+                if(GameLauncher.Headcount == 1)
+                {
+
+                }
+
+                // 슈퍼 클라이언트 인덱스 변경
+                if(disconnectPlayerIndex == PlayerController.SuperClientIndex)
+                {
+                    int index = disconnectPlayerIndex + 1;
+
+                    for(; index < _sceneMedium.Headcount; index++)
+                    {
+                        if(PlayerController.IsConnectPlayers[index])
+                        {
+                            PlayerController.SuperClientIndex = index;
+                            break;
+                        }
+                    }
+                }
+                Debug.Log("Super Client: " + PlayerController.SuperClientIndex);
+
+                // 연결이 끊어진 플레이어에 대한 오브젝트 삭제
+                Destroy(PlayerController.Players[disconnectPlayerIndex]);
+                Destroy(PlayerController.GoalPosts[disconnectPlayerIndex]);
+                Destroy(PlayerController.MiniMapManager.Players[disconnectPlayerIndex]);
             });
         }
 
