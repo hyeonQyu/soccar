@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,9 +40,13 @@ public class RoutineScheduler : MonoBehaviour
                 //if(j == PlayerController.PlayerIndex)
                 //    continue;
 
-                PlayerController.Players[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
-                Vector3 newVector = new Vector3(PlayerController.Players[j].transform.position.x, 163, PlayerController.Players[j].transform.position.z);
-                PlayerController.MiniMapManager.Players[j].transform.position = newVector;
+                try
+                {
+                    PlayerController.Players[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
+                    Vector3 newVector = new Vector3(PlayerController.Players[j].transform.position.x, 163, PlayerController.Players[j].transform.position.z);
+                    PlayerController.MiniMapManager.Players[j].transform.position = newVector;
+                }
+                catch(Exception e) { }
             }
 
             yield return new WaitForSeconds(0.002f);

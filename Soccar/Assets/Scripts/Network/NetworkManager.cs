@@ -7,11 +7,10 @@ using UnityEngine.SceneManagement;
 public class NetworkManager : MonoBehaviour
 {
     /* 서버 접속에 관한 요소 */
-    //private const string Url = "http://10.21.20.20:9090";
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-    private const string Ip = "http://localhost:";
+    private const string Ip = "http://15.164.59.198:";
 #elif UNITY_WEBGL
-    private const string Ip = "http://15.164.220.253:";
+    private const string Ip = "http://15.164.59.198:";
 #endif
     public Socket Socket { get; private set; }
 
@@ -55,28 +54,6 @@ public class NetworkManager : MonoBehaviour
                 PlayerController.PlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
             });
 
-            // 상대좌표 + 공
-            Socket.On("relative_position", (string data) =>
-            {
-                //Debug.Log("FRAME " + GameLauncher.Frame + " 상대좌표");
-                //long timestamp = GetTimestamp();
-
-                data = ToJsonFormat(data);
-
-                // 캐릭터 이동
-                Packet.ReceivingPositions receivingPositions = JsonUtility.FromJson<Packet.ReceivingPositions>(data);
-                PlayerController.Move(receivingPositions.PlayerPositions, PlayerController.Relative);
-
-                if(PlayerController.PlayerIndex != 0)
-                {
-                    // 공 이동
-                    for(int i = 0; i < 2; i++)
-                    {
-                        GameLauncher.Balls[i].transform.position = receivingPositions.BallPositions[i];
-                    }
-                }
-            });
-
             // 절대 좌표 + 공
             Socket.On("absolute_position", (string data) =>
             {
@@ -87,6 +64,46 @@ public class NetworkManager : MonoBehaviour
                 GameLauncher.RoutineScheduler.StopMoving();
                 GameLauncher.RoutineScheduler.StartMoving(receivingPositions);
                 //PlayerController.Move(receivingPositions.PlayerPositions, PlayerController.Absolute);
+            });
+
+            Socket.On("kick_off", (string data) =>
+            {
+                GameLauncher.IsReadyToKickOff = true;
+            });
+
+            Socket.On("disconnection", (string data) =>
+            {
+                int disconnectPlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
+
+                PlayerController.IsConnectPlayers[disconnectPlayerIndex] = false;
+                GameLauncher.Headcount--;
+
+                // 게임에 혼자만 남음
+                if(GameLauncher.Headcount == 1)
+                {
+
+                }
+
+                // 슈퍼 클라이언트 인덱스 변경
+                if(disconnectPlayerIndex == PlayerController.SuperClientIndex)
+                {
+                    int index = disconnectPlayerIndex + 1;
+
+                    for(; index < _sceneMedium.Headcount; index++)
+                    {
+                        if(PlayerController.IsConnectPlayers[index])
+                        {
+                            PlayerController.SuperClientIndex = index;
+                            break;
+                        }
+                    }
+                }
+                Debug.Log("Super Client: " + PlayerController.SuperClientIndex);
+
+                // 연결이 끊어진 플레이어에 대한 오브젝트 삭제
+                Destroy(PlayerController.Players[disconnectPlayerIndex]);
+                Destroy(PlayerController.GoalPosts[disconnectPlayerIndex]);
+                Destroy(PlayerController.MiniMapManager.Players[disconnectPlayerIndex]);
             });
         }
 
@@ -168,7 +185,7 @@ public class NetworkManager : MonoBehaviour
                 Destroy(GameObject.Find("(singleton) socket.io.SocketManager"));
                 Destroy(GameObject.Find("MainThreadDispatcher"));
 
-                SceneManager.LoadScene("GoalTestScene");
+                SceneManager.LoadScene("Game Scene");
             });
 
             // 게임 시작 실패(인원수가 적음)

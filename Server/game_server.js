@@ -7,20 +7,12 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
-var playerIndex = 0;
+var timestamp = 0;
 
-var timestamp = [];
-timestamp[0] = 0;
-timestamp[1] = 0;
-
-var isFirst = [];
-isFirst[0] = true;
-isFirst[1] = true;
+var isFirst = true;
 
 // 상대위치 이동정도 및 절대위치를 보관
-var playersPositions = [];
-for(var i = 0; i < 2; i++){
-    var playersPosition = new Object();
+var playersPosition = new Object();
     var positions = [];
     for(var j = 0; j < totalPlayer; j++){
         var position = new Object();
@@ -30,9 +22,14 @@ for(var i = 0; i < 2; i++){
 
         positions.push(position);
     }
-    playersPosition.Positions = positions;
-    playersPositions.push(playersPosition);
+playersPosition.Positions = positions;
+
+var indexToSocketId = [];
+for(var i = 0; i < totalPlayer; i++){
+    indexToSocketId.push('');
 }
+
+var loadedPlayerIndex = [];
 
 // 2개의 공 절대위치를 보관
 var ballsPositions = [];
@@ -47,37 +44,38 @@ for(var i = 0; i < 2; i++){
 
 var sendingPosition = new Object();
 sendingPosition.BallPositions = ballsPositions;
-//sendingPosition.PlayerPositions = playersPositions[1].Positions;
+//sendingPosition.PlayerPositions = playersPosition.Positions;
 
 io.on('connection', function(socket) {
 
     console.log("Connect in child");
 
     socket.on('player_index', function(data) {
+        var playerIndex = data;
+        indexToSocketId[playerIndex] = socket.id;
         console.log('player_index ' + data);
         socket.emit('player_index', data);
     });
 
-    socket.on('relative_position', function(data) {
-        if(isFirst[0]){
-            timestamp[0] = Date.now();
-            isFirst[0] = false;
+    socket.on('complete_loading', function(data) {
+        var playerIndex = data;
+        if(loadedPlayerIndex.indexOf(playerIndex) == -1){
+            loadedPlayerIndex.push(playerIndex);
         }
-
-        playersPositions[0].Positions[data.PlayerIndex].x += data.Position.x;
-        playersPositions[0].Positions[data.PlayerIndex].y += data.Position.y;
-        playersPositions[0].Positions[data.PlayerIndex].z += data.Position.z;
+        if(loadedPlayerIndex.length == totalPlayer){
+            io.emit('kick_off', '');
+        }
     });
 
     socket.on('absolute_position', function(data){
-        if(isFirst[1]){
-            timestamp[1] = Date.now();
-            isFirst[1] = false;
+        if(isFirst){
+            timestamp = Date.now();
+            isFirst = false;
 
             for(var i = 0; i < totalPlayer; i++){
-                playersPositions[1].Positions[i].x = j * 5;
-                playersPositions[1].Positions[i].y = 3.5;
-                playersPositions[1].Positions[i].z = j * 5;
+                playersPosition.Positions[i].x = j * 5;
+                playersPosition.Positions[i].y = 3.5;
+                playersPosition.Positions[i].z = j * 5;
             }
         }
 
@@ -90,47 +88,39 @@ io.on('connection', function(socket) {
             }
         }
 
-        playersPositions[1].Positions[data.PlayerIndex].x = data.PlayerPosition.x;
-        playersPositions[1].Positions[data.PlayerIndex].y = data.PlayerPosition.y;
-        playersPositions[1].Positions[data.PlayerIndex].z = data.PlayerPosition.z;
+        playersPosition.Positions[data.PlayerIndex].x = data.PlayerPosition.x;
+        playersPosition.Positions[data.PlayerIndex].y = data.PlayerPosition.y;
+        playersPosition.Positions[data.PlayerIndex].z = data.PlayerPosition.z;
 
-        var timeDiff1 = Date.now() - timestamp[0];
-        var timeDiff2 = Date.now() - timestamp[1];
+        var timeDiff = Date.now() - timestamp;
 
         // 20ms마다 절대 좌표 + 공
-        if(timeDiff2 > 40){
+        if(timeDiff > 40){
             sendingPosition.BallPositions = ballsPositions;
-            sendingPosition.PlayerPositions = playersPositions[1].Positions;
+            sendingPosition.PlayerPositions = playersPosition.Positions;
             var datas = JSON.stringify(sendingPosition);
             //console.log('절대' + datas);
 
             io.emit('absolute_position', datas);
-            for(var i = 0; i < totalPlayer; i++){
-                playersPositions[0].Positions[i].x = 0;
-                playersPositions[0].Positions[i].y = 0;
-                playersPositions[0].Positions[i].z = 0;
-            }
-            timestamp[1] = Date.now();
+            timestamp = Date.now();
         }
-        /* Lerp
-        // 20ms마다 상대 좌표 + 공 전송
-        else if(timeDiff1 > 20){
-            sendingPosition.BallPositions = ballsPositions;
-            sendingPosition.PlayerPositions = playersPositions[0].Positions;
-            var datas = JSON.stringify(sendingPosition);
-            //console.log('상대' + datas);
-
-            io.emit('relative_position', datas);
-            for(var i = 0; i < totalPlayer; i++){
-                playersPositions[0].Positions[i].x = 0;
-                playersPositions[0].Positions[i].y = 0;
-                playersPositions[0].Positions[i].z = 0;
-            }
-
-            timestamp[0] = Date.now();
-        }
-        */
     });
+
+    socket.on('disconnect', function(data){
+        var i;
+        for(i = 0; i < totalPlayer; i++){
+            if(indexToSocketId[i] == socket.id){
+                break;
+            }
+        }
+        console.log(i+"player is disconnected in "+ port+' '+socket.id);
+        socket.emit('disconnection', JSON.stringify(i));
+    });
+
+    socket.on('disconnection', function(data) {
+        console.log('in disconnection '+ socket.id);
+        socket.disconnect(true);
+    })
 
 });
 
