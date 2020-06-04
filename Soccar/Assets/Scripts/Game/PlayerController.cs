@@ -178,7 +178,7 @@ public static class PlayerController
     // 자신의 분신을 움직임
     private static void Move(Vector3 movingPosition)
     {
-        AlterEgo.transform.Translate(movingPosition);
+        AlterEgo.transform.position += movingPosition;
         //Players[_playerIndex].transform.Translate(movingPosition);
     }
 
