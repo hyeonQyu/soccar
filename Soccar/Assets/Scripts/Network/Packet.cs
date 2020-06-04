@@ -79,6 +79,18 @@ public class Packet
         }
     }
 
+    public class SendingScore
+    {
+        public int Scorer;
+        public int Conceder;
+
+        public SendingScore(int scorer, int conceder)
+        {
+            Scorer = scorer;
+            Conceder = conceder;
+        }
+    }
+
     // 대기중인 방 정보 수신
     public class ReceivingRoomList
     {

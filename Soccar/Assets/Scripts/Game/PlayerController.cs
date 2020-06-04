@@ -57,6 +57,7 @@ public static class PlayerController
             if (i < GameLauncher.Headcount)
             {
                 Players[i] = GameObject.Find("Player" + suffix);
+                Players[i].GetComponent<PlayerInformation>().SetPlayerInformation(PlayerIndex);
                 MiniMapManager.Players[i] = MiniMapManager.MiniMapGround.transform.Find("Mini Map Player" + suffix).gameObject;
                 IsConnectPlayers[i] = true;
             }
