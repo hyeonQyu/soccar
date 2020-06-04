@@ -10,7 +10,7 @@ public class Sound
     public AudioSource Whistle { get; private set; }
 
     // 로비
-    public AudioSource BackgroundMusic { get; private set; }
+
 
     public Sound(bool isGameScene)
     {
@@ -24,7 +24,7 @@ public class Sound
         // 로비
         else
         {
-            BackgroundMusic = _sounds.transform.Find("Background Music").GetComponent<AudioSource>();
+
         }
     }
 }

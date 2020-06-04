@@ -11,12 +11,6 @@ public class LobbyManager : MonoBehaviour
     public const byte OnRoomPanel = 3;
 
     [SerializeField]
-    private Image _logoPanel;
-    [SerializeField]
-    private Image _mainScreenPanel;
-    [SerializeField]
-    private Image _pressAnyKey;
-    [SerializeField]
     private GameObject _roomList;
     [SerializeField]
     private GameObject _roomPanel;
@@ -30,9 +24,6 @@ public class LobbyManager : MonoBehaviour
     private GameObject _sceneMediumObject;
 
     private InputField _chatMessage;
-
-    public static bool IsLogoDestroyed { set; get; }
-    private bool _isOnLobby;
 
     // 통신을 위한 요소
     private LobbyNetworkLinker _lobbyNetworkLinker;
@@ -56,8 +47,7 @@ public class LobbyManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Animator logoAnimator = _logoPanel.GetComponent<Animator>();
-        logoAnimator.SetBool("isDestroy", true);
+        _sound = new Sound(false);
 
         _roomManager = new RoomManager(_roomList);
         _room = new Room(_roomPanel);
@@ -66,29 +56,15 @@ public class LobbyManager : MonoBehaviour
         _networkManager = _networkManagerObject.GetComponent<NetworkManager>();
         _networkManager.SetWebSocket(false, _sceneMediumObject.GetComponent<SceneMedium>(), _lobbyNetworkLinker);
 
-        _sound = new Sound(false);
-
         _chatMessage = _roomPanel.transform.Find("Message").GetComponent<InputField>();
         _buttonController = _buttonControllerObject.GetComponent<ButtonController>();
 
-        CurrentPanel = 0;
+        CurrentPanel = OnLoginPanel;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // 아무 키나 누르면 Main Screen이 사라지고 로그인 화면으로 이동
-        if(IsLogoDestroyed && Input.anyKeyDown && !_isOnLobby)
-        {
-            Destroy(_pressAnyKey.gameObject);
-            Animator mainScreenAnimator = _mainScreenPanel.GetComponent<Animator>();
-            mainScreenAnimator.SetBool("isDestroy", true);
-            _isOnLobby = true;
-
-            CurrentPanel = OnLoginPanel;
-            _sound.BackgroundMusic.Play();
-        }
-
         // Input Field가 있는 패널에서 엔터키 입력
         if(Input.GetKeyDown(KeyCode.Return))
         {

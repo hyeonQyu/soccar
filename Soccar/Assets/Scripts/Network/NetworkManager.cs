@@ -168,7 +168,7 @@ public class NetworkManager : MonoBehaviour
                 Destroy(GameObject.Find("(singleton) socket.io.SocketManager"));
                 Destroy(GameObject.Find("MainThreadDispatcher"));
 
-                SceneManager.LoadScene("GoalTestScene");
+                SceneManager.LoadScene("Game Scene");
             });
 
             // 게임 시작 실패(인원수가 적음)
