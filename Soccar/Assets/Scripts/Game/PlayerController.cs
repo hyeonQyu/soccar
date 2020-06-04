@@ -16,6 +16,9 @@ public static class PlayerController
     public static MiniMapManager MiniMapManager { get; set; }
     public static GameObject[] GoalPosts { get; set; }
 
+    // 현재 접속중인 플레이어
+    public static bool[] IsConnectPlayers { get; set; }
+
     // 속도
     private static float _walkSpeed;
     private static float _runSpeed;
@@ -32,6 +35,7 @@ public static class PlayerController
 
     // 99 = 서버로 부터 값을 받지 않음.
     public static int PlayerIndex { get; set; }
+    public static int SuperClientIndex { get; set; }
 
     // 움직임 발생시 true로 변환하여 서버로 패킷전송
     private static bool _isMoved = false;
@@ -44,23 +48,42 @@ public static class PlayerController
 
         Players = new GameObject[GameLauncher.Headcount];
         MiniMapManager = new MiniMapManager(GameLauncher.Headcount);
-        for(int i =0; i < 6; i++)
+        IsConnectPlayers = new bool[GameLauncher.Headcount];
+        for(int i = 0; i < 6; i++)
         {
             string suffix = i.ToString();
 
+            // 접속한 플레이어 수 만큼만 게임오브젝트와 연결
             if (i < GameLauncher.Headcount)
             {
                 Players[i] = GameObject.Find("Player" + suffix);
+                Players[i].GetComponent<PlayerInformation>().SetPlayerInformation(PlayerIndex);
                 MiniMapManager.Players[i] = MiniMapManager.MiniMapGround.transform.Find("Mini Map Player" + suffix).gameObject;
+                IsConnectPlayers[i] = true;
             }
             else
             {
                 GameObject.Find("Player" + suffix).SetActive(false);
                 MiniMapManager.MiniMapGround.transform.Find("Mini Map Player" + suffix).gameObject.SetActive(false);
+                try
+                {
+                    IsConnectPlayers[i] = false;
+                }
+                catch(IndexOutOfRangeException e) { }
             }
         }
 
         AlterEgo = GameObject.Find("Alter Ego");
+
+        // 슈퍼 클라이언트의 인덱스를 찾음
+        for(int i = 0; i < GameLauncher.Headcount; i++)
+        {
+            if(!IsConnectPlayers[i])
+                continue;
+            
+            SuperClientIndex = i;
+            break;
+        }
     }
 
     public static void InitializePlayer(string playerName)

@@ -32,7 +32,7 @@ public class GameLauncher : MonoBehaviour
 
     public static GameObject[] Balls { get; private set; }
 
-    public static int Headcount { get; private set; }
+    public static int Headcount { get; set; }
 
     // Start is called before the first frame update
     void Start()
@@ -91,8 +91,11 @@ public class GameLauncher : MonoBehaviour
         }
         catch(Exception e) { }
 
+        if(!IsReadyToKickOff)
+            return;
+
         // 경기 시작 휘슬을 울림
-        if(IsReadyToKickOff && !_isKickOff)
+        if(!_isKickOff)
         {
             _sound.Whistle.Play();
             _isKickOff = true;
