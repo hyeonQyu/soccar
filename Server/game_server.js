@@ -9,7 +9,11 @@ var io = require('socket.io')(server);
 
 var TIME_STAMP = 0;
 
+var SUPER_CLIENT_INDEX = 0;
+
 var isFirst = true;
+
+var CONNECTED_CLIENT_COUNT = totalPlayer;
 
 // 상대위치 이동정도 및 절대위치를 보관
 var PLAYERS_POSITION = new Object();
@@ -90,7 +94,7 @@ io.on('connection', function(socket) {
         }
 
         //  슈퍼클라이언트에게서 공의 절대위치 수신
-        if(data.PlayerIndex == 0){
+        if(data.PlayerIndex == SUPER_CLIENT_INDEX){
             for(var i = 0; i < 2; i++){
                 ballsPositions[i].x = data.BallPositions[i].x;
                 ballsPositions[i].y = data.BallPositions[i].y;
@@ -114,6 +118,10 @@ io.on('connection', function(socket) {
             io.emit('absolute_position', datas);
             TIME_STAMP = Date.now();
         }
+    });
+
+    socket.on('change_super_client', function(data){
+        SUPER_CLIENT_INDEX  = data;
     });
 
     socket.on('score', function(data){
@@ -162,13 +170,17 @@ io.on('connection', function(socket) {
             }
         }
         console.log(i+"player is disconnected in "+ port+' '+socket.id);
+        CONNECTED_CLIENT_COUNT -= 1;
+        if(CONNECTED_CLIENT_COUNT == 0){
+            process.exit(1);
+        }
         io.emit('disconnection', JSON.stringify(i));
     });
 
     socket.on('disconnection', function(data) {
         console.log('in disconnection '+ socket.id);
         socket.disconnect(true);
-    })
+    });
 
 });
 
