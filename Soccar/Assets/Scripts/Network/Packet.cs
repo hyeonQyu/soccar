@@ -79,16 +79,40 @@ public class Packet
         }
     }
 
+    public class SendingCompleteLoading
+    {
+        public int PlayerIndex;
+        public string PlayerName;
+
+        public SendingCompleteLoading(int playerIndex, string playerName)
+        {
+            PlayerIndex = playerIndex;
+            PlayerName = playerName;
+        }
+    }
+
+    public class ReceivingKickOff
+    {
+        public string[] PlayerNames;
+    }
+
     public class SendingScore
     {
         public int Scorer;
         public int Conceder;
+        public byte IsFeverBall;
 
-        public SendingScore(int scorer, int conceder)
+        public SendingScore(int scorer, int conceder, bool isFeverBall)
         {
             Scorer = scorer;
             Conceder = conceder;
+            IsFeverBall = isFeverBall ? (byte)1 : (byte)0;
         }
+    }
+
+    public class ReceivingScore
+    {
+        public int[] ScoreBoard;
     }
 
     // 대기중인 방 정보 수신

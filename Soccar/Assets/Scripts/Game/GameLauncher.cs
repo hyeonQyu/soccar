@@ -6,6 +6,8 @@ public class GameLauncher : MonoBehaviour
 {
     [SerializeField]
     private GameObject _loadingGameScenePanel;
+    [SerializeField]
+    private GameObject[] _scoreBoard;
 
     // 네트워크
     [SerializeField]
@@ -33,6 +35,7 @@ public class GameLauncher : MonoBehaviour
     public static GameObject[] Balls { get; private set; }
 
     public static int Headcount { get; set; }
+    private const int MaxPlayer = 6;
 
     // Start is called before the first frame update
     void Start()
@@ -43,19 +46,34 @@ public class GameLauncher : MonoBehaviour
         RoutineScheduler = GetComponent<RoutineScheduler>();
         PlayerController.SetPlayers();
 
+        // 스코어보드 배치
+        int n = Headcount - 1;
+        for(int i = 0; i < Headcount; i++)
+        {
+            _scoreBoard[i].transform.localPosition = new Vector3((n - i) * -100, 0, 0);
+        }
+        for(int i = Headcount; i < MaxPlayer; i++)
+        {
+            Destroy(_scoreBoard[i]);
+        }
+
+        // 네트워크 설정
         _networkManager = _networkManagerObject.GetComponent<NetworkManager>();
-        _networkManager.SetWebSocket(true, _sceneMedium);
+        _networkManager.SetWebSocket(_sceneMedium, _scoreBoard);
         PlayerController.NetworkManager = _networkManager;
 
         _sound = new Sound(true);
 
         PlayerController.PlayerIndex = 99;
 
+        // 공 객체를 찾음
         Balls = new GameObject[2];
-        Balls[0] = GameObject.Find("Ball0");
-        Balls[1] = GameObject.Find("Ball1");
-        PlayerController.MiniMapManager.Balls[0] = PlayerController.MiniMapManager.MiniMapGround.transform.Find("Mini Map Ball0").gameObject;
-        PlayerController.MiniMapManager.Balls[1] = PlayerController.MiniMapManager.MiniMapGround.transform.Find("Mini Map Ball1").gameObject;
+        for(int i = 0; i < Balls.Length; i++)
+        {
+            Balls[i] = GameObject.Find("Ball" + i);
+            Balls[i].GetComponent<BallController>().IsFeverBall = false;
+            PlayerController.MiniMapManager.Balls[i] = PlayerController.MiniMapManager.MiniMapGround.transform.Find("Mini Map Ball" + i).gameObject;
+        }
     }
 
     void FixedUpdate()
@@ -87,6 +105,8 @@ public class GameLauncher : MonoBehaviour
                 return;
             Destroy(_loadingGameScenePanel);
 
+            // 로딩이 완료되었음을 서버에 알림
+            Packet.SendingCompleteLoading sendingCompleteLoading = new Packet.SendingCompleteLoading(PlayerController.PlayerIndex, _sceneMedium.PlayerName);
             _networkManager.Send("complete_loading", PlayerController.PlayerIndex.ToString());
         }
         catch(Exception e) { }
