@@ -261,6 +261,10 @@ io.on('connection', function(socket) {
                 argv.push(JSON.stringify(ROOM_LIST.rooms[roomIndex].playerCounts));
                 var child = cp.fork("game_server.js", argv);
 
+                child.on('exit', ()=>{
+                    console.log('child terminated');
+                });
+
                 var sendingData = new Object();
                 sendingData.Port = PORT;
                 sendingData.Headcount = ROOM_LIST.rooms[roomIndex].playerCounts;
