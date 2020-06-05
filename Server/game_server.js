@@ -27,12 +27,14 @@ PLAYERS_POSITION.Positions = positions;
 // 변수 초기화
 var INDEX_TO_SOCKET_ID = [];
 var SCORE_BOARD = [];
+var PLAYERS_NAME = [];
 for(var i = 0; i < totalPlayer; i++){
     INDEX_TO_SOCKET_ID.push('');
+    PLAYERS_NAME.push('');
     SCORE_BOARD.push(0);
 }
 
-var loadedPlayerIndex = [];
+var LOADED_PLAYER_INDEX = [];
 
 // 2개의 공 절대위치를 보관
 var ballsPositions = [];
@@ -61,12 +63,17 @@ io.on('connection', function(socket) {
     });
 
     socket.on('complete_loading', function(data) {
-        var playerIndex = data;
-        if(loadedPlayerIndex.indexOf(playerIndex) == -1){
-            loadedPlayerIndex.push(playerIndex);
+        var playerIndex = data.PlayerIndex;
+        var playerName = data.PlayerName;
+        if(LOADED_PLAYER_INDEX.indexOf(playerIndex) == -1){
+            LOADED_PLAYER_INDEX.push(playerIndex);
+            PLAYERS_NAME[playerIndex] = playerName;
         }
-        if(loadedPlayerIndex.length == totalPlayer){
-            io.emit('kick_off', '');
+        if(LOADED_PLAYER_INDEX.length == totalPlayer){
+            var sendingData = new Object();
+            sendingData.PlayerNames = PLAYERS_NAME;
+            var datas = JSON.stringify(sendingData);
+            io.emit('kick_off', datas);
         }
     });
 
