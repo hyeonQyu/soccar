@@ -7,12 +7,12 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
-var timestamp = 0;
+var TIME_STAMP = 0;
 
 var isFirst = true;
 
 // 상대위치 이동정도 및 절대위치를 보관
-var playersPosition = new Object();
+var PLAYERS_POSITION = new Object();
     var positions = [];
     for(var j = 0; j < totalPlayer; j++){
         var position = new Object();
@@ -22,11 +22,14 @@ var playersPosition = new Object();
 
         positions.push(position);
     }
-playersPosition.Positions = positions;
+PLAYERS_POSITION.Positions = positions;
 
-var indexToSocketId = [];
+// 변수 초기화
+var INDEX_TO_SOCKET_ID = [];
+var SCORE_BOARD = [];
 for(var i = 0; i < totalPlayer; i++){
-    indexToSocketId.push('');
+    INDEX_TO_SOCKET_ID.push('');
+    SCORE_BOARD.push(0);
 }
 
 var loadedPlayerIndex = [];
@@ -44,7 +47,7 @@ for(var i = 0; i < 2; i++){
 
 var sendingPosition = new Object();
 sendingPosition.BallPositions = ballsPositions;
-//sendingPosition.PlayerPositions = playersPosition.Positions;
+//sendingPosition.PlayerPositions = PLAYERS_POSITION.Positions;
 
 io.on('connection', function(socket) {
 
@@ -52,7 +55,7 @@ io.on('connection', function(socket) {
 
     socket.on('player_index', function(data) {
         var playerIndex = data;
-        indexToSocketId[playerIndex] = socket.id;
+        INDEX_TO_SOCKET_ID[playerIndex] = socket.id;
         console.log('player_index ' + data);
         socket.emit('player_index', data);
     });
@@ -69,13 +72,13 @@ io.on('connection', function(socket) {
 
     socket.on('absolute_position', function(data){
         if(isFirst){
-            timestamp = Date.now();
+            TIME_STAMP = Date.now();
             isFirst = false;
 
             for(var i = 0; i < totalPlayer; i++){
-                playersPosition.Positions[i].x = j * 5;
-                playersPosition.Positions[i].y = 3.5;
-                playersPosition.Positions[i].z = j * 5;
+                PLAYERS_POSITION.Positions[i].x = j * 5;
+                PLAYERS_POSITION.Positions[i].y = 3.5;
+                PLAYERS_POSITION.Positions[i].z = j * 5;
             }
         }
 
@@ -88,28 +91,60 @@ io.on('connection', function(socket) {
             }
         }
 
-        playersPosition.Positions[data.PlayerIndex].x = data.PlayerPosition.x;
-        playersPosition.Positions[data.PlayerIndex].y = data.PlayerPosition.y;
-        playersPosition.Positions[data.PlayerIndex].z = data.PlayerPosition.z;
+        PLAYERS_POSITION.Positions[data.PlayerIndex].x = data.PlayerPosition.x;
+        PLAYERS_POSITION.Positions[data.PlayerIndex].y = data.PlayerPosition.y;
+        PLAYERS_POSITION.Positions[data.PlayerIndex].z = data.PlayerPosition.z;
 
-        var timeDiff = Date.now() - timestamp;
+        var timeDiff = Date.now() - TIME_STAMP;
 
         // 20ms마다 절대 좌표 + 공
         if(timeDiff > 40){
             sendingPosition.BallPositions = ballsPositions;
-            sendingPosition.PlayerPositions = playersPosition.Positions;
+            sendingPosition.PlayerPositions = PLAYERS_POSITION.Positions;
             var datas = JSON.stringify(sendingPosition);
             //console.log('절대' + datas);
 
             io.emit('absolute_position', datas);
-            timestamp = Date.now();
+            TIME_STAMP = Date.now();
         }
     });
+
+    socket.on('score', function(data){
+        // data = (Scorer,  Conceder, IsFeverBall);
+        var scorer = data.Scorer;
+        var conceder = data.Conceder;
+        var flag = data.IsFeverBall;
+
+        // 골 점수 처리하는 부분
+        if(flag == 1){
+            SCORE_BOARD[scorer] += 3;
+            SCORE_BOARD[conceder] -= 2;
+            if(SCORE_BOARD[conceder] < 0){
+                SCORE_BOARD[conceder] = 0;
+            }
+        }
+        else{
+            SCORE_BOARD[scorer] += 2;
+            SCORE_BOARD[conceder] -= 1;
+            if(SCORE_BOARD[conceder] < 0){
+                SCORE_BOARD[conceder] = 0;
+            }
+        }
+
+        var sendingData = new Object();
+        sendingData.ScoreBoard = SCORE_BOARD;
+        var datas = JSON.stringify(sendingData);
+        io.emit('score', datas);
+    });
+
+    socket.on('end_game', function(data){
+
+    })
 
     socket.on('disconnect', function(data){
         var i;
         for(i = 0; i < totalPlayer; i++){
-            if(indexToSocketId[i] == socket.id){
+            if(INDEX_TO_SOCKET_ID[i] == socket.id){
                 break;
             }
         }
