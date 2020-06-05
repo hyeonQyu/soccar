@@ -114,7 +114,7 @@ io.on('connection', function(socket) {
             }
         }
         console.log(i+"player is disconnected in "+ port+' '+socket.id);
-        socket.emit('disconnection', JSON.stringify(i));
+        io.emit('disconnection', JSON.stringify(i));
     });
 
     socket.on('disconnection', function(data) {
@@ -125,5 +125,5 @@ io.on('connection', function(socket) {
 });
 
 server.listen(port, function(){
-    console.log('Game server listening on port ' + port);
+    console.log('Game server listening on port=' + port+ ' totalCount='+totalPlayer);
 })

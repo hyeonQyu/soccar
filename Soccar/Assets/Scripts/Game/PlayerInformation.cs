@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class PlayerInformation : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject _networkManagerObject;
+    private NetworkManager _networkManager;
+
     public string PlayerName { get; set; }
     public int Score { get; set; }
+    public int PlayerIndex { get; private set; }
 
     private Vector3 _lastReceivedPosition;
     public Vector3 LastReceivedPosition
@@ -16,10 +21,22 @@ public class PlayerInformation : MonoBehaviour
         }
     }
 
+    public void SetPlayerInformation(int playerIndex)
+    {
+        PlayerIndex = playerIndex;
+        _networkManager = _networkManagerObject.GetComponent<NetworkManager>();
+    }
+
     // 득점
     public void Scores(ref GameObject conceder)
     {
         PlayerInformation concederPlayer = conceder.GetComponent<PlayerInformation>();
+
+        // 슈퍼 클라이언트만 득점 정보 서버에 전송
+        if(PlayerController.PlayerIndex == PlayerController.SuperClientIndex)
+        {
+            _networkManager.Send<Packet.SendingScore>("score", new Packet.SendingScore(PlayerIndex, concederPlayer.PlayerIndex));
+        }
 
         // 득점자는 +2점, 실점자는 -1점
         if(!concederPlayer.PlayerName.Equals(PlayerName))
