@@ -5,6 +5,7 @@ using UnityEngine;
 public class BallController : MonoBehaviour
 {
     private Collider _ball;
+    public bool IsFeverBall { get; set; }
     private GameObject _lastPlayer;
     public GameObject LastPlayer
     {

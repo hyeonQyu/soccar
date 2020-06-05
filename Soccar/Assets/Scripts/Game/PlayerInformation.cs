@@ -28,32 +28,33 @@ public class PlayerInformation : MonoBehaviour
     }
 
     // 득점
-    public void Scores(ref GameObject conceder)
+    public void Scores(ref GameObject conceder, bool isFeverBall)
     {
         PlayerInformation concederPlayer = conceder.GetComponent<PlayerInformation>();
 
         // 슈퍼 클라이언트만 득점 정보 서버에 전송
         if(PlayerController.PlayerIndex == PlayerController.SuperClientIndex)
         {
-            _networkManager.Send<Packet.SendingScore>("score", new Packet.SendingScore(PlayerIndex, concederPlayer.PlayerIndex));
+            Packet.SendingScore sendingScore = new Packet.SendingScore(PlayerIndex, concederPlayer.PlayerIndex, isFeverBall);
+            _networkManager.Send<Packet.SendingScore>("score", sendingScore);
         }
 
-        // 득점자는 +2점, 실점자는 -1점
-        if(!concederPlayer.PlayerName.Equals(PlayerName))
-        {
-            Score += 2;
-            // 득점에 대한 메시지 
-            Debug.Log("득점자: " + PlayerName + "   실점자: " + concederPlayer.PlayerName);
-        }
-        // 자책골, 자책골은 득점으로 인정하지 않음
-        else
-        {
-            // 자책골에 대한 메시지
-            Debug.Log(PlayerName + "의 자책골");
-        }
-        concederPlayer.Score--;
+        //// 득점자는 +2점, 실점자는 -1점
+        //if(!concederPlayer.PlayerName.Equals(PlayerName))
+        //{
+        //    Score += 2;
+        //    // 득점에 대한 메시지 
+        //    Debug.Log("득점자: " + PlayerName + "   실점자: " + concederPlayer.PlayerName);
+        //}
+        //// 자책골, 자책골은 득점으로 인정하지 않음
+        //else
+        //{
+        //    // 자책골에 대한 메시지
+        //    Debug.Log(PlayerName + "의 자책골");
+        //}
+        //concederPlayer.Score--;
 
-        Debug.Log(PlayerName + ": " + Score + "    " + concederPlayer.PlayerName + ": " + concederPlayer.PlayerName);
+        //Debug.Log(PlayerName + ": " + Score + "    " + concederPlayer.PlayerName + ": " + concederPlayer.PlayerName);
     }
 
     // 캐릭터에 충돌 발생 시 분신을 캐릭터 위치로 옮김

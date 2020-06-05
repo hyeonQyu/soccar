@@ -13,13 +13,16 @@ public class GoalChecker : MonoBehaviour
         if(other.gameObject.CompareTag("Ball"))
         {
             GameObject ball = other.gameObject;
-            GameObject scorer = ball.GetComponent<BallController>().LastPlayer;
+            BallController ballController = ball.GetComponent<BallController>();
+
             // 해당 공이 득점 상태가 아닌 경우에만 득점 인정(공이 트리거를 한 번에 두 번 통과하는 경우 방지)
-            if(!ball.GetComponent<BallController>().IsScored)
+            if(!ballController.IsScored)
             {
+                GameObject scorer = ballController.LastPlayer;
+
                 // 득점
-                ball.GetComponent<BallController>().IsScored = true;
-                scorer.GetComponent<PlayerInformation>().Scores(ref _player);
+                ballController.IsScored = true;
+                scorer.GetComponent<PlayerInformation>().Scores(ref _player, ballController.IsFeverBall);
 
                 // 3초 대기
                 StartCoroutine(MoveBall(ball));

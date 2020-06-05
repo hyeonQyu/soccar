@@ -10,6 +10,7 @@ public static class PlayerController
 
     // 전체 플레이어
     public static GameObject[] Players { get; set; }
+    public static PlayerInformation[] PlayerInformations { get; set; }
     // 현재 컨트롤하는 플레이어
     public static GameObject Player { get; private set; }
     public static GameObject AlterEgo { get; private set; }
@@ -57,7 +58,8 @@ public static class PlayerController
             if (i < GameLauncher.Headcount)
             {
                 Players[i] = GameObject.Find("Player" + suffix);
-                Players[i].GetComponent<PlayerInformation>().SetPlayerInformation(PlayerIndex);
+                PlayerInformations[i] = Players[i].GetComponent<PlayerInformation>();
+                PlayerInformations[i].SetPlayerInformation(PlayerIndex);
                 MiniMapManager.Players[i] = MiniMapManager.MiniMapGround.transform.Find("Mini Map Player" + suffix).gameObject;
                 IsConnectPlayers[i] = true;
             }
@@ -102,8 +104,8 @@ public static class PlayerController
         Debug.Log("r=" + RightVector + " l=" + LeftVector + " f=" + ForwardVector + " b=" + BackwardVector);
 
         Player = Players[PlayerIndex];
+        PlayerInformations[PlayerIndex].PlayerName = playerName;
         AlterEgo.transform.position = Player.transform.position;
-        Player.GetComponent<PlayerInformation>().PlayerName = playerName;
 
         IsPlayersInitialized = true;
     }

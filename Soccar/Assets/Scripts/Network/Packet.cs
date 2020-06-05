@@ -83,12 +83,19 @@ public class Packet
     {
         public int Scorer;
         public int Conceder;
+        public byte IsFeverBall;
 
-        public SendingScore(int scorer, int conceder)
+        public SendingScore(int scorer, int conceder, bool isFeverBall)
         {
             Scorer = scorer;
             Conceder = conceder;
+            IsFeverBall = isFeverBall ? (byte)1 : (byte)0;
         }
+    }
+
+    public class ReceivingScore
+    {
+        public int[] ScoreBoard;
     }
 
     // 대기중인 방 정보 수신

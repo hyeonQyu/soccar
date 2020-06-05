@@ -6,6 +6,8 @@ public class GameLauncher : MonoBehaviour
 {
     [SerializeField]
     private GameObject _loadingGameScenePanel;
+    [SerializeField]
+    private GameObject[] _scoreBoard;
 
     // 네트워크
     [SerializeField]
@@ -44,7 +46,7 @@ public class GameLauncher : MonoBehaviour
         PlayerController.SetPlayers();
 
         _networkManager = _networkManagerObject.GetComponent<NetworkManager>();
-        _networkManager.SetWebSocket(true, _sceneMedium);
+        _networkManager.SetWebSocket(_sceneMedium, _scoreBoard);
         PlayerController.NetworkManager = _networkManager;
 
         _sound = new Sound(true);
@@ -52,10 +54,12 @@ public class GameLauncher : MonoBehaviour
         PlayerController.PlayerIndex = 99;
 
         Balls = new GameObject[2];
-        Balls[0] = GameObject.Find("Ball0");
-        Balls[1] = GameObject.Find("Ball1");
-        PlayerController.MiniMapManager.Balls[0] = PlayerController.MiniMapManager.MiniMapGround.transform.Find("Mini Map Ball0").gameObject;
-        PlayerController.MiniMapManager.Balls[1] = PlayerController.MiniMapManager.MiniMapGround.transform.Find("Mini Map Ball1").gameObject;
+        for(int i = 0; i < Balls.Length; i++)
+        {
+            Balls[i] = GameObject.Find("Ball" + i);
+            Balls[i].GetComponent<BallController>().IsFeverBall = false;
+            PlayerController.MiniMapManager.Balls[i] = PlayerController.MiniMapManager.MiniMapGround.transform.Find("Mini Map Ball" + i).gameObject;
+        }
     }
 
     void FixedUpdate()
