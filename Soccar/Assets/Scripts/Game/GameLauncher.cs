@@ -50,7 +50,8 @@ public class GameLauncher : MonoBehaviour
         int n = Headcount - 1;
         for(int i = 0; i < Headcount; i++)
         {
-            _scoreBoard[i].transform.localPosition = new Vector3((n - i) * -100, 0, 0);
+            Debug.Log("스코어보드 배치: " + n + " " + i);
+            _scoreBoard[i].transform.localPosition = new Vector3((n - i) * -100 + 300, 0, 0);
         }
         for(int i = Headcount; i < MaxPlayer; i++)
         {
@@ -119,6 +120,7 @@ public class GameLauncher : MonoBehaviour
         {
             _sound.Whistle.Play();
             _isKickOff = true;
+            _sound.CrowdDefault.Play();
             return;
         }
 

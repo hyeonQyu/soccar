@@ -14,7 +14,11 @@ public class RoutineScheduler : MonoBehaviour
         Vector3[] currentPlayerPositions = new Vector3[GameLauncher.Headcount];
         for(int i = 0; i < GameLauncher.Headcount; i++)
         {
-            currentPlayerPositions[i] = PlayerController.Players[i].transform.position;
+            try
+            {
+                currentPlayerPositions[i] = PlayerController.Players[i].transform.position;
+            }
+            catch(Exception e) { }
         }
         Vector3[] currentBallPositions = new Vector3[2];
         for(int i = 0; i < 2; i++)
@@ -63,7 +67,7 @@ public class RoutineScheduler : MonoBehaviour
 
             for(int j = 0; j < destPositions.Length; j++)
             {
-                if(PlayerController.PlayerIndex != 0)
+                if(PlayerController.PlayerIndex != PlayerController.SuperClientIndex)
                     GameLauncher.Balls[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
                 Vector3 newVector = new Vector3(GameLauncher.Balls[j].transform.position.x, 165, GameLauncher.Balls[j].transform.position.z);
                 PlayerController.MiniMapManager.Balls[j].transform.position = newVector;

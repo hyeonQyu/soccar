@@ -161,12 +161,9 @@ public class NetworkManager : MonoBehaviour
         Socket.On("kick_off", (string data) =>
         {
             data = ToJsonFormat(data);
-            Debug.Log("Kick off 들어옴 " + data);
             Packet.ReceivingKickOff receivingKickOff = JsonUtility.FromJson<Packet.ReceivingKickOff>(data);
             for(int i = 0; i < receivingKickOff.PlayerNames.Length; i++)
             {
-                Debug.Log("Kick off " + i);
-                Debug.Log(receivingKickOff.PlayerNames[i]);
                 PlayerController.PlayerInformations[i].PlayerName = receivingKickOff.PlayerNames[i];
                 scoreBoard[i].transform.Find("Name").GetComponent<Text>().text = receivingKickOff.PlayerNames[i];
             }
@@ -190,14 +187,7 @@ public class NetworkManager : MonoBehaviour
             int disconnectPlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
 
             PlayerController.IsConnectPlayers[disconnectPlayerIndex] = false;
-            GameLauncher.Headcount--;
-
-            // 게임에 혼자만 남음
-            if(GameLauncher.Headcount == 1)
-            {
-
-            }
-
+            
             // 슈퍼 클라이언트 인덱스 변경
             if(disconnectPlayerIndex == PlayerController.SuperClientIndex)
             {
@@ -212,7 +202,8 @@ public class NetworkManager : MonoBehaviour
                     }
                 }
             }
-            Debug.Log("Super Client: " + PlayerController.SuperClientIndex);
+            if(PlayerController.PlayerIndex == PlayerController.SuperClientIndex)
+                Send("change_super_client", PlayerController.SuperClientIndex.ToString());
 
             // 연결이 끊어진 플레이어에 대한 오브젝트 삭제
             Destroy(PlayerController.Players[disconnectPlayerIndex]);
