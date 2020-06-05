@@ -45,6 +45,14 @@ public class GameLauncher : MonoBehaviour
         RoutineScheduler = GetComponent<RoutineScheduler>();
         PlayerController.SetPlayers();
 
+        // 스코어보드 배치
+        int n = Headcount - 1;
+        for(int i = 0; i < Headcount; i++)
+        {
+            _scoreBoard[i].transform.position = new Vector3((n - i) * -100, 0, 0);
+        }
+
+        // 네트워크 설정
         _networkManager = _networkManagerObject.GetComponent<NetworkManager>();
         _networkManager.SetWebSocket(_sceneMedium, _scoreBoard);
         PlayerController.NetworkManager = _networkManager;
@@ -53,6 +61,7 @@ public class GameLauncher : MonoBehaviour
 
         PlayerController.PlayerIndex = 99;
 
+        // 공 객체를 찾음
         Balls = new GameObject[2];
         for(int i = 0; i < Balls.Length; i++)
         {
