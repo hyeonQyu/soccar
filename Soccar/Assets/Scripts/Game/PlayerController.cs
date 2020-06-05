@@ -60,7 +60,7 @@ public static class PlayerController
             {
                 Players[i] = GameObject.Find("Player" + suffix);
                 PlayerInformations[i] = Players[i].GetComponent<PlayerInformation>();
-                PlayerInformations[i].SetPlayerInformation(PlayerIndex);
+                PlayerInformations[i].SetPlayerInformation(i);
                 MiniMapManager.Players[i] = MiniMapManager.MiniMapGround.transform.Find("Mini Map Player" + suffix).gameObject;
                 IsConnectPlayers[i] = true;
             }

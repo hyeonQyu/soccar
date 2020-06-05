@@ -107,7 +107,7 @@ public class GameLauncher : MonoBehaviour
 
             // 로딩이 완료되었음을 서버에 알림
             Packet.SendingCompleteLoading sendingCompleteLoading = new Packet.SendingCompleteLoading(PlayerController.PlayerIndex, _sceneMedium.PlayerName);
-            _networkManager.Send("complete_loading", PlayerController.PlayerIndex.ToString());
+            _networkManager.Send<Packet.SendingCompleteLoading>("complete_loading", sendingCompleteLoading);
         }
         catch(Exception e) { }
 
