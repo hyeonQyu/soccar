@@ -123,7 +123,13 @@ io.on('connection', function(socket) {
         var flag = data.IsFeverBall;
 
         // 골 점수 처리하는 부분
-        if(flag == 1){
+        if(scorer == conceder){
+            SCORE_BOARD[scorer] -= 1;
+            if(SCORE_BOARD[scorer] < 0){
+                SCORE_BOARD[scorer] = 0;
+            }
+        }
+        else if(flag == 1){
             SCORE_BOARD[scorer] += 3;
             SCORE_BOARD[conceder] -= 2;
             if(SCORE_BOARD[conceder] < 0){
