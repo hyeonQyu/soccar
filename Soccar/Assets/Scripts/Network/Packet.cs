@@ -79,6 +79,23 @@ public class Packet
         }
     }
 
+    public class SendingCompleteLoading
+    {
+        public int PlayerIndex;
+        public string PlayerName;
+
+        public SendingCompleteLoading(int playerIndex, string playerName)
+        {
+            PlayerIndex = playerIndex;
+            PlayerName = playerName;
+        }
+    }
+
+    public class ReceivingKickOff
+    {
+        public string[] PlayerNames;
+    }
+
     public class SendingScore
     {
         public int Scorer;

@@ -648,7 +648,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c917161e09ea8c4a865ef76d85589c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 0}
+  _player: {fileID: 1212019531}
 --- !u!23 &11966076
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -25380,7 +25380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c917161e09ea8c4a865ef76d85589c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 0}
+  _player: {fileID: 1693342386}
 --- !u!23 &899857343
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -44428,7 +44428,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _loadingGameScenePanel: {fileID: 1281934252}
-  _scoreBoard: []
+  _scoreBoard:
+  - {fileID: 1501298440}
+  - {fileID: 1770040281}
+  - {fileID: 663485644}
+  - {fileID: 2124945375}
+  - {fileID: 1674397771}
+  - {fileID: 969897005}
   _networkManagerObject: {fileID: 1489427009}
   _txtTime: {fileID: 360387856}
 --- !u!4 &1564077113
@@ -45578,7 +45584,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c917161e09ea8c4a865ef76d85589c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 0}
+  _player: {fileID: 837281104}
 --- !u!23 &1606624167
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -49147,7 +49153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c917161e09ea8c4a865ef76d85589c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 0}
+  _player: {fileID: 320973243}
 --- !u!23 &1726664092
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -56698,7 +56704,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c917161e09ea8c4a865ef76d85589c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 0}
+  _player: {fileID: 1737032118}
 --- !u!23 &2007246913
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -59480,7 +59486,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c917161e09ea8c4a865ef76d85589c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 0}
+  _player: {fileID: 1648846368}
 --- !u!23 &2136855212
 MeshRenderer:
   m_ObjectHideFlags: 0

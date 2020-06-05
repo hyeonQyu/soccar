@@ -3,6 +3,7 @@ using UnityEngine;
 using socket.io;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class NetworkManager : MonoBehaviour
 {
@@ -136,7 +137,7 @@ public class NetworkManager : MonoBehaviour
         _scores = new Text[scoreBoard.Length];
         for(int i = 0; i < scoreBoard.Length; i++)
         {
-            _scores[i] = scoreBoard[i].transform.Find("Score" + i).GetComponent<Text>();
+            _scores[i] = scoreBoard[i].transform.Find("Score").GetComponent<Text>();
         }
 
         /* 서버로부터 메시지 수신 */
@@ -159,6 +160,15 @@ public class NetworkManager : MonoBehaviour
 
         Socket.On("kick_off", (string data) =>
         {
+            data = ToJsonFormat(data);
+
+            Packet.ReceivingKickOff receivingKickOff = JsonUtility.FromJson<Packet.ReceivingKickOff>(data);
+            for(int i = 0; i < receivingKickOff.PlayerNames.Length; i++)
+            {
+                PlayerController.PlayerInformations[i].PlayerName = receivingKickOff.PlayerNames[i];
+                scoreBoard[i].transform.Find("Name").GetComponent<Text>().text = receivingKickOff.PlayerNames[i];
+            }
+
             GameLauncher.IsReadyToKickOff = true;
         });
 

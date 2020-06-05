@@ -35,6 +35,7 @@ public class GameLauncher : MonoBehaviour
     public static GameObject[] Balls { get; private set; }
 
     public static int Headcount { get; set; }
+    private const int MaxPlayer = 6;
 
     // Start is called before the first frame update
     void Start()
@@ -49,7 +50,11 @@ public class GameLauncher : MonoBehaviour
         int n = Headcount - 1;
         for(int i = 0; i < Headcount; i++)
         {
-            _scoreBoard[i].transform.position = new Vector3((n - i) * -100, 0, 0);
+            _scoreBoard[i].transform.localPosition = new Vector3((n - i) * -100, 0, 0);
+        }
+        for(int i = Headcount; i < MaxPlayer; i++)
+        {
+            Destroy(_scoreBoard[i]);
         }
 
         // 네트워크 설정
@@ -100,6 +105,8 @@ public class GameLauncher : MonoBehaviour
                 return;
             Destroy(_loadingGameScenePanel);
 
+            // 로딩이 완료되었음을 서버에 알림
+            Packet.SendingCompleteLoading sendingCompleteLoading = new Packet.SendingCompleteLoading(PlayerController.PlayerIndex, _sceneMedium.PlayerName);
             _networkManager.Send("complete_loading", PlayerController.PlayerIndex.ToString());
         }
         catch(Exception e) { }

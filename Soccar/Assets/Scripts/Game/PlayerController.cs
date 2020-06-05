@@ -48,6 +48,7 @@ public static class PlayerController
         _runSpeed = _walkSpeed * 2;
 
         Players = new GameObject[GameLauncher.Headcount];
+        PlayerInformations = new PlayerInformation[GameLauncher.Headcount];
         MiniMapManager = new MiniMapManager(GameLauncher.Headcount);
         IsConnectPlayers = new bool[GameLauncher.Headcount];
         for(int i = 0; i < 6; i++)
