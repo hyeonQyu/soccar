@@ -373,7 +373,7 @@ namespace AnimFollow
 						gettingUp = true;
 						orientate = true;
 						playerMovement.inhibitMove = true;
-						animator.speed = masterFallAnimatorSpeedFactor * animatorSpeed; // Animation speed during transition to get up state
+						animator.speed = masterFallAnimatorSpeedFactor * animatorSpeed * 4; // Animation speed during transition to get up state
 						animFollow.maxTorque = 0f; // These strengths shold be zero to avoid twitching during orientation
 						animFollow.maxForce = 0f;
 						animFollow.maxJointTorque = 0f;
