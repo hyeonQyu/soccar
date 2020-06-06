@@ -10,11 +10,10 @@ public class Camera : MonoBehaviour
     private float _angle = 25f;
     [SerializeField]
     private float _height = 3.7f;
-
     private bool _isFirstRun = true;
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         if(PlayerController.IsPlayersInitialized && _isFirstRun)
         {

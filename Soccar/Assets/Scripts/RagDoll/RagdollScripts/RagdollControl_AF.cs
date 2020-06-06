@@ -16,7 +16,7 @@ namespace AnimFollow
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		AnimFollow_AF animFollow;				// The script that controlls the muscles of the ragdoll
-		PlayerMovement_AF playerMovement;			// To tell the character controller to no move when we are dosed off after a collision.
+		// PlayerMovement_AF playerMovement;			// To tell the character controller to no move when we are dosed off after a collision.
 		Animator animator;							// Reference to the animator component.
 		HashIDs_AF hash;							// Reference to the HashIDs.
 #if SIMPLEFOOTIK
@@ -151,7 +151,7 @@ namespace AnimFollow
 				return;
 			}
 
-			animatorSpeed = playerMovement.animatorSpeed; // Read user setting
+			animatorSpeed = PlayerController.animatorSpeed; // Read user setting
 			animator.speed = animatorSpeed; // set the animator speed to the setting in player movement. RagdollControl varies the animator speed, best to not set animator speed anywhere else
 			secondaryUpdateSet = animFollow.secondaryUpdate;
 
@@ -178,10 +178,10 @@ namespace AnimFollow
 				Debug.LogWarning("RagdollControll script is version " + version + " but Limb script is version " + ragdollRootBone.GetComponent<Limb_AF>().version + "\n");
 			if (animFollow.version != version)
 				Debug.LogWarning("RagdollControll script is version " + version + " but animFollow script is version " + animFollow.version + "\n");
-			if (playerMovement.version != version)
-				Debug.LogWarning("RagdollControll script is version " + version + " but playerMovement script is version " + playerMovement.version + "\n");
-			if (playerMovement.GetComponent<HashIDs_AF>().version != version)
-				Debug.LogWarning("RagdollControll script is version " + version + " but HashIDs script is version " + playerMovement.GetComponent<HashIDs_AF>().version + "\n");
+			// if (playerMovement.version != version)
+			// 	Debug.LogWarning("RagdollControll script is version " + version + " but playerMovement script is version " + playerMovement.version + "\n");
+			// if (playerMovement.GetComponent<HashIDs_AF>().version != version)
+			// 	Debug.LogWarning("RagdollControll script is version " + version + " but HashIDs script is version " + playerMovement.GetComponent<HashIDs_AF>().version + "\n");
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -200,7 +200,7 @@ namespace AnimFollow
 				animFollow.angularDrag = angularDrag;
 				animFollow.drag = drag;
 				simpleFootIK.userNeedsToFixStuff = true; // Just disabling footIK
-				playerMovement.inhibitMove = true;
+				PlayerController.inhibitMove = true;
 
 				Renderer ragdollRenderer;
 				if ((ragdollRenderer = transform.GetComponentInChildren<Renderer>()) && !ragdollRenderer.isVisible)
@@ -317,7 +317,7 @@ namespace AnimFollow
 						}
 						else if (!(isInTransitionToGetup || getupState)) // Getting up is done. We are back in Idle (if not delayed)
 						{
-							playerMovement.inhibitMove = false; // Master is able to move again
+							PlayerController.inhibitMove = false; // Master is able to move again
 #if SIMPLEFOOTIK
 							simpleFootIK.extraYLerp = 1f;
 #endif
@@ -336,12 +336,12 @@ namespace AnimFollow
 							{
 								gettingUp = false; // Getting up is done
 								delayedGetupDone = false;
-								playerMovement.inhibitRun = false;
+								PlayerController.inhibitRun = false;
 							}
 							else
 							{
 								delayedGetupDone = true;
-								playerMovement.inhibitRun = true; // Inhibit running until ragdoll is matching master again
+								PlayerController.inhibitRun = true; // Inhibit running until ragdoll is matching master again
 							}
 						}
 						else // Lerp the ragdoll to contact strength during get up
@@ -372,7 +372,7 @@ namespace AnimFollow
 					{
 						gettingUp = true;
 						orientate = true;
-						playerMovement.inhibitMove = true;
+						PlayerController.inhibitMove = true;
 						animator.speed = masterFallAnimatorSpeedFactor * animatorSpeed * 4; // Animation speed during transition to get up state
 						animFollow.maxTorque = 0f; // These strengths shold be zero to avoid twitching during orientation
 						animFollow.maxForce = 0f;
@@ -436,9 +436,9 @@ namespace AnimFollow
 			
 			// Adjust player movements if ragdoll distortion is large, e.g. if we are walking into a wall
 			if (noContactTime < .3f && !(gettingUp || falling))
-				playerMovement.glideFree = new Vector3(-limbError.x, 0f, -limbError.z) * glideFree;
+				PlayerController.glideFree = new Vector3(-limbError.x, 0f, -limbError.z) * glideFree;
 			else
-				playerMovement.glideFree = Vector3.zero;
+				PlayerController.glideFree = Vector3.zero;
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -499,11 +499,11 @@ namespace AnimFollow
 				}
 			}
 
-			if (!(playerMovement = master.GetComponent<PlayerMovement_AF>()))
-			{
-				Debug.LogWarning("Missing Script: PlayerMovement on " + master.name + "\n");
-				return(false);
-			}
+			// if (!(playerMovement = master.GetComponent<PlayerMovement_AF>()))
+			// {
+			// 	Debug.LogWarning("Missing Script: PlayerMovement on " + master.name + "\n");
+			// 	return(false);
+			// }
 			if (!(animator = master.GetComponent<Animator>()))
 			{
 				Debug.LogWarning("Missing Animator on " + master.name + "\n");

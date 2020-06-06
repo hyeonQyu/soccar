@@ -178,6 +178,10 @@ namespace AnimFollow
 			System.Array.Resize(ref localRotations2, slaveTransforms.Length);
 			System.Array.Resize(ref rigidbodiesPosToCOM, slaveTransforms.Length);
 
+			// Debug.Log("slave name = " + slaveTransforms.ToString());
+			// Debug.Log("slave = " + slaveTransforms.Length);
+			// Debug.Log("master = " + masterTransforms.Length + "master name = " + master.name);
+
 			if (!(masterTransforms.Length == slaveTransforms.Length))
 			{
 				UnityEngine.Debug.LogWarning(this.name + " does not have a valid master.\nMaster transform count does not equal slave transform count." + "\n");

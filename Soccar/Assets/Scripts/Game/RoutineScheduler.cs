@@ -34,6 +34,17 @@ public class RoutineScheduler : MonoBehaviour
     private IEnumerator MovePlayers(Vector3[] prePositions, Vector3[] destPositions)
     {
         float t = 0;
+        Vector3 directionVector;
+        for (int k = 0; k < destPositions.Length; k++)
+        {
+            directionVector = destPositions[k] - prePositions[k];
+            directionVector.y = 0;
+            
+            if (directionVector != Vector3.zero)
+            {
+                PlayerController.Players[k].transform.rotation = Quaternion.LookRotation(directionVector.normalized);
+            }
+        }
 
         for(int i = 0; i < 10; i++)
         {

@@ -10,11 +10,11 @@ namespace AnimFollow
 		public readonly int version = 7; // The version of this script
 
 		// Here we store the hash tags for various strings used in our animators.
-		public int dyingState;
-		public int locomotionState;
-		public int deadBool;
+		// public int dyingState;
+		// public int locomotionState;
+		// public int deadBool;
 		public int speedFloat;
-		public int sneakingBool;
+		// public int sneakingBool;
 
 		public int frontTrigger;
 		public int backTrigger;
@@ -22,6 +22,9 @@ namespace AnimFollow
 		public int backMirrorTrigger;
 
 		public int idle;
+		public int jump;
+		public int tackle;
+		public int shoot;
 
 		public int getupFront; 
 		public int getupBack; 
@@ -35,15 +38,18 @@ namespace AnimFollow
 
 		void Awake ()
 		{
-			dyingState = Animator.StringToHash("Base Layer.Dying");
-			locomotionState = Animator.StringToHash("Base Layer.Locomotion");
-			deadBool = Animator.StringToHash("Dead");
-			sneakingBool = Animator.StringToHash("Sneaking");
+			// dyingState = Animator.StringToHash("Base Layer.Dying");
+			// locomotionState = Animator.StringToHash("Base Layer.Locomotion");
+			// deadBool = Animator.StringToHash("Dead");
+			// sneakingBool = Animator.StringToHash("Sneaking");
 
-			idle = Animator.StringToHash("Base Layer.Idle"); 
-
+			idle = Animator.StringToHash("Base Layer.Blend Tree.Idle"); 
+			
 			// These are used by the RagdollControll script and must exist exactly as below
 			speedFloat = Animator.StringToHash("Speed");
+			jump = Animator.StringToHash("Jump");
+			tackle = Animator.StringToHash("Tackle");
+			shoot = Animator.StringToHash("Shoot");
 
 			frontTrigger = Animator.StringToHash("FrontTrigger");
 			backTrigger = Animator.StringToHash("BackTrigger");

@@ -21,10 +21,8 @@ public static class PlayerController
     public static bool[] IsConnectPlayers { get; set; }
 
     // 속도
-    private static float _walkSpeed;
-    private static float _runSpeed;
+    private static float _speed;
     private static float _playerSpeed;
-
     public static float Theta { get; private set; }
 
     public static Vector3 RightVector { get; private set; }
@@ -42,10 +40,18 @@ public static class PlayerController
     private static bool _isMoved = false;
     public static bool IsPlayersInitialized { get; private set; }
 
+    // 플레이어 컴포넌트
+    [HideInInspector] public static Vector3 glideFree = Vector3.zero;   // Set from RagdollControl
+    [HideInInspector] public static bool inhibitRun = false;    // Set from RagdollControl
+    public static bool inhibitMove = false;     // Set from RagdollControl
+	public static float animatorSpeed = 1.3f;   // Read by RagdollControl
+	private static Animator _animator;			// Reference to the animator component.
+	public static AnimFollow.HashIDs_AF Hash;			// Reference to the HashIDs.
+    public static readonly int version = 7; // The version of this script
     public static void SetPlayers()
     {
-        _walkSpeed = 2.5f;
-        _runSpeed = _walkSpeed * 2;
+        _speed = 2.5f;
+        //_rotationSpeed = 2.5f;
 
         Players = new GameObject[GameLauncher.Headcount];
         PlayerInformations = new PlayerInformation[GameLauncher.Headcount];
@@ -66,7 +72,7 @@ public static class PlayerController
             }
             else
             {
-                GameObject.Find("Player" + suffix).SetActive(false);
+                GameObject.Find("Character" + suffix).SetActive(false);
                 MiniMapManager.MiniMapGround.transform.Find("Mini Map Player" + suffix).gameObject.SetActive(false);
                 try
                 {
@@ -107,6 +113,10 @@ public static class PlayerController
         Player = Players[PlayerIndex];
         PlayerInformations[PlayerIndex].PlayerName = playerName;
         AlterEgo.transform.position = Player.transform.position;
+        
+        // Set Animation
+        _animator = Player.GetComponent<Animator>();
+        Hash = Player.GetComponent<AnimFollow.HashIDs_AF>();
 
         IsPlayersInitialized = true;
     }
@@ -131,6 +141,8 @@ public static class PlayerController
                 // Set Player Position & Rotation (골대 위치 초기화하는 김에 플레이어도 같이 함)
                 Players[i].transform.position = backwardVector * 6 + new Vector3(0, 0, 0);
                 Players[i].transform.eulerAngles = new Vector3(0, -theta * i, 0);
+
+                
             }
             else
             {
@@ -143,41 +155,67 @@ public static class PlayerController
 
     public static void InputRelativePosition()
     {
+        if(inhibitMove)
+            return;
+        
         // 상대 좌표
-        Vector3 myPosition = new Vector3(0, 0, 0);
+        Vector3 myPosition = Vector3.zero;
+        
+        // Input down, up, left, right key
+        _playerSpeed = Mathf.Abs(Input.GetAxis("Sensitivity")) * _speed;
 
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.E) && _playerSpeed > 0)
         {
-            _playerSpeed = _runSpeed;
-        }
-        else
-        {
-            _playerSpeed = _walkSpeed;
+            _playerSpeed += 2.5f;
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            myPosition += (LeftVector * _playerSpeed * Time.deltaTime);
-
+            myPosition += (LeftVector * _playerSpeed * Time.fixedDeltaTime);
+            
             _isMoved = true;
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            myPosition += (RightVector * _playerSpeed * Time.deltaTime);
-
+            myPosition += (RightVector * _playerSpeed * Time.fixedDeltaTime);
+            
             _isMoved = true;
         }
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            myPosition += (ForwardVector * _playerSpeed * Time.deltaTime);
-
+            myPosition += (ForwardVector * _playerSpeed * Time.fixedDeltaTime);
+            
             _isMoved = true;
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            myPosition += (BackwardVector * _playerSpeed * Time.deltaTime);
-
+            myPosition += (BackwardVector * _playerSpeed * Time.fixedDeltaTime);
+            
             _isMoved = true;
+        }
+        
+        _animator.SetFloat(Hash.speedFloat, (_playerSpeed / 5f), 0.1f, Time.fixedDeltaTime);
+
+        _animator.SetBool(Hash.jump, false);
+        _animator.SetBool(Hash.tackle, false);
+        _animator.SetBool(Hash.shoot, false);
+
+        if(!_animator.IsInTransition(0))
+        {
+            if(Input.GetKey(KeyCode.Space))
+            {
+                _animator.SetBool(Hash.jump, true);
+            }
+
+            else if(Input.GetKey(KeyCode.A))
+            {
+                _animator.SetBool(Hash.tackle, true);
+            }
+
+            else if(Input.GetKey(KeyCode.D))
+            {
+                _animator.SetBool(Hash.shoot, true);
+            }
         }
 
         if (_isMoved)
@@ -207,8 +245,9 @@ public static class PlayerController
         // 경기장 밖을 벗어나면 움직이지 않음
         if(IsOutOfStadium(AlterEgo.transform.position, movingPosition))
             return;
-
+        
         AlterEgo.transform.position += movingPosition;
+        
         //Players[_playerIndex].transform.Translate(movingPosition);
     }
 
@@ -229,5 +268,10 @@ public static class PlayerController
         Players = null;
         Player = null;
     }
-
+	public static void OnAnimatorMove ()
+	{
+        Vector3 glideFree2 = Vector3.zero;
+		glideFree2 = Vector3.Lerp (glideFree2, glideFree, .05f);
+		AlterEgo.transform.position += _animator.deltaPosition + glideFree2;
+	}
 }
