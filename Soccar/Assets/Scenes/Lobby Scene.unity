@@ -3655,10 +3655,10 @@ Transform:
   m_LocalPosition: {x: -839.8, y: 17.361347, z: 16.732239}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1164057495}
-  - {fileID: 1402988235}
   - {fileID: 1679682579}
   - {fileID: 1972407554}
+  - {fileID: 1164057495}
+  - {fileID: 1402988235}
   - {fileID: 976232346}
   - {fileID: 416102036}
   m_Father: {fileID: 1856523197}
@@ -7628,7 +7628,7 @@ GameObject:
   - component: {fileID: 1164057495}
   - component: {fileID: 1164057494}
   m_Layer: 0
-  m_Name: Waiting Player Camera0
+  m_Name: Waiting Player Camera2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7667,7 +7667,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: e417f67dc2a997041b80a71c2dfe1360, type: 2}
+  m_TargetTexture: {fileID: 8400000, guid: 445aada9a081c574f99f17dbb609ecc5, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -7693,7 +7693,7 @@ Transform:
   - {fileID: 207557230}
   - {fileID: 597978687}
   m_Father: {fileID: 536637053}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1193201439
 GameObject:
@@ -8495,7 +8495,7 @@ GameObject:
   - component: {fileID: 1402988235}
   - component: {fileID: 1402988236}
   m_Layer: 0
-  m_Name: Waiting Player Camera1
+  m_Name: Waiting Player Camera3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8517,7 +8517,7 @@ Transform:
   - {fileID: 1892797079}
   - {fileID: 480734022}
   m_Father: {fileID: 536637053}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &1402988236
 Camera:
@@ -8552,7 +8552,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: e641bebdb93fe0f43a76859e3c70d5e5, type: 2}
+  m_TargetTexture: {fileID: 8400000, guid: dff17a411b7963a4cab80128d9c11dfc, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -9726,7 +9726,7 @@ GameObject:
   - component: {fileID: 1679682579}
   - component: {fileID: 1679682580}
   m_Layer: 0
-  m_Name: Waiting Player Camera2
+  m_Name: Waiting Player Camera0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9748,7 +9748,7 @@ Transform:
   - {fileID: 700329091}
   - {fileID: 37808837}
   m_Father: {fileID: 536637053}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &1679682580
 Camera:
@@ -9783,7 +9783,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: 445aada9a081c574f99f17dbb609ecc5, type: 2}
+  m_TargetTexture: {fileID: 8400000, guid: e417f67dc2a997041b80a71c2dfe1360, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -11662,7 +11662,7 @@ GameObject:
   - component: {fileID: 1972407554}
   - component: {fileID: 1972407555}
   m_Layer: 0
-  m_Name: Waiting Player Camera3
+  m_Name: Waiting Player Camera1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11684,7 +11684,7 @@ Transform:
   - {fileID: 1732925064}
   - {fileID: 374030152}
   m_Father: {fileID: 536637053}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &1972407555
 Camera:
@@ -11719,7 +11719,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: dff17a411b7963a4cab80128d9c11dfc, type: 2}
+  m_TargetTexture: {fileID: 8400000, guid: e641bebdb93fe0f43a76859e3c70d5e5, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1

@@ -8806,7 +8806,7 @@ GameObject:
   - component: {fileID: 371496713}
   - component: {fileID: 371496712}
   m_Layer: 0
-  m_Name: Player2
+  m_Name: Player0
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11027,7 +11027,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 447535440}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -4.17, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1983023804}
@@ -13278,7 +13278,7 @@ GameObject:
   m_Component:
   - component: {fileID: 557597725}
   m_Layer: 0
-  m_Name: Character2
+  m_Name: Character0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13292,7 +13292,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 557597724}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 2.815, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 371496716}
@@ -33319,7 +33319,7 @@ GameObject:
   - component: {fileID: 1358522585}
   - component: {fileID: 1358522584}
   m_Layer: 0
-  m_Name: Player3
+  m_Name: Player1
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37855,7 +37855,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1525151373}
   m_Layer: 0
-  m_Name: Character1
+  m_Name: Character3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37869,7 +37869,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1525151372}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.409, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2110445786}
@@ -43519,7 +43519,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1758568072}
   m_Layer: 0
-  m_Name: Character3
+  m_Name: Character1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43533,7 +43533,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1758568071}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.416, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1358522588}
@@ -47027,7 +47027,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1904000941}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -2.816, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1749752779}
@@ -51204,7 +51204,7 @@ GameObject:
   - component: {fileID: 2110445783}
   - component: {fileID: 2110445782}
   m_Layer: 0
-  m_Name: Player1
+  m_Name: Player3
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53008,7 +53008,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3363049091309805826}
   m_Layer: 0
-  m_Name: Character0
+  m_Name: Character2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54572,7 +54572,7 @@ GameObject:
   - component: {fileID: 3363049091020173959}
   - component: {fileID: 6740233065131043722}
   m_Layer: 0
-  m_Name: Player0
+  m_Name: Player2
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
