@@ -203,7 +203,10 @@ public static class PlayerController
         }
 
         // Player 방향
-        Player.transform.rotation = Quaternion.LookRotation(direction.normalized);
+        if(direction != Vector3.zero)
+        {
+            Player.transform.rotation = Quaternion.LookRotation(direction.normalized);
+        }
 
         _animator.SetFloat(Hash.speedFloat, (_playerSpeed / 5f), 0.1f, Time.fixedDeltaTime);
 
