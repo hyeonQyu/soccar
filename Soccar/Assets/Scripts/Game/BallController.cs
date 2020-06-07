@@ -6,8 +6,8 @@ public class BallController : MonoBehaviour
 {
     private Collider _ball;
     private Rigidbody _rigidBody;
-    private float _shootForce;
-    private float _dribbleForce;
+    private float _shootSpeed;
+    private float _dribbleSpeed;
     public bool IsFeverBall { get; set; }
     private GameObject _lastPlayer;
     public GameObject LastPlayer
@@ -34,8 +34,8 @@ public class BallController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _shootForce = 10.0f;
-        _dribbleForce = 1.0f;
+        _shootSpeed = 10.0f;
+        _dribbleSpeed = 1.0f;
         _ball = GetComponent<Collider>();
         _rigidBody = GetComponent<Rigidbody>();
     }
@@ -81,21 +81,23 @@ public class BallController : MonoBehaviour
     private void OnCollisionStay(Collision collision) 
     {
         // 드리블
-        Debug.Log("layer name = " + collision.gameObject.layer);
-        // if(collision.gameObject.layer.GetHashCode){}
+        Debug.Log("layer name = " + LayerMask.LayerToName(collision.gameObject.layer));
         
-        // 드리블 속도
-        _rigidBody.velocity = collision.gameObject.transform.forward * _dribbleForce;
+        if(collision.gameObject.layer.Equals(LayerMask.NameToLayer("RagDoll")))
+        {
+            // 드리블 속도
+            _rigidBody.velocity = collision.gameObject.transform.forward * _dribbleSpeed;
 
-        // if(collision.gameObject.GetComponent<Animator>().HasState(0, Animator.StringToHash("Base Layer.Shooting")))
-        // {
-        //     if(collision.collider.CompareTag("RightLeg"))
-        //     {
-        //         Debug.Log("슈우우웃");
-        //         // 살짝 위로 올라가도록
-        //         _rigidBody.velocity = _lastPlayer.transform.forward * _shootForce + new Vector3(0, 2, 0);
-        //     }
-        // }
+            if(collision.gameObject.GetComponent<Animator>().HasState(0, Animator.StringToHash("Base Layer.Shooting")))
+            {
+                if(collision.collider.CompareTag("RightLeg"))
+                {
+                    Debug.Log("슈우우웃");
+                    // 살짝 위로 올라가도록
+                    _rigidBody.velocity = _lastPlayer.transform.forward * _shootSpeed + new Vector3(0, 2, 0);
+                }
+            }
+        }
     }
 
     private void OnCollisionExit(Collision collision)
