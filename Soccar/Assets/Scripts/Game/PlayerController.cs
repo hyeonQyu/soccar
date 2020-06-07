@@ -163,7 +163,8 @@ public static class PlayerController
         
         // 상대 좌표
         Vector3 myPosition = Vector3.zero;
-        
+        Vector3 direction = Vector3.zero;
+
         // Input down, up, left, right key
         _playerSpeed = Mathf.Abs(Input.GetAxis("Sensitivity")) * _speed;
 
@@ -175,28 +176,35 @@ public static class PlayerController
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             myPosition += (LeftVector * _playerSpeed * Time.fixedDeltaTime);
-            
+            direction += LeftVector;
+
             _isMoved = true;
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
             myPosition += (RightVector * _playerSpeed * Time.fixedDeltaTime);
-            
+            direction += RightVector;
+
             _isMoved = true;
         }
         if (Input.GetKey(KeyCode.UpArrow))
         {
             myPosition += (ForwardVector * _playerSpeed * Time.fixedDeltaTime);
-            
+            direction += ForwardVector;
+
             _isMoved = true;
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
             myPosition += (BackwardVector * _playerSpeed * Time.fixedDeltaTime);
-            
+            direction += BackwardVector;
+
             _isMoved = true;
         }
-        
+
+        // Player 방향
+        Player.transform.rotation = Quaternion.LookRotation(direction.normalized);
+
         _animator.SetFloat(Hash.speedFloat, (_playerSpeed / 5f), 0.1f, Time.fixedDeltaTime);
 
         _animator.SetBool(Hash.jump, false);

@@ -37,16 +37,19 @@ public class RoutineScheduler : MonoBehaviour
         Vector3 directionVector;
         for (int k = 0; k < destPositions.Length; k++)
         {
-            directionVector = destPositions[k] - prePositions[k];
-            directionVector.y = 0;
-            
-            if (directionVector != Vector3.zero)
+            if(k != PlayerController.PlayerIndex)
             {
-                try
+                directionVector = destPositions[k] - prePositions[k];
+                directionVector.y = 0;
+            
+                if (directionVector != Vector3.zero)
                 {
-                    PlayerController.Players[k].transform.rotation = Quaternion.LookRotation(directionVector.normalized);
+                    try
+                    {
+                        PlayerController.Players[k].transform.rotation = Quaternion.LookRotation(directionVector.normalized);
+                    }
+                    catch(MissingReferenceException e) { }
                 }
-                catch(MissingReferenceException e) { }
             }
         }
 
