@@ -26,6 +26,7 @@ public class PlayerInformation : MonoBehaviour
     {
         PlayerIndex = playerIndex;
         _networkManager = _networkManagerObject.GetComponent<NetworkManager>();
+        _ragDollHips = transform.GetChild(1).GetChild(0).GetChild(0).gameObject;
     }
 
     // 득점
