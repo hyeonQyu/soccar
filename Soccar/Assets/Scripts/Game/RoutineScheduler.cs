@@ -42,7 +42,11 @@ public class RoutineScheduler : MonoBehaviour
             
             if (directionVector != Vector3.zero)
             {
-                PlayerController.Players[k].transform.rotation = Quaternion.LookRotation(directionVector.normalized);
+                try
+                {
+                    PlayerController.Players[k].transform.rotation = Quaternion.LookRotation(directionVector.normalized);
+                }
+                catch(MissingReferenceException e) { }
             }
         }
 
