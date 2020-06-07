@@ -69,10 +69,13 @@ public static class PlayerController
                 PlayerInformations[i].SetPlayerInformation(i);
                 MiniMapManager.Players[i] = MiniMapManager.MiniMapGround.transform.Find("Mini Map Player" + suffix).gameObject;
                 IsConnectPlayers[i] = true;
+
+                // Avatar를 가리킴
+                Players[i] = Players[i].transform.GetChild(0).gameObject;
             }
             else
             {
-                GameObject.Find("Character" + suffix).SetActive(false);
+                GameObject.Find("Player" + suffix).SetActive(false);
                 MiniMapManager.MiniMapGround.transform.Find("Mini Map Player" + suffix).gameObject.SetActive(false);
                 try
                 {
@@ -139,7 +142,7 @@ public static class PlayerController
                 GoalPosts[i].transform.eulerAngles = new Vector3(0, -theta * i, 0);
 
                 // Set Player Position & Rotation (골대 위치 초기화하는 김에 플레이어도 같이 함)
-                Players[i].transform.position = backwardVector * 6 + new Vector3(0, 0, 0);
+                Players[i].transform.parent.transform.position = backwardVector * 6 + new Vector3(0, 0, 0);
                 Players[i].transform.eulerAngles = new Vector3(0, -theta * i, 0);
 
                 

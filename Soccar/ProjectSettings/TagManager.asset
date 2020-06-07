@@ -8,7 +8,6 @@ TagManager:
   - Ground
   - Net
   - Post
-  - RightLeg
   layers:
   - Default
   - TransparentFX

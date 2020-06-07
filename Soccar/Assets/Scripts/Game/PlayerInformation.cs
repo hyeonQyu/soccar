@@ -8,7 +8,7 @@ public class PlayerInformation : MonoBehaviour
     [SerializeField]
     private GameObject _networkManagerObject;
     private NetworkManager _networkManager;
-
+    public GameObject _ragDollHips;
     public string PlayerName { get; set; }
     public int Score { get; set; }
     public int PlayerIndex { get; private set; }

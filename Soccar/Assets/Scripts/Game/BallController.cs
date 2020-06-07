@@ -35,7 +35,7 @@ public class BallController : MonoBehaviour
     void Start()
     {
         _shootSpeed = 10.0f;
-        _dribbleSpeed = 1.0f;
+        _dribbleSpeed = 2.5f;
         _ball = GetComponent<Collider>();
         _rigidBody = GetComponent<Rigidbody>();
     }
@@ -83,20 +83,23 @@ public class BallController : MonoBehaviour
         // 드리블
         Debug.Log("layer name = " + LayerMask.LayerToName(collision.gameObject.layer));
         
-        if(collision.gameObject.layer.Equals(LayerMask.NameToLayer("RagDoll")))
+        GameObject collisionObject = collision.gameObject;
+
+        if(collisionObject.layer.Equals(LayerMask.NameToLayer("RagDoll")))
         {
             // 드리블 속도
             _rigidBody.velocity = collision.gameObject.transform.forward * _dribbleSpeed;
 
-            if(collision.gameObject.GetComponent<Animator>().HasState(0, Animator.StringToHash("Base Layer.Shooting")))
-            {
-                if(collision.collider.CompareTag("RightLeg"))
-                {
-                    Debug.Log("슈우우웃");
-                    // 살짝 위로 올라가도록
-                    _rigidBody.velocity = _lastPlayer.transform.forward * _shootSpeed + new Vector3(0, 2, 0);
-                }
-            }
+            // if(collisionObject.transform.root.GetChild(0).gameObject.GetComponent<Animator>().HasState(0, Animator.StringToHash("Base Layer.Shooting")))
+            // {
+            //     Debug.Log("what " + collision.collider);
+            //     if(collision.collider.CompareTag("RightLeg"))
+            //     {
+            //         Debug.Log("Shoot");
+            //         // 살짝 위로 올라가도록
+            //         _rigidBody.velocity = _lastPlayer.transform.forward * _shootSpeed + new Vector3(0, 3, 0);
+            //     }
+            // }
         }
     }
 
