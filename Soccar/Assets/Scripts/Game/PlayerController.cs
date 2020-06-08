@@ -19,6 +19,7 @@ public static class PlayerController
 
     // 현재 접속중인 플레이어
     public static bool[] IsConnectPlayers { get; set; }
+    private static bool IsDash;
 
     // 속도
     private static float _speed;
@@ -51,6 +52,7 @@ public static class PlayerController
     public static void SetPlayers()
     {
         _speed = 2.5f;
+        _playerSpeed = 0;
         //_rotationSpeed = 2.5f;
 
         Players = new GameObject[GameLauncher.Headcount];
@@ -166,44 +168,65 @@ public static class PlayerController
         Vector3 direction = Vector3.zero;
 
         // Input down, up, left, right key
-        _playerSpeed = Mathf.Abs(Input.GetAxis("Sensitivity")) * _speed;
+        //_playerSpeed = Mathf.Abs(Input.GetAxis("Sensitivity")) * _speed;
 
-        if (Input.GetKey(KeyCode.E) && _playerSpeed > 0)
+        IsDash = false;
+        if (Input.GetKey(KeyCode.E))
         {
-            _playerSpeed += 2.5f;
-        }
-
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            myPosition += (LeftVector * _playerSpeed * Time.fixedDeltaTime);
-            direction += LeftVector;
-
-            _isMoved = true;
+            IsDash = true;
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            myPosition += (RightVector * _playerSpeed * Time.fixedDeltaTime);
-            direction += RightVector;
+            myPosition += RightVector;
+
+            _isMoved = true;
+        }
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            myPosition += LeftVector;
 
             _isMoved = true;
         }
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            myPosition += (ForwardVector * _playerSpeed * Time.fixedDeltaTime);
-            direction += ForwardVector;
+            myPosition += ForwardVector;
 
             _isMoved = true;
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            myPosition += (BackwardVector * _playerSpeed * Time.fixedDeltaTime);
-            direction += BackwardVector;
+            myPosition += BackwardVector;
 
             _isMoved = true;
         }
 
+        direction = myPosition;
+        myPosition = myPosition.normalized;
+
+        if (_isMoved)
+        {
+            // 자신의 분신을 움직임
+            if (IsDash)
+            {
+                _playerSpeed = 5.0f;
+            }
+            else
+            {
+                _playerSpeed = 2.5f;
+            }
+            myPosition = myPosition * _playerSpeed * Time.fixedDeltaTime;
+            Debug.Log("move Position" +myPosition.x + " " + myPosition.y + " "+ myPosition.z);
+            Move(myPosition);
+
+            _isMoved = false;
+        }
+        else
+        {
+            _playerSpeed = 0;
+        }
+
         // Player 방향
-        if(direction != Vector3.zero)
+        if (direction != Vector3.zero)
         {
             Player.transform.rotation = Quaternion.LookRotation(direction.normalized);
         }
@@ -214,30 +237,22 @@ public static class PlayerController
         _animator.SetBool(Hash.tackle, false);
         _animator.SetBool(Hash.shoot, false);
 
-        if(!_animator.IsInTransition(0))
+        if (!_animator.IsInTransition(0))
         {
-            if(Input.GetKey(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Space))
             {
                 _animator.SetBool(Hash.jump, true);
             }
 
-            else if(Input.GetKey(KeyCode.A))
+            else if (Input.GetKey(KeyCode.A))
             {
                 _animator.SetBool(Hash.tackle, true);
             }
 
-            else if(Input.GetKey(KeyCode.D))
+            else if (Input.GetKey(KeyCode.D))
             {
                 _animator.SetBool(Hash.shoot, true);
             }
-        }
-
-        if (_isMoved)
-        {
-            // 자신의 분신을 움직임
-            Move(myPosition);
-
-            _isMoved = false;
         }
     }
 
