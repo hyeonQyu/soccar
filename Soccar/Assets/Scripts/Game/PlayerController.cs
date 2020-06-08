@@ -5,8 +5,9 @@ using UnityEngine;
 
 public static class PlayerController
 {
-    public const int Relative = 0;
-    public const int Absolute = 1;
+    public const int Jump = 0;
+    public const int Tackle = 1;
+    public const int Shoot = 2;
 
     // 전체 플레이어
     public static GameObject[] Players { get; set; }
@@ -234,11 +235,18 @@ public static class PlayerController
         _animator.SetBool(Hash.tackle, false);
         _animator.SetBool(Hash.shoot, false);
 
-        if (!_animator.IsInTransition(0))
+        // 현재 state에 있음
+        if(!_animator.IsInTransition(0))
         {
-            if (Input.GetKey(KeyCode.Space))
+            //if(_animator.GetCurrentAnimatorStateInfo(0).nameHash == Animator.StringToHash("Base Layer.Shooting")
+            //        || _animator.GetCurrentAnimatorStateInfo(0).nameHash == Animator.StringToHash("Base Layer.Jumping")
+            //        || _animator.GetCurrentAnimatorStateInfo(0).nameHash == Animator.StringToHash("Base Layer.Soccer Tackle"))
+            //    return;
+
+            if(Input.GetKey(KeyCode.Space))
             {
                 _animator.SetBool(Hash.jump, true);
+                
             }
 
             else if (Input.GetKey(KeyCode.A))
