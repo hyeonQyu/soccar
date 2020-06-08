@@ -317,8 +317,7 @@ namespace AnimFollow
 						}
 						else if (!(isInTransitionToGetup || getupState)) // Getting up is done. We are back in Idle (if not delayed)
 						{
-							if(transform.root.GetComponent<PlayerInformation>().PlayerIndex == PlayerController.PlayerIndex)
-								PlayerController.InhibitMove = false; // Master is able to move again
+							PlayerController.InhibitMove = false; // Master is able to move again
 #if SIMPLEFOOTIK
 							simpleFootIK.extraYLerp = 1f;
 #endif
@@ -362,7 +361,7 @@ namespace AnimFollow
 				}// 쓰러짐
 				else // Falling
 				{
-					Debug.Log("쓰러짐1(Player" + PlayerController.PlayerIndex + ")");
+					Debug.Log("쓰러짐1(Player" + transform.root.GetComponent<PlayerInformation>().PlayerIndex + ")");
 					// Lerp force to zero from residual values
 					animFollow.maxTorque = Mathf.Lerp(animFollow.maxTorque, 0f, fallLerp * Time.fixedDeltaTime);
 					animFollow.maxForce = Mathf.Lerp(animFollow.maxForce, 0f, fallLerp * Time.fixedDeltaTime);
@@ -372,10 +371,11 @@ namespace AnimFollow
 					// Orientate master to ragdoll and start transition to getUp when settled on the ground. Falling is over, getting up commences
 					if (ragdollRootBone.GetComponent<Rigidbody>().velocity.magnitude < settledSpeed) // && contactTime + noContactTime > .4f)
 					{
-						Debug.Log("쓰러짐2(Player" + PlayerController.PlayerIndex + ")");
+						Debug.Log("쓰러짐2(Player" + transform.root.GetComponent<PlayerInformation>().PlayerIndex + ")");
 						gettingUp = true;
 						orientate = true;
-						PlayerController.InhibitMove = true;
+						if (transform.root.GetComponent<PlayerInformation>().PlayerIndex == PlayerController.PlayerIndex)
+							PlayerController.InhibitMove = true;
 						animator.speed = masterFallAnimatorSpeedFactor * animatorSpeed * 4; // Animation speed during transition to get up state
 						animFollow.maxTorque = 0f; // These strengths shold be zero to avoid twitching during orientation
 						animFollow.maxForce = 0f;
@@ -385,7 +385,7 @@ namespace AnimFollow
 						Vector3 rootBoneForward = ragdollRootBone.rotation * rootboneToForward * Vector3.forward;
 						if (Vector3.Dot(rootBoneForward, Vector3.down) >= 0f) // Check if ragdoll is lying on its back or front, then transition to getup animation
 						{
-							Debug.Log("일어나려고함(Player" + PlayerController.PlayerIndex + ")");
+							Debug.Log("일어나려고함(Player" + transform.root.GetComponent<PlayerInformation>().PlayerIndex + ")");
 							if (!animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.getupFront))
 								animator.SetBool(hash.frontTrigger, true);
 							else // if (!anim.GetCurrentAnimatorStateInfo(0).IsName("GetupFrontMirror"))

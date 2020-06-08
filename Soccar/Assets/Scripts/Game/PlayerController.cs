@@ -44,9 +44,9 @@ public static class PlayerController
 
     // 플레이어 컴포넌트
     [HideInInspector] public static Vector3 GlideFree = Vector3.zero;   // Set from RagdollControl
-    [HideInInspector] public static bool InhibitRun { get; set}    // Set from RagdollControl
+    [HideInInspector] public static bool InhibitRun { get; set; }    // Set from RagdollControl
     public static bool InhibitMove { get; set; }     // Set from RagdollControl
-	public static float AnimatorSpeed { get; set}   // Read by RagdollControl
+	public static float AnimatorSpeed { get; set; }   // Read by RagdollControl
 	private static Animator _animator;			// Reference to the animator component.
 	public static AnimFollow.HashIDs_AF Hash;			// Reference to the HashIDs.
     public static readonly int version = 7; // The version of this script
