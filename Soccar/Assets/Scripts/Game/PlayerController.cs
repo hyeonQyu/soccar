@@ -19,7 +19,7 @@ public static class PlayerController
 
     // 현재 접속중인 플레이어
     public static bool[] IsConnectPlayers { get; set; }
-    private static bool IsDash;
+    private static bool _isDash;
 
     // 속도
     private static float _speed;
@@ -167,13 +167,10 @@ public static class PlayerController
         Vector3 myPosition = Vector3.zero;
         Vector3 direction = Vector3.zero;
 
-        // Input down, up, left, right key
-        //_playerSpeed = Mathf.Abs(Input.GetAxis("Sensitivity")) * _speed;
-
-        IsDash = false;
+        _isDash = false;
         if (Input.GetKey(KeyCode.E))
         {
-            IsDash = true;
+            _isDash = true;
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
@@ -206,7 +203,7 @@ public static class PlayerController
         if (_isMoved)
         {
             // 자신의 분신을 움직임
-            if (IsDash)
+            if (_isDash)
             {
                 _playerSpeed = 5.0f;
             }
