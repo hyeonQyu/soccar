@@ -43,10 +43,10 @@ public static class PlayerController
     public static bool IsPlayersInitialized { get; private set; }
 
     // 플레이어 컴포넌트
-    [HideInInspector] public static Vector3 glideFree = Vector3.zero;   // Set from RagdollControl
-    [HideInInspector] public static bool inhibitRun = false;    // Set from RagdollControl
-    public static bool inhibitMove = false;     // Set from RagdollControl
-	public static float animatorSpeed = 1.3f;   // Read by RagdollControl
+    [HideInInspector] public static Vector3 GlideFree = Vector3.zero;   // Set from RagdollControl
+    [HideInInspector] public static bool InhibitRun { get; set}    // Set from RagdollControl
+    public static bool InhibitMove { get; set; }     // Set from RagdollControl
+	public static float AnimatorSpeed { get; set}   // Read by RagdollControl
 	private static Animator _animator;			// Reference to the animator component.
 	public static AnimFollow.HashIDs_AF Hash;			// Reference to the HashIDs.
     public static readonly int version = 7; // The version of this script
@@ -54,6 +54,7 @@ public static class PlayerController
     {
         _speed = 2.5f;
         _playerSpeed = 0;
+        AnimatorSpeed = 1.3f;
         //_rotationSpeed = 2.5f;
 
         Players = new GameObject[GameLauncher.Headcount];
@@ -161,7 +162,7 @@ public static class PlayerController
 
     public static void InputRelativePosition()
     {
-        if(inhibitMove)
+        if(InhibitMove)
             return;
         
         // 상대 좌표
@@ -305,7 +306,7 @@ public static class PlayerController
 	public static void OnAnimatorMove ()
 	{
         Vector3 glideFree2 = Vector3.zero;
-		glideFree2 = Vector3.Lerp (glideFree2, glideFree, .05f);
+		glideFree2 = Vector3.Lerp (glideFree2, GlideFree, .05f);
 		AlterEgo.transform.position += _animator.deltaPosition + glideFree2;
 	}
 }

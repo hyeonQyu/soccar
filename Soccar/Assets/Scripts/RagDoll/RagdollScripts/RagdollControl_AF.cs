@@ -151,7 +151,7 @@ namespace AnimFollow
 				return;
 			}
 
-			animatorSpeed = PlayerController.animatorSpeed; // Read user setting
+			animatorSpeed = PlayerController.AnimatorSpeed; // Read user setting
 			animator.speed = animatorSpeed; // set the animator speed to the setting in player movement. RagdollControl varies the animator speed, best to not set animator speed anywhere else
 			secondaryUpdateSet = animFollow.secondaryUpdate;
 
@@ -200,7 +200,7 @@ namespace AnimFollow
 				animFollow.angularDrag = angularDrag;
 				animFollow.drag = drag;
 				simpleFootIK.userNeedsToFixStuff = true; // Just disabling footIK
-				PlayerController.inhibitMove = true;
+				PlayerController.InhibitMove = true;
 
 				Renderer ragdollRenderer;
 				if ((ragdollRenderer = transform.GetComponentInChildren<Renderer>()) && !ragdollRenderer.isVisible)
@@ -317,7 +317,8 @@ namespace AnimFollow
 						}
 						else if (!(isInTransitionToGetup || getupState)) // Getting up is done. We are back in Idle (if not delayed)
 						{
-							PlayerController.inhibitMove = false; // Master is able to move again
+							if(transform.root.GetComponent<PlayerInformation>().PlayerIndex == PlayerController.PlayerIndex)
+								PlayerController.InhibitMove = false; // Master is able to move again
 #if SIMPLEFOOTIK
 							simpleFootIK.extraYLerp = 1f;
 #endif
@@ -336,12 +337,12 @@ namespace AnimFollow
 							{
 								gettingUp = false; // Getting up is done
 								delayedGetupDone = false;
-								PlayerController.inhibitRun = false;
+								PlayerController.InhibitRun = false;
 							}
 							else
 							{
 								delayedGetupDone = true;
-								PlayerController.inhibitRun = true; // Inhibit running until ragdoll is matching master again
+								PlayerController.InhibitRun = true; // Inhibit running until ragdoll is matching master again
 							}
 						}
 						else // Lerp the ragdoll to contact strength during get up
@@ -374,7 +375,7 @@ namespace AnimFollow
 						Debug.Log("쓰러짐2(Player" + PlayerController.PlayerIndex + ")");
 						gettingUp = true;
 						orientate = true;
-						PlayerController.inhibitMove = true;
+						PlayerController.InhibitMove = true;
 						animator.speed = masterFallAnimatorSpeedFactor * animatorSpeed * 4; // Animation speed during transition to get up state
 						animFollow.maxTorque = 0f; // These strengths shold be zero to avoid twitching during orientation
 						animFollow.maxForce = 0f;
@@ -439,9 +440,9 @@ namespace AnimFollow
 			
 			// Adjust player movements if ragdoll distortion is large, e.g. if we are walking into a wall
 			if (noContactTime < .3f && !(gettingUp || falling))
-				PlayerController.glideFree = new Vector3(-limbError.x, 0f, -limbError.z) * glideFree;
+				PlayerController.GlideFree = new Vector3(-limbError.x, 0f, -limbError.z) * glideFree;
 			else
-				PlayerController.glideFree = Vector3.zero;
+				PlayerController.GlideFree = Vector3.zero;
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
