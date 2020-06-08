@@ -39,6 +39,13 @@ namespace AnimFollow
 //					Debug.Log (collision.transform.name + "\nincreasing");
 				}
 			}
+
+			if(LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
+				return;
+			else if(collision.gameObject.tag.Equals("Ground") || collision.gameObject.tag.Equals("Ball"))
+				return;
+			Debug.Log("OnCollision " + collision.gameObject.name);
+			PlayerController.AlterEgo.transform.position = transform.root.GetChild(0).position;
 		}
 		
 		void OnCollisionExit(Collision collision)

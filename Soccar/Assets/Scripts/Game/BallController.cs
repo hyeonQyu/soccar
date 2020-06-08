@@ -51,20 +51,25 @@ public class BallController : MonoBehaviour
     // 실제 축구공처럼 튀기게 하기 위함
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("공과 부딪힘 " + collision.gameObject.name);
+        GameObject other = collision.gameObject;
+
         // 땅에 부딪히면 탄성 감소
-        if(collision.gameObject.CompareTag("Ground"))
+        if(other.CompareTag("Ground"))
         {
             _ball.material.bounciness *= 0.8f;
             return;
         }
         // 그물은 공을 튀기지 않기 때문에 그물 위에 올라가면 공을 내려줘야 함
-        else if(collision.gameObject.CompareTag("Net"))
+        else if(other.CompareTag("Net"))
         {
             _ball.material.bounciness *= 0.01f;
             _isOnNet = true;
             StartCoroutine(MoveBallOnNet());
             return;
+        }
+        else if(other.CompareTag("Fense"))
+        {
+            _ball.material.bounciness = 1;
         }
 
 
@@ -80,30 +85,30 @@ public class BallController : MonoBehaviour
         _ball.material.bounciness = 0.8f;
     }
 
-    private void OnCollisionStay(Collision collision) 
-    {
-        // 드리블
-        Debug.Log("layer name = " + LayerMask.LayerToName(collision.gameObject.layer));
+    //private void OnCollisionStay(Collision collision) 
+    //{
+    //    // 드리블
+    //    Debug.Log("layer name = " + LayerMask.LayerToName(collision.gameObject.layer));
         
-        GameObject collisionObject = collision.gameObject;
+    //    GameObject collisionObject = collision.gameObject;
 
-        if(collisionObject.layer.Equals(LayerMask.NameToLayer("RagDoll")))
-        {
-            // 드리블 속도
-            _rigidBody.velocity = collision.gameObject.transform.forward * _dribbleSpeed;
+    //    if(collisionObject.layer.Equals(LayerMask.NameToLayer("RagDoll")))
+    //    {
+    //        // 드리블 속도
+    //        _rigidBody.velocity = collision.gameObject.transform.forward * _dribbleSpeed;
 
-            // if(collisionObject.transform.root.GetChild(0).gameObject.GetComponent<Animator>().HasState(0, Animator.StringToHash("Base Layer.Shooting")))
-            // {
-            //     Debug.Log("what " + collision.collider);
-            //     if(collision.collider.CompareTag("RightLeg"))
-            //     {
-            //         Debug.Log("Shoot");
-            //         // 살짝 위로 올라가도록
-            //         _rigidBody.velocity = _lastPlayer.transform.forward * _shootSpeed + new Vector3(0, 3, 0);
-            //     }
-            // }
-        }
-    }
+    //        // if(collisionObject.transform.root.GetChild(0).gameObject.GetComponent<Animator>().HasState(0, Animator.StringToHash("Base Layer.Shooting")))
+    //        // {
+    //        //     Debug.Log("what " + collision.collider);
+    //        //     if(collision.collider.CompareTag("RightLeg"))
+    //        //     {
+    //        //         Debug.Log("Shoot");
+    //        //         // 살짝 위로 올라가도록
+    //        //         _rigidBody.velocity = _lastPlayer.transform.forward * _shootSpeed + new Vector3(0, 3, 0);
+    //        //     }
+    //        // }
+    //    }
+    //}
 
     private void OnCollisionExit(Collision collision)
     {

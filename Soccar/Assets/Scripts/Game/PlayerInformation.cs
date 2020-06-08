@@ -8,7 +8,6 @@ public class PlayerInformation : MonoBehaviour
     [SerializeField]
     private GameObject _networkManagerObject;
     private NetworkManager _networkManager;
-    public GameObject _ragDollHips;
     public string PlayerName { get; set; }
     public int Score { get; set; }
     public int PlayerIndex { get; private set; }
@@ -26,7 +25,6 @@ public class PlayerInformation : MonoBehaviour
     {
         PlayerIndex = playerIndex;
         _networkManager = _networkManagerObject.GetComponent<NetworkManager>();
-        _ragDollHips = transform.GetChild(1).GetChild(0).GetChild(0).gameObject;
     }
 
     // 득점

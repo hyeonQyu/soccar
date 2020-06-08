@@ -8,6 +8,7 @@ TagManager:
   - Ground
   - Net
   - Post
+  - Fense
   layers:
   - Default
   - TransparentFX

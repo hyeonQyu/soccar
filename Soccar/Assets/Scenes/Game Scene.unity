@@ -5041,7 +5041,7 @@ PrefabInstance:
     - target: {fileID: -496746795281242098, guid: 9bc95f1228cf64d4ea3182e7ee6ee384,
         type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Fense
       objectReference: {fileID: 0}
     - target: {fileID: 177252561519316536, guid: 9bc95f1228cf64d4ea3182e7ee6ee384,
         type: 3}
@@ -5960,7 +5960,7 @@ Rigidbody:
   m_GameObject: {fileID: 217128558}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 0.4
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -10559,8 +10559,8 @@ GameObject:
   m_Component:
   - component: {fileID: 436404128}
   - component: {fileID: 436404131}
-  - component: {fileID: 436404130}
   - component: {fileID: 436404129}
+  - component: {fileID: 436404130}
   m_Layer: 8
   m_Name: LeftLeg
   m_TagString: Untagged
@@ -10678,8 +10678,8 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!136 &436404130
-CapsuleCollider:
+--- !u!65 &436404130
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -10688,10 +10688,9 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 5
-  m_Height: 20
-  m_Direction: 1
-  m_Center: {x: 0, y: 10, z: 0}
+  serializedVersion: 2
+  m_Size: {x: 7.0653276, y: 20.724623, z: 9.558951}
+  m_Center: {x: -0.034861963, y: 8.755661, z: 0.12168612}
 --- !u!54 &436404131
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14080,7 +14079,7 @@ Rigidbody:
   m_GameObject: {fileID: 605115361}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 0.4
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -14231,7 +14230,7 @@ GameObject:
   m_Component:
   - component: {fileID: 612305161}
   - component: {fileID: 612305164}
-  - component: {fileID: 612305163}
+  - component: {fileID: 612305165}
   - component: {fileID: 612305162}
   m_Layer: 8
   m_Name: LeftLeg
@@ -14350,20 +14349,6 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!136 &612305163
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 612305160}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 5
-  m_Height: 20
-  m_Direction: 1
-  m_Center: {x: 0, y: 10, z: 0}
 --- !u!54 &612305164
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14380,6 +14365,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &612305165
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 612305160}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 7.0653276, y: 20.724623, z: 9.558951}
+  m_Center: {x: -0.034861963, y: 8.755661, z: 0.12168612}
 --- !u!1 &615067301
 GameObject:
   m_ObjectHideFlags: 0
@@ -17522,6 +17520,7 @@ MonoBehaviour:
   ignoreCollidersWithTag:
   - Ball
   - Ground
+  - Fense
   getupAngularDrag: 50
   fallAngularDrag: 20
   getupDrag: 25
@@ -20770,8 +20769,8 @@ GameObject:
   m_Component:
   - component: {fileID: 857373119}
   - component: {fileID: 857373122}
-  - component: {fileID: 857373121}
   - component: {fileID: 857373120}
+  - component: {fileID: 857373121}
   m_Layer: 8
   m_Name: RightLeg
   m_TagString: Untagged
@@ -20889,8 +20888,8 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!136 &857373121
-CapsuleCollider:
+--- !u!65 &857373121
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -20899,10 +20898,9 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 5
-  m_Height: 20
-  m_Direction: 1
-  m_Center: {x: 0, y: 10, z: 0}
+  serializedVersion: 2
+  m_Size: {x: 7.0653276, y: 20.724623, z: 9.558951}
+  m_Center: {x: -0.034861963, y: 8.755661, z: 0.12168612}
 --- !u!54 &857373122
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -26090,7 +26088,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1096193091}
   - component: {fileID: 1096193094}
-  - component: {fileID: 1096193093}
+  - component: {fileID: 1096193095}
   - component: {fileID: 1096193092}
   m_Layer: 8
   m_Name: RightLeg
@@ -26209,20 +26207,6 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!136 &1096193093
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1096193090}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 5
-  m_Height: 20
-  m_Direction: 1
-  m_Center: {x: 0, y: 10, z: 0}
 --- !u!54 &1096193094
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -26239,6 +26223,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &1096193095
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1096193090}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 7.0653276, y: 20.724623, z: 9.558951}
+  m_Center: {x: -0.034861963, y: 8.755661, z: 0.12168612}
 --- !u!1 &1096542123
 GameObject:
   m_ObjectHideFlags: 0
@@ -30319,8 +30316,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1264065388}
   - component: {fileID: 1264065391}
-  - component: {fileID: 1264065390}
   - component: {fileID: 1264065389}
+  - component: {fileID: 1264065390}
   m_Layer: 8
   m_Name: LeftLeg
   m_TagString: Untagged
@@ -30438,8 +30435,8 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!136 &1264065390
-CapsuleCollider:
+--- !u!65 &1264065390
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -30448,10 +30445,9 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 5
-  m_Height: 20
-  m_Direction: 1
-  m_Center: {x: 0, y: 10, z: 0}
+  serializedVersion: 2
+  m_Size: {x: 7.0653276, y: 20.724623, z: 9.558951}
+  m_Center: {x: -0.034861963, y: 8.755661, z: 0.12168612}
 --- !u!54 &1264065391
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -35979,8 +35975,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1470943286}
   - component: {fileID: 1470943289}
-  - component: {fileID: 1470943288}
   - component: {fileID: 1470943287}
+  - component: {fileID: 1470943288}
   m_Layer: 8
   m_Name: RightLeg
   m_TagString: Untagged
@@ -36098,8 +36094,8 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!136 &1470943288
-CapsuleCollider:
+--- !u!65 &1470943288
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -36108,10 +36104,9 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 5
-  m_Height: 20
-  m_Direction: 1
-  m_Center: {x: 0, y: 10, z: 0}
+  serializedVersion: 2
+  m_Size: {x: 7.0653276, y: 20.724623, z: 9.558951}
+  m_Center: {x: -0.034861963, y: 8.755661, z: 0.12168612}
 --- !u!54 &1470943289
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -44183,8 +44178,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1791972854}
   - component: {fileID: 1791972857}
-  - component: {fileID: 1791972856}
   - component: {fileID: 1791972855}
+  - component: {fileID: 1791972856}
   m_Layer: 8
   m_Name: LeftLeg
   m_TagString: Untagged
@@ -44302,8 +44297,8 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!136 &1791972856
-CapsuleCollider:
+--- !u!65 &1791972856
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -44312,10 +44307,9 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 5
-  m_Height: 20
-  m_Direction: 1
-  m_Center: {x: 0, y: 10, z: 0}
+  serializedVersion: 2
+  m_Size: {x: 7.0653276, y: 20.724623, z: 9.558951}
+  m_Center: {x: -0.034861963, y: 8.755661, z: 0.12168612}
 --- !u!54 &1791972857
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -45598,8 +45592,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1853853946}
   - component: {fileID: 1853853949}
-  - component: {fileID: 1853853948}
   - component: {fileID: 1853853947}
+  - component: {fileID: 1853853948}
   m_Layer: 8
   m_Name: LeftLeg
   m_TagString: Untagged
@@ -45717,8 +45711,8 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!136 &1853853948
-CapsuleCollider:
+--- !u!65 &1853853948
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -45727,10 +45721,9 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 5
-  m_Height: 20
-  m_Direction: 1
-  m_Center: {x: 0, y: 10, z: 0}
+  serializedVersion: 2
+  m_Size: {x: 7.0653276, y: 20.724623, z: 9.558951}
+  m_Center: {x: -0.034861963, y: 8.755661, z: 0.12168612}
 --- !u!54 &1853853949
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -46257,8 +46250,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1871667703}
   - component: {fileID: 1871667706}
-  - component: {fileID: 1871667705}
   - component: {fileID: 1871667704}
+  - component: {fileID: 1871667705}
   m_Layer: 8
   m_Name: RightLeg
   m_TagString: Untagged
@@ -46376,8 +46369,8 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!136 &1871667705
-CapsuleCollider:
+--- !u!65 &1871667705
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -46386,10 +46379,9 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 5
-  m_Height: 20
-  m_Direction: 1
-  m_Center: {x: 0, y: 10, z: 0}
+  serializedVersion: 2
+  m_Size: {x: 7.0653276, y: 20.724623, z: 9.558951}
+  m_Center: {x: -0.034861963, y: 8.755661, z: 0.12168612}
 --- !u!54 &1871667706
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -49362,8 +49354,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2003166203}
   - component: {fileID: 2003166206}
-  - component: {fileID: 2003166205}
   - component: {fileID: 2003166204}
+  - component: {fileID: 2003166205}
   m_Layer: 8
   m_Name: RightLeg
   m_TagString: Untagged
@@ -49481,8 +49473,8 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!136 &2003166205
-CapsuleCollider:
+--- !u!65 &2003166205
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -49491,10 +49483,9 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 5
-  m_Height: 20
-  m_Direction: 1
-  m_Center: {x: 0, y: 10, z: 0}
+  serializedVersion: 2
+  m_Size: {x: 7.0653276, y: 20.724623, z: 9.558951}
+  m_Center: {x: -0.034861963, y: 8.755661, z: 0.12168612}
 --- !u!54 &2003166206
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -54964,20 +54955,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!136 &8439884763398546323
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8894303955177479929}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 7.5
-  m_Height: 17.5
-  m_Direction: 1
-  m_Center: {x: 0, y: 7.5, z: 0}
 --- !u!65 &8439884763398546324
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -55039,20 +55016,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!136 &8439884763398546331
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8574726124706559537}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 5
-  m_Height: 20
-  m_Direction: 1
-  m_Center: {x: 0, y: 10, z: 0}
 --- !u!54 &8439884763398546332
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -55329,8 +55292,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4440205442386805722}
   - component: {fileID: 8439884763398546332}
-  - component: {fileID: 8439884763398546331}
   - component: {fileID: 3363049092151698425}
+  - component: {fileID: 8574726124706559538}
   m_Layer: 8
   m_Name: LeftLeg
   m_TagString: Untagged
@@ -55338,6 +55301,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!65 &8574726124706559538
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8574726124706559537}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 7.0653276, y: 20.724623, z: 9.558951}
+  m_Center: {x: -0.034861963, y: 8.755661, z: 0.12168612}
 --- !u!4 &8620417744877701018
 Transform:
   m_ObjectHideFlags: 0
@@ -55412,8 +55388,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1255592620096938765}
   - component: {fileID: 8439884763398546327}
-  - component: {fileID: 8439884763398546323}
   - component: {fileID: 3363049091303320643}
+  - component: {fileID: 8894303955177479930}
   m_Layer: 8
   m_Name: RightUpLeg
   m_TagString: Untagged
@@ -55421,6 +55397,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!65 &8894303955177479930
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8894303955177479929}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 7.0653276, y: 20.724623, z: 9.558951}
+  m_Center: {x: -0.034861963, y: 8.755661, z: 0.12168612}
 --- !u!1 &8897813835322240747
 GameObject:
   m_ObjectHideFlags: 0
