@@ -185,8 +185,8 @@ io.on('connection', function(socket) {
         roomKey = ROOM_KEY;
 
         var datas = ROOM_LIST.stringifyRoomInfo(ROOM_KEY);
-        console.log(datas);
-        socket.emit('in create_room : room_info', datas);
+        console.log('in create_room : ' + datas);
+        socket.emit('room_info', datas);
         ROOM_KEY = ROOM_KEY + 1;
     });
 
