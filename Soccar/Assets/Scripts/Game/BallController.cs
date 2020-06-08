@@ -66,14 +66,16 @@ public class BallController : MonoBehaviour
             StartCoroutine(MoveBallOnNet());
             return;
         }
-        
+
 
         // 어떤 플레이어의 득점인지 판단하기 위해 가장 마지막에 접촉한 플레이어를 저장해야 함(레그돌과 부딪힘으로 바꿔야댐) /// 바꿔야 할 부분
-        if(collision.gameObject.CompareTag("Player"))
+        if(LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
         {
-            _lastPlayer = collision.gameObject;
-            _rigidBody.velocity = Vector3.zero;     // 레그돌이 맞으면 속도를 0으로 하여 막는다. (또는 줄임) /// 바꿔야 할 부분
+            GameObject player = collision.transform.root.gameObject;
+            Debug.Log("루트 이름: " + player.name);
+            _lastPlayer = player;
         }
+       
         // 다른 물체에 부딪히면 탄성을 원래대로
         _ball.material.bounciness = 0.8f;
     }
