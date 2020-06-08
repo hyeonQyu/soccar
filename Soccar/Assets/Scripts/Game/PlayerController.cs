@@ -46,7 +46,7 @@ public static class PlayerController
     [HideInInspector] public static Vector3 GlideFree = Vector3.zero;   // Set from RagdollControl
     [HideInInspector] public static bool InhibitRun { get; set; }    // Set from RagdollControl
     public static bool InhibitMove { get; set; }     // Set from RagdollControl
-	public static float AnimatorSpeed { get; set; }   // Read by RagdollControl
+    public static float AnimatorSpeed = 1.3f;   // Read by RagdollControl
 	private static Animator _animator;			// Reference to the animator component.
 	public static AnimFollow.HashIDs_AF Hash;			// Reference to the HashIDs.
     public static readonly int version = 7; // The version of this script
@@ -54,7 +54,6 @@ public static class PlayerController
     {
         _speed = 2.5f;
         _playerSpeed = 0;
-        AnimatorSpeed = 1.3f;
         //_rotationSpeed = 2.5f;
 
         Players = new GameObject[GameLauncher.Headcount];
