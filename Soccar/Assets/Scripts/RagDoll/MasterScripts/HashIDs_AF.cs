@@ -3,10 +3,10 @@ using System.Collections;
 
 namespace AnimFollow
 {
-	public class HashIDs_AF : MonoBehaviour
+	public class HashIDs_AF:MonoBehaviour
 	{
 		// Add this script to the master
-		
+
 		public readonly int version = 7; // The version of this script
 
 		// Here we store the hash tags for various strings used in our animators.

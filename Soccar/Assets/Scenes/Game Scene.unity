@@ -11034,7 +11034,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _networkManagerObject: {fileID: 1489427009}
-  _ragDollHips: {fileID: 0}
 --- !u!1 &448669012
 GameObject:
   m_ObjectHideFlags: 0
@@ -13314,7 +13313,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _networkManagerObject: {fileID: 1489427009}
-  _ragDollHips: {fileID: 0}
 --- !u!1 &563993243
 GameObject:
   m_ObjectHideFlags: 0
@@ -22163,6 +22161,7 @@ MonoBehaviour:
   ignoreCollidersWithTag:
   - Ball
   - Ground
+  - Fense
   getupAngularDrag: 50
   fallAngularDrag: 20
   getupDrag: 25
@@ -32757,6 +32756,7 @@ MonoBehaviour:
   ignoreCollidersWithTag:
   - Ball
   - Ground
+  - Fense
   getupAngularDrag: 50
   fallAngularDrag: 20
   getupDrag: 25
@@ -37888,7 +37888,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _networkManagerObject: {fileID: 1489427009}
-  _ragDollHips: {fileID: 0}
 --- !u!1 &1525266916
 GameObject:
   m_ObjectHideFlags: 0
@@ -41126,6 +41125,7 @@ MonoBehaviour:
   ignoreCollidersWithTag:
   - Ball
   - Ground
+  - Fense
   getupAngularDrag: 50
   fallAngularDrag: 20
   getupDrag: 25
@@ -43516,7 +43516,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _networkManagerObject: {fileID: 1489427009}
-  _ragDollHips: {fileID: 0}
 --- !u!1 &1764331046
 GameObject:
   m_ObjectHideFlags: 0
@@ -47022,7 +47021,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _networkManagerObject: {fileID: 1489427009}
-  _ragDollHips: {fileID: 0}
 --- !u!1 &1904448732
 GameObject:
   m_ObjectHideFlags: 0
@@ -48354,6 +48352,7 @@ MonoBehaviour:
   ignoreCollidersWithTag:
   - Ball
   - Ground
+  - Fense
   getupAngularDrag: 50
   fallAngularDrag: 20
   getupDrag: 25
@@ -52586,6 +52585,7 @@ MonoBehaviour:
   ignoreCollidersWithTag:
   - Ball
   - Ground
+  - Fense
   getupAngularDrag: 50
   fallAngularDrag: 20
   getupDrag: 25
@@ -52987,7 +52987,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _networkManagerObject: {fileID: 1489427009}
-  _ragDollHips: {fileID: 0}
 --- !u!153 &3363049091331414355
 ConfigurableJoint:
   m_ObjectHideFlags: 0

@@ -83,7 +83,7 @@ public class GameLauncher : MonoBehaviour
         // 소켓 연결시까지 대기
         if(!_networkManager.Socket.IsConnected)
             return;
-        
+
         if(!PlayerController.IsPlayersInitialized)
         {
             // Player Index 세팅

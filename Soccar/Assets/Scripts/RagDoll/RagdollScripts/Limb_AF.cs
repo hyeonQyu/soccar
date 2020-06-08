@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 namespace AnimFollow
 {
@@ -40,12 +41,22 @@ namespace AnimFollow
 				}
 			}
 
+			try
+			{
+				if(transform.root.GetChild(0).GetInstanceID() != PlayerController.Player.GetInstanceID())
+					return;
+			}
+			catch(NullReferenceException e)
+			{
+				return;
+			}
 			if(LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
 				return;
 			else if(collision.gameObject.tag.Equals("Ground") || collision.gameObject.tag.Equals("Ball"))
 				return;
 			Debug.Log("OnCollision " + collision.gameObject.name);
-			PlayerController.AlterEgo.transform.position = transform.root.GetChild(0).position;
+			Vector3 hipPosition = transform.root.GetChild(1).transform.Find("Hips").position;
+			PlayerController.AlterEgo.transform.position = new Vector3(hipPosition.x, PlayerController.AlterEgo.transform.position.y, hipPosition.z);
 		}
 		
 		void OnCollisionExit(Collision collision)
