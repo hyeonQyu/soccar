@@ -160,7 +160,7 @@ io.on('connection', function(socket) {
 
     var roomKey = 0;
 
-    console.log("Connect");
+    console.log("Connect socketID = "+ socket.id);
 
     socket.on('login', function(data){
         socket.emit('login', socket.id);
@@ -171,18 +171,14 @@ io.on('connection', function(socket) {
     });
 
     socket.on('refresh', function(data) {
-        // for debugging
-        console.log('in refresh');
 
         var datas = ROOM_LIST.stringifyRoomList();
-        console.log(datas);
+        console.log('in refresh' +datas);
         socket.emit('room_list', datas);
     });
 
 
     socket.on('create_room', function(data) {
-        //for debugging
-        console.log('in create_room');
 
         ROOM_LIST.createRoom(ROOM_KEY, data.RoomName, socket.id, data.PlayerName);
         socket.join(ROOM_KEY);
@@ -190,13 +186,11 @@ io.on('connection', function(socket) {
 
         var datas = ROOM_LIST.stringifyRoomInfo(ROOM_KEY);
         console.log(datas);
-        socket.emit('room_info', datas);
+        socket.emit('in create_room : room_info', datas);
         ROOM_KEY = ROOM_KEY + 1;
     });
 
     socket.on('enter_room', function(data){
-        //for debugging
-        console.log('in enter_room');
 
         var flag;
         flag = ROOM_LIST.addPlayer(data.RoomKey, socket.id, data.PlayerName)
@@ -205,7 +199,7 @@ io.on('connection', function(socket) {
             roomKey = data.RoomKey;
 
             var datas = ROOM_LIST.stringifyRoomInfo(data.RoomKey);
-            console.log(datas);
+            console.log('in enter_room' + datas);
             io.sockets.in(data.RoomKey).emit('room_info', datas); // broadcast to all clients in room(data.RoomKey)
         }
         else { // flag == 0 방이 가득 참 or flag ==  -1 해당 방이 존재하지 않음
@@ -250,6 +244,7 @@ io.on('connection', function(socket) {
     });
 
     socket.on('start_game', function(data){
+        console.log(data + 'room starts game');
         var roomIndex = ROOM_LIST.findRoom(data);
         if(roomIndex >  -1){
             if(ROOM_LIST.rooms[roomIndex].playerCounts < MIN_PLAYER){
