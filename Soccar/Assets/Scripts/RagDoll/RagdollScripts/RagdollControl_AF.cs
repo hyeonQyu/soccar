@@ -281,6 +281,7 @@ namespace AnimFollow
 					{
 						falling = false;
 
+						//for debugging
 						// Here the master gets reorientated to the ragdoll which could have ended its fall in any direction and position
 						master.transform.rotation = ragdollRootBone.rotation * Quaternion.Inverse(masterRootBone.rotation) * master.transform.rotation;
 						master.transform.rotation = Quaternion.LookRotation(new Vector3(master.transform.forward.x, 0f, master.transform.forward.z), Vector3.up); 
@@ -334,7 +335,8 @@ namespace AnimFollow
 
 							if (limbErrorMagnitude < maxErrorWhenMatching) // Do not go to full strength unless ragdoll is matching master (delay)
 							{
-								gettingUp = false; // Getting up is done
+								Debug.Log("Set gettingUP = false");
+                                gettingUp = false; // Getting up is done
 								delayedGetupDone = false;
 								PlayerController.InhibitRun = false;
 							}
@@ -362,18 +364,18 @@ namespace AnimFollow
 				else // Falling
 				{
 					Debug.Log("쓰러짐1(Player" + transform.root.GetComponent<PlayerInformation>().PlayerIndex + ")");
-					// Lerp force to zero from residual values
+                    // Lerp force to zero from residual values
 
-					// 이영재가 추가함 20.06.09
-					//if (transform.root.GetComponent<PlayerInformation>().PlayerIndex == PlayerController.PlayerIndex)
-					//{
-					//	//Vector3 hipPosition = transform.root.GetChild(1).transform.Find("Hips").position;
-					//	Debug.Log("RootBone !!!");
-					//	Vector3 hipPosition = ragdollRootBone.position;
-					//	PlayerController.AlterEgo.transform.position = new Vector3(hipPosition.x, PlayerController.AlterEgo.transform.position.y, hipPosition.z);
-					//}
+                    // 이영재가 추가함 20.06.09
+                    if (transform.root.GetComponent<PlayerInformation>().PlayerIndex == PlayerController.PlayerIndex)
+                    {
+                        //Vector3 hipPosition = transform.root.GetChild(1).transform.Find("Hips").position;
+                        Debug.Log("RootBone !!!");
+                        Vector3 hipPosition = ragdollRootBone.position;
+                        PlayerController.AlterEgo.transform.position = new Vector3(hipPosition.x, PlayerController.AlterEgo.transform.position.y, hipPosition.z);
+                    }
 
-					animFollow.maxTorque = Mathf.Lerp(animFollow.maxTorque, 0f, fallLerp * Time.fixedDeltaTime);
+                    animFollow.maxTorque = Mathf.Lerp(animFollow.maxTorque, 0f, fallLerp * Time.fixedDeltaTime);
 					animFollow.maxForce = Mathf.Lerp(animFollow.maxForce, 0f, fallLerp * Time.fixedDeltaTime);
 					animFollow.maxJointTorque = Mathf.Lerp(animFollow.maxJointTorque, 0f, fallLerp * Time.fixedDeltaTime);
 					animFollow.SetJointTorque (animFollow.maxJointTorque); // Do not wait for animfollow.secondaryUpdate

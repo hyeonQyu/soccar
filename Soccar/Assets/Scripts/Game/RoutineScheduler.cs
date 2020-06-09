@@ -63,13 +63,9 @@ public class RoutineScheduler : MonoBehaviour
                 {
                     //if(j == PlayerController.PlayerIndex)
                     //    continue;
-                    if (PlayerController.Players[j].transform.root.GetChild(1).gameObject.GetComponent<AnimFollow.RagdollControl_AF>().falling)
+                    if (!PlayerController.Players[j].transform.root.GetChild(1).gameObject.GetComponent<AnimFollow.RagdollControl_AF>().falling &&
+                        !PlayerController.Players[j].transform.root.GetChild(1).gameObject.GetComponent<AnimFollow.RagdollControl_AF>().gettingUp)
                     {
-                        PlayerController.Players[j].transform.position = PlayerController.Players[j].transform.root.GetChild(1).gameObject.GetComponent<AnimFollow.RagdollControl_AF>().ragdollRootBone.position;
-                    }
-                    else
-                    {
-
                         PlayerController.Players[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
                         Vector3 newVector = new Vector3(PlayerController.Players[j].transform.position.x, 1, PlayerController.Players[j].transform.position.z);
                         PlayerController.MiniMapManager.Players[j].transform.localPosition = newVector;

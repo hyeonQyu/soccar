@@ -22,7 +22,7 @@ namespace AnimFollow
 		void OnCollisionEnter(Collision collision)
 		{
 			bool ignore = false;
-			if (!(collision.transform.name == "Terrain") && collision.transform.root != this.transform.root)
+			if (!(collision.transform.name == "Ground") && collision.transform.root != this.transform.root)
 			{
 				foreach (string ignoreTag in ignoreCollidersWithTag)
 				{
@@ -31,6 +31,12 @@ namespace AnimFollow
 						ignore = true;
 						break;
 					}
+				}
+
+				// Ignore RagDoll collision
+				if (collision.transform.root.gameObject.tag.Equals("Player"))
+				{
+					ignore = true;
 				}
 
 				if (!ignore)
@@ -43,7 +49,7 @@ namespace AnimFollow
 
 			try
 			{
-				if (transform.root.GetChild(0).GetInstanceID() != PlayerController.Player.GetInstanceID())
+				if (transform.root.GetChild(0).gameObject.GetInstanceID() != PlayerController.Player.GetInstanceID())
 				{
                     // 항상 여기로 들어온다 !! 밑으로 절대 안가 !!
 					return;
@@ -53,12 +59,11 @@ namespace AnimFollow
 			{
 				return;
 			}
-			//if(LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
-			//	return;
-			if(collision.gameObject.tag.Equals("Ground") || collision.gameObject.tag.Equals("Ball"))
+            if (transform.root.gameObject.GetInstanceID() == collision.transform.root.gameObject.GetInstanceID())
+                return;
+            if (collision.gameObject.tag.Equals("Ground") || collision.gameObject.tag.Equals("Ball"))
 				return;
-			Debug.Log("OnCollision " + collision.gameObject.name);
-			Vector3 hipPosition = transform.root.GetChild(1).transform.Find("Hips").position;
+			Vector3 hipPosition = transform.root.GetChild(1).gameObject.GetComponent<AnimFollow.RagdollControl_AF>().ragdollRootBone.position;
 			PlayerController.AlterEgo.transform.position = new Vector3(hipPosition.x, PlayerController.AlterEgo.transform.position.y, hipPosition.z);
 		}
 		
@@ -74,6 +79,12 @@ namespace AnimFollow
 						ignore = true;
 						break;
 					}
+				}
+
+				// Ignore RagDoll collision
+				if (collision.transform.root.gameObject.tag.Equals("Player"))
+				{
+					ignore = true;
 				}
 
 				if (!ignore)
