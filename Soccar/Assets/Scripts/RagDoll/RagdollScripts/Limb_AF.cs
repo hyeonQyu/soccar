@@ -43,16 +43,19 @@ namespace AnimFollow
 
 			try
 			{
-				if(transform.root.GetChild(0).GetInstanceID() != PlayerController.Player.GetInstanceID())
+				if (transform.root.GetChild(0).GetInstanceID() != PlayerController.Player.GetInstanceID())
+				{
+                    // 항상 여기로 들어온다 !! 밑으로 절대 안가 !!
 					return;
+				}
 			}
 			catch(NullReferenceException e)
 			{
 				return;
 			}
-			if(LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
-				return;
-			else if(collision.gameObject.tag.Equals("Ground") || collision.gameObject.tag.Equals("Ball"))
+			//if(LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
+			//	return;
+			if(collision.gameObject.tag.Equals("Ground") || collision.gameObject.tag.Equals("Ball"))
 				return;
 			Debug.Log("OnCollision " + collision.gameObject.name);
 			Vector3 hipPosition = transform.root.GetChild(1).transform.Find("Hips").position;

@@ -23,7 +23,7 @@ namespace AnimFollow
 		SimpleFootIK_AF simpleFootIK;
 #endif
 
-		public Transform ragdollRootBone;		// A transform representative of the ragdoll position and rotation. ASSIGN IN INSPECTOR or it will be auto assigned to the first transform with a rigid body
+		public Transform ragdollRootBone;	    // A transform representative of the ragdoll position and rotation. ASSIGN IN INSPECTOR or it will be auto assigned to the first transform with a rigid body
 		GameObject master;						// The master character that is originally controlled by animations. Auto assaigned
 		Rigidbody[] slaveRigidBodies;			// Contains all rigid bodies in the ragdoll. Only used to distribute the Limb scripts
 		Transform masterRootBone;				// A transform representative of the ragdoll position and rotation. Auto assaigned
@@ -363,6 +363,16 @@ namespace AnimFollow
 				{
 					Debug.Log("쓰러짐1(Player" + transform.root.GetComponent<PlayerInformation>().PlayerIndex + ")");
 					// Lerp force to zero from residual values
+
+					// 이영재가 추가함 20.06.09
+					//if (transform.root.GetComponent<PlayerInformation>().PlayerIndex == PlayerController.PlayerIndex)
+					//{
+					//	//Vector3 hipPosition = transform.root.GetChild(1).transform.Find("Hips").position;
+					//	Debug.Log("RootBone !!!");
+					//	Vector3 hipPosition = ragdollRootBone.position;
+					//	PlayerController.AlterEgo.transform.position = new Vector3(hipPosition.x, PlayerController.AlterEgo.transform.position.y, hipPosition.z);
+					//}
+
 					animFollow.maxTorque = Mathf.Lerp(animFollow.maxTorque, 0f, fallLerp * Time.fixedDeltaTime);
 					animFollow.maxForce = Mathf.Lerp(animFollow.maxForce, 0f, fallLerp * Time.fixedDeltaTime);
 					animFollow.maxJointTorque = Mathf.Lerp(animFollow.maxJointTorque, 0f, fallLerp * Time.fixedDeltaTime);

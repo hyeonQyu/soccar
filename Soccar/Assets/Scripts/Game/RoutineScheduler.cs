@@ -59,16 +59,23 @@ public class RoutineScheduler : MonoBehaviour
 
             for(int j = 0; j < destPositions.Length; j++)
             {
-                //if(j == PlayerController.PlayerIndex)
-                //    continue;
-
                 try
                 {
-                    PlayerController.Players[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
-                    Vector3 newVector = new Vector3(PlayerController.Players[j].transform.position.x, 163, PlayerController.Players[j].transform.position.z);
-                    PlayerController.MiniMapManager.Players[j].transform.position = newVector;
+                    //if(j == PlayerController.PlayerIndex)
+                    //    continue;
+                    if (PlayerController.Players[j].transform.root.GetChild(1).gameObject.GetComponent<AnimFollow.RagdollControl_AF>().falling)
+                    {
+                        PlayerController.Players[j].transform.position = PlayerController.Players[j].transform.root.GetChild(1).gameObject.GetComponent<AnimFollow.RagdollControl_AF>().ragdollRootBone.position;
+                    }
+                    else
+                    {
+
+                        PlayerController.Players[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
+                        Vector3 newVector = new Vector3(PlayerController.Players[j].transform.position.x, 163, PlayerController.Players[j].transform.position.z);
+                        PlayerController.MiniMapManager.Players[j].transform.position = newVector;
+                    }
                 }
-                catch(Exception e) { }
+                catch (Exception e) { }
             }
 
             yield return new WaitForSeconds(0.002f);

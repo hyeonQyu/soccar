@@ -213,7 +213,6 @@ public static class PlayerController
                 _playerSpeed = 2.5f;
             }
             myPosition = myPosition * _playerSpeed * Time.fixedDeltaTime;
-            Debug.Log("move Position" +myPosition.x + " " + myPosition.y + " "+ myPosition.z);
             Move(myPosition);
 
             _isMoved = false;
