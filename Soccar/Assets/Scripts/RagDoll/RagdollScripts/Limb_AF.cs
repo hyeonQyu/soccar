@@ -50,7 +50,7 @@ namespace AnimFollow
 
 			try
 			{
-				if (transform.root.GetChild(0).GetInstanceID() != PlayerController.Player.GetInstanceID())
+				if (transform.root.GetChild(0).gameObject.GetInstanceID() != PlayerController.Player.GetInstanceID())
 				{
                     // 항상 여기로 들어온다 !! 밑으로 절대 안가 !!
 					return;
