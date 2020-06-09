@@ -12,11 +12,15 @@ public class Camera : MonoBehaviour
     private float _height = 3.7f;
     private bool _isFirstRun = true;
 
+    [SerializeField]
+    private UnityEngine.Camera _miniMapCam;
+
     // Update is called once per frame
     void LateUpdate()
     {
         if(PlayerController.IsPlayersInitialized && _isFirstRun)
         {
+            _miniMapCam.transform.eulerAngles = new Vector3(90, -PlayerController.Theta, 0);
             transform.eulerAngles = new Vector3(_angle, -PlayerController.Theta, 0);
             _isFirstRun = false;
             Debug.Log("==카메라 세팅됨");

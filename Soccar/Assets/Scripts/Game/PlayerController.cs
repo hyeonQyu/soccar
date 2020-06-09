@@ -147,8 +147,6 @@ public static class PlayerController
                 // Set Player Position & Rotation (골대 위치 초기화하는 김에 플레이어도 같이 함)
                 Players[i].transform.parent.transform.position = backwardVector * 6 + new Vector3(0, 0, 0);
                 Players[i].transform.eulerAngles = new Vector3(0, -theta * i, 0);
-
-                
             }
             else
             {

@@ -18538,6 +18538,7 @@ MonoBehaviour:
   _distance: 5.3
   _angle: 25
   _height: 3.7
+  _miniMapCam: {fileID: 1145474567}
 --- !u!1 &757331417
 GameObject:
   m_ObjectHideFlags: 0
