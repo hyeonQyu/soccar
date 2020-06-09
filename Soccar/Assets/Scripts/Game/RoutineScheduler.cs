@@ -71,8 +71,8 @@ public class RoutineScheduler : MonoBehaviour
                     {
 
                         PlayerController.Players[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
-                        Vector3 newVector = new Vector3(PlayerController.Players[j].transform.position.x, 163, PlayerController.Players[j].transform.position.z);
-                        PlayerController.MiniMapManager.Players[j].transform.position = newVector;
+                        Vector3 newVector = new Vector3(PlayerController.Players[j].transform.position.x, 1, PlayerController.Players[j].transform.position.z);
+                        PlayerController.MiniMapManager.Players[j].transform.localPosition = newVector;
                     }
                 }
                 catch (Exception e) { }
@@ -94,8 +94,8 @@ public class RoutineScheduler : MonoBehaviour
             {
                 if(PlayerController.PlayerIndex != PlayerController.SuperClientIndex)
                     GameLauncher.Balls[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
-                Vector3 newVector = new Vector3(GameLauncher.Balls[j].transform.position.x, 165, GameLauncher.Balls[j].transform.position.z);
-                PlayerController.MiniMapManager.Balls[j].transform.position = newVector;
+                Vector3 newVector = new Vector3(GameLauncher.Balls[j].transform.position.x, 2, GameLauncher.Balls[j].transform.position.z);
+                PlayerController.MiniMapManager.Balls[j].transform.localPosition = newVector;
             }
 
             yield return new WaitForSeconds(0.002f);

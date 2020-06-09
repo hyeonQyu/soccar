@@ -70,7 +70,7 @@ public static class PlayerController
                 Players[i] = GameObject.Find("Player" + suffix);
                 PlayerInformations[i] = Players[i].GetComponent<PlayerInformation>();
                 PlayerInformations[i].SetPlayerInformation(i);
-                MiniMapManager.Players[i] = MiniMapManager.MiniMapGround.transform.Find("Mini Map Player" + suffix).gameObject;
+                MiniMapManager.Players[i] = MiniMapManager.MiniMap.transform.Find("Mini Map Player" + suffix).gameObject;
                 IsConnectPlayers[i] = true;
 
                 // Avatar를 가리킴
@@ -79,7 +79,7 @@ public static class PlayerController
             else
             {
                 GameObject.Find("Player" + suffix).SetActive(false);
-                MiniMapManager.MiniMapGround.transform.Find("Mini Map Player" + suffix).gameObject.SetActive(false);
+                UnityEngine.Object.Destroy(MiniMapManager.MiniMap.transform.Find("Mini Map Player" + suffix).gameObject);
                 try
                 {
                     IsConnectPlayers[i] = false;
@@ -152,7 +152,7 @@ public static class PlayerController
             }
             else
             {
-                GameObject.Find("Goal Post" + suffix).SetActive(false);
+                UnityEngine.Object.Destroy(GameObject.Find("Goal Post" + suffix));
             }
         }
         AlterEgo.transform.position = Player.transform.position;

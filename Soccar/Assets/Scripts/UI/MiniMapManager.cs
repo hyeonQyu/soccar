@@ -8,13 +8,13 @@ public class MiniMapManager
     public GameObject[] Balls { get; set; }
     // public GameObject[] GoalPosts { get; set; }
 
-    public GameObject MiniMapGround { get; private set; }
+    public GameObject MiniMap { get; private set; }
 
     public MiniMapManager(int headcount)
     {
         Players = new GameObject[headcount];
         Balls = new GameObject[2];
 
-        MiniMapGround = GameObject.Find("Mini Map Ground");
+        MiniMap = GameObject.Find("Mini Map");
     }
 }

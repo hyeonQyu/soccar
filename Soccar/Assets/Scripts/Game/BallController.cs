@@ -128,11 +128,11 @@ public class BallController : MonoBehaviour
             loop++;
         }
 
-        // 공이 4초 후에도 그물 위에 있으면 탄성 복구 후 랜덤 위치로 공 이동
+        // 공이 4초 후에도 그물 위에 있으면 탄성 복구 후 중앙으로 공 이동
         if(_isOnNet)
         {
             _ball.material.bounciness = 0.8f;
-            transform.position = new Vector3(Random.Range(-25f, 25f), 30, Random.Range(-25f, 2f));
+            transform.position = new Vector3(0, 10, 0);
         }
     }
 }

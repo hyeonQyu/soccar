@@ -73,7 +73,7 @@ public class GameLauncher : MonoBehaviour
         {
             Balls[i] = GameObject.Find("Ball" + i);
             Balls[i].GetComponent<BallController>().IsFeverBall = false;
-            PlayerController.MiniMapManager.Balls[i] = PlayerController.MiniMapManager.MiniMapGround.transform.Find("Mini Map Ball" + i).gameObject;
+            PlayerController.MiniMapManager.Balls[i] = PlayerController.MiniMapManager.MiniMap.transform.Find("Mini Map Ball" + i).gameObject;
         }
     }
 

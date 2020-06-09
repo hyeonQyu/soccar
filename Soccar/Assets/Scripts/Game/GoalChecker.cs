@@ -33,8 +33,8 @@ public class GoalChecker : MonoBehaviour
     private IEnumerator MoveBall(GameObject ball)
     {
         yield return new WaitForSeconds(3);
-        // (-25, 30, -25) ~ (25, 30, 25)의 랜덤 위치로 공을 이동시킴
-        ball.transform.position = new Vector3(Random.Range(-25f, 25f), 30, Random.Range(-25f, 2f));
+        // 공을 중앙으로 이동시킴
+        ball.transform.position = new Vector3(0, 10, 0);
         ball.GetComponent<BallController>().IsScored = false;
         // 탄성력 복구
         ball.GetComponent<Collider>().material.bounciness = 0.8f;

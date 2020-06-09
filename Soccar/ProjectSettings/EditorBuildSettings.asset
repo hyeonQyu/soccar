@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Game Scene.unity
     guid: 397473f608a899e428e64817f82ac9cc
+  - enabled: 1
+    path: Assets/Scenes/Mini Map Scene.unity
+    guid: 7498d11218019f74da0d4ef7c711cb52
   m_configObjects: {}
