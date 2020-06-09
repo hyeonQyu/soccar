@@ -21,7 +21,6 @@ namespace AnimFollow
 		
 		void OnCollisionEnter(Collision collision)
 		{
-			Debug.Log(collision.gameObject.gameObject + "  " + collision.gameObject.layer);
 			bool ignore = false;
 			if (!(collision.transform.name == "Ground") && collision.transform.root != this.transform.root)
 			{
@@ -34,8 +33,8 @@ namespace AnimFollow
 					}
 				}
 
-                // Ignore RagDoll collision
-				if (LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
+				// Ignore RagDoll collision
+				if (collision.transform.root.gameObject.tag.Equals("Player"))
 				{
 					ignore = true;
 				}
@@ -60,12 +59,11 @@ namespace AnimFollow
 			{
 				return;
 			}
-			//if(LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
-			//	return;
-			if(collision.gameObject.tag.Equals("Ground") || collision.gameObject.tag.Equals("Ball"))
+            if (transform.root.gameObject.GetInstanceID() == collision.transform.root.gameObject.GetInstanceID())
+                return;
+            if (collision.gameObject.tag.Equals("Ground") || collision.gameObject.tag.Equals("Ball"))
 				return;
-			Debug.Log("OnCollision " + collision.gameObject.name);
-			Vector3 hipPosition = transform.root.GetChild(1).transform.Find("Hips").position;
+			Vector3 hipPosition = transform.root.GetChild(1).gameObject.GetComponent<AnimFollow.RagdollControl_AF>().ragdollRootBone.position;
 			PlayerController.AlterEgo.transform.position = new Vector3(hipPosition.x, PlayerController.AlterEgo.transform.position.y, hipPosition.z);
 		}
 		
@@ -81,6 +79,12 @@ namespace AnimFollow
 						ignore = true;
 						break;
 					}
+				}
+
+				// Ignore RagDoll collision
+				if (collision.transform.root.gameObject.tag.Equals("Player"))
+				{
+					ignore = true;
 				}
 
 				if (!ignore)
