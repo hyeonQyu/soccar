@@ -21,8 +21,9 @@ namespace AnimFollow
 		
 		void OnCollisionEnter(Collision collision)
 		{
+			Debug.Log(collision.gameObject.gameObject + "  " + collision.gameObject.layer);
 			bool ignore = false;
-			if (!(collision.transform.name == "Terrain") && collision.transform.root != this.transform.root)
+			if (!(collision.transform.name == "Ground") && collision.transform.root != this.transform.root)
 			{
 				foreach (string ignoreTag in ignoreCollidersWithTag)
 				{
@@ -31,6 +32,12 @@ namespace AnimFollow
 						ignore = true;
 						break;
 					}
+				}
+
+                // Ignore RagDoll collision
+				if (LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
+				{
+					ignore = true;
 				}
 
 				if (!ignore)
