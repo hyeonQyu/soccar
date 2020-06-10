@@ -215,9 +215,9 @@ namespace AnimFollow
 	//		Debug.DrawRay(ragdollRootBone.position, ragdollRootBone.rotation * rootboneToForward * Vector3.forward); // Open this and check that the ray is pointing as the nose of the charater
 
 			// Check if we are in getup state or in transition to getup state
-			getupState = animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.getupFront) || animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.getupBack) || animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.getupFrontMirror) || animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.getupBackMirror);
+			getupState = animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.GetupFront) || animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.GetupBack) || animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.GetupFrontMirror) || animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.GetupBackMirror);
 			wasInTransitionToGetup = isInTransitionToGetup;
-			isInTransitionToGetup = animator.GetAnimatorTransitionInfo(0).fullPathHash.Equals(hash.anyStateToGetupFront) || animator.GetAnimatorTransitionInfo(0).fullPathHash.Equals(hash.anyStateToGetupBack) || animator.GetAnimatorTransitionInfo(0).fullPathHash.Equals(hash.anyStateToGetupFrontMirror) || animator.GetAnimatorTransitionInfo(0).fullPathHash.Equals(hash.anyStateToGetupBackMirror);
+			isInTransitionToGetup = animator.GetAnimatorTransitionInfo(0).fullPathHash.Equals(hash.AnyStateToGetupFront) || animator.GetAnimatorTransitionInfo(0).fullPathHash.Equals(hash.AnyStateToGetupBack) || animator.GetAnimatorTransitionInfo(0).fullPathHash.Equals(hash.AnyStateToGetupFrontMirror) || animator.GetAnimatorTransitionInfo(0).fullPathHash.Equals(hash.AnyStateToGetupBackMirror);
 			// For Unity 4
 //			getupState = anim.GetCurrentAnimatorStateInfo(0).nameHash.Equals(hash.getupFront) || anim.GetCurrentAnimatorStateInfo(0).nameHash.Equals(hash.getupBack) || anim.GetCurrentAnimatorStateInfo(0).nameHash.Equals(hash.getupFrontMirror) || anim.GetCurrentAnimatorStateInfo(0).nameHash.Equals(hash.getupBackMirror);
 //			wasInTransitionToGetup = isInTransitionToGetup;
@@ -237,7 +237,7 @@ namespace AnimFollow
 				if (!falling)
 				{
 					// The initial strength immediately after the impact
-					if (!animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.idle) && ! getupState) // If not in idle state
+					if (!animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.Idle) && ! getupState) // If not in idle state
 					{
 						animFollow.maxTorque = residualTorque;
 						animFollow.maxForce = residualForce;
@@ -392,23 +392,23 @@ namespace AnimFollow
 						animFollow.maxTorque = 0f; // These strengths shold be zero to avoid twitching during orientation
 						animFollow.maxForce = 0f;
 						animFollow.maxJointTorque = 0f;
-						animator.SetFloat(hash.speedFloat, 0f, 0f, Time.fixedDeltaTime);
+						animator.SetFloat(hash.SpeedFloat, 0f, 0f, Time.fixedDeltaTime);
 
 						Vector3 rootBoneForward = ragdollRootBone.rotation * rootboneToForward * Vector3.forward;
 						if (Vector3.Dot(rootBoneForward, Vector3.down) >= 0f) // Check if ragdoll is lying on its back or front, then transition to getup animation
 						{
 							Debug.Log("일어나려고함(Player" + transform.root.GetComponent<PlayerInformation>().PlayerIndex + ")");
-							if (!animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.getupFront))
-								animator.SetBool(hash.frontTrigger, true);
+							if (!animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.GetupFront))
+								animator.SetBool(hash.FrontTrigger, true);
 							else // if (!anim.GetCurrentAnimatorStateInfo(0).IsName("GetupFrontMirror"))
-								animator.SetBool(hash.frontMirrorTrigger, true);
+								animator.SetBool(hash.FrontMirrorTrigger, true);
 						}
 						else
 						{
-							if (!animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.getupBack))
-								animator.SetBool(hash.backTrigger, true);
+							if (!animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.GetupBack))
+								animator.SetBool(hash.BackTrigger, true);
 							else // if (!anim.GetCurrentAnimatorStateInfo(0).IsName("GetupFrontMirror"))
-								animator.SetBool(hash.backMirrorTrigger, true);
+								animator.SetBool(hash.BackMirrorTrigger, true);
 						}
 					}
 				}

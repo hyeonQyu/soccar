@@ -13,28 +13,33 @@ namespace AnimFollow
 		// public int dyingState;
 		// public int locomotionState;
 		// public int deadBool;
-		public int speedFloat;
+		public int SpeedFloat;
 		// public int sneakingBool;
 
-		public int frontTrigger;
-		public int backTrigger;
-		public int frontMirrorTrigger;
-		public int backMirrorTrigger;
+		public int FrontTrigger;
+		public int BackTrigger;
+		public int FrontMirrorTrigger;
+		public int BackMirrorTrigger;
 
-		public int idle;
-		public int jump;
-		public int tackle;
-		public int shoot;
+		public int Idle;
+		public int Walk;
+		public int Run;
+		public int Jump;
+		public int Tackle;
+		public int Shoot;
+		public int JumpTrigger;
+		public int TackleTrigger;
+		public int ShootTrigger;
 
-		public int getupFront; 
-		public int getupBack; 
-		public int getupFrontMirror; 
-		public int getupBackMirror; 
+		public int GetupFront; 
+		public int GetupBack; 
+		public int GetupFrontMirror; 
+		public int GetupBackMirror; 
 
-		public int anyStateToGetupFront; 
-		public int anyStateToGetupBack; 
-		public int anyStateToGetupFrontMirror; 
-		public int anyStateToGetupBackMirror;
+		public int AnyStateToGetupFront; 
+		public int AnyStateToGetupBack; 
+		public int AnyStateToGetupFrontMirror; 
+		public int AnyStateToGetupBackMirror;
 
 		void Awake ()
 		{
@@ -43,23 +48,31 @@ namespace AnimFollow
 			// deadBool = Animator.StringToHash("Dead");
 			// sneakingBool = Animator.StringToHash("Sneaking");
 
-			idle = Animator.StringToHash("Base Layer.Blend Tree.Idle"); 
-			
+
 			// These are used by the RagdollControll script and must exist exactly as below
-			speedFloat = Animator.StringToHash("Speed");
-			jump = Animator.StringToHash("Jump");
-			tackle = Animator.StringToHash("Tackle");
-			shoot = Animator.StringToHash("Shoot");
+			SpeedFloat = Animator.StringToHash("SpeedFloat");
 
-			frontTrigger = Animator.StringToHash("FrontTrigger");
-			backTrigger = Animator.StringToHash("BackTrigger");
-			frontMirrorTrigger = Animator.StringToHash("FrontMirrorTrigger");
-			backMirrorTrigger = Animator.StringToHash("BackMirrorTrigger");
+			Idle = Animator.StringToHash("Base Layer.Move.Idle"); 
+			Walk = Animator.StringToHash("Base Layer.Move.Walk");
+			Run = Animator.StringToHash("Base Layer.Move.Run");
 
-			getupFront = Animator.StringToHash("Base Layer.GetupFront"); 
-			getupBack = Animator.StringToHash("Base Layer.GetupBack"); 
-			getupFrontMirror = Animator.StringToHash("Base Layer.GetupFronMirror"); 
-			getupBackMirror = Animator.StringToHash("Base Layer.GetupBackMirror"); 
+			JumpTrigger = Animator.StringToHash("JumpTrigger");
+			TackleTrigger = Animator.StringToHash("TackleTrigger");
+			ShootTrigger = Animator.StringToHash("ShootTrigger");
+			
+			Jump = Animator.StringToHash("Base Layer.Jump");
+			Tackle = Animator.StringToHash("Base Layer.Tackle");
+			Shoot = Animator.StringToHash("Base Layer.Shoot");
+
+			FrontTrigger = Animator.StringToHash("FrontTrigger");
+			BackTrigger = Animator.StringToHash("BackTrigger");
+			FrontMirrorTrigger = Animator.StringToHash("FrontMirrorTrigger");
+			BackMirrorTrigger = Animator.StringToHash("BackMirrorTrigger");
+
+			GetupFront = Animator.StringToHash("Base Layer.GetupFront"); 
+			GetupBack = Animator.StringToHash("Base Layer.GetupBack"); 
+			GetupFrontMirror = Animator.StringToHash("Base Layer.GetupFronMirror"); 
+			GetupBackMirror = Animator.StringToHash("Base Layer.GetupBackMirror"); 
 
 			// Use this in Unity older than unity 5
 //			anyStateToGetupFront = Animator.StringToHash("AnyState -> Base Layer.GetupFront"); 
@@ -68,10 +81,10 @@ namespace AnimFollow
 //			anyStateToGetupBackMirror = Animator.StringToHash("AnyState -> Base Layer.GetupBackMirror");
 
 			// Use this in Unity 5
-			anyStateToGetupFront = Animator.StringToHash("Entry -> Base Layer.GetupFront"); 
-			anyStateToGetupBack = Animator.StringToHash("Entry -> Base Layer.GetupBack"); 
-			anyStateToGetupFrontMirror = Animator.StringToHash("Entry -> Base Layer.GetupFrontMirror"); 
-			anyStateToGetupBackMirror = Animator.StringToHash("Entry -> Base Layer.GetupBackMirror");
+			AnyStateToGetupFront = Animator.StringToHash("Entry -> Base Layer.GetupFront"); 
+			AnyStateToGetupBack = Animator.StringToHash("Entry -> Base Layer.GetupBack"); 
+			AnyStateToGetupFrontMirror = Animator.StringToHash("Entry -> Base Layer.GetupFrontMirror"); 
+			AnyStateToGetupBackMirror = Animator.StringToHash("Entry -> Base Layer.GetupBackMirror");
 		}
 	}
 }

@@ -161,13 +161,9 @@ public static class PlayerController
         if(InhibitMove)
             return;
 
-        PlayerAnimator.SetBool(Hash.jump, false);
-        PlayerAnimator.SetBool(Hash.tackle, false);
-        PlayerAnimator.SetBool(Hash.shoot, false);
-
         // 현재 태클 혹은 슛 상태이면 분신을 움직이지 못하도록 함
         int animHash = PlayerAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash;
-        if(animHash == Animator.StringToHash("Base Layer.Shoot") || animHash == Animator.StringToHash("Base Layer.Tackle"))
+        if(animHash == Hash.Shoot || animHash == Hash.Tackle)
         {
             Debug.Log("태클이나 슛 중");
             return;
@@ -237,24 +233,24 @@ public static class PlayerController
             Player.transform.rotation = Quaternion.LookRotation(direction.normalized);
         }
 
-        PlayerAnimator.SetFloat(Hash.speedFloat, (_playerSpeed / 5f), 0.1f, Time.fixedDeltaTime);
+        PlayerAnimator.SetFloat(Hash.SpeedFloat, (_playerSpeed / 5f), 0.1f, Time.fixedDeltaTime);
 
         // 현재 state에 있음
         if(!PlayerAnimator.IsInTransition(0))
         {
-            if(Input.GetKey(KeyCode.Space))
+            if(Input.GetKeyDown(KeyCode.Space))
             {
-                PlayerAnimator.SetBool(Hash.jump, true);  
+                PlayerAnimator.SetTrigger(Hash.JumpTrigger);  
             }
 
-            else if (Input.GetKey(KeyCode.A))
+            else if (Input.GetKeyDown(KeyCode.A))
             {
-                PlayerAnimator.SetBool(Hash.tackle, true);
+                PlayerAnimator.SetTrigger(Hash.TackleTrigger);
             }
 
-            else if (Input.GetKey(KeyCode.D))
+            else if (Input.GetKeyDown(KeyCode.D))
             {
-                PlayerAnimator.SetBool(Hash.shoot, true);
+                PlayerAnimator.SetTrigger(Hash.ShootTrigger);
             }
         }
     }
