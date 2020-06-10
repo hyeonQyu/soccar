@@ -11,7 +11,7 @@ public class SphereMove : MonoBehaviour
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
-        _speed = 10f;
+        _speed = 30f;
     }
 
     // Update is called once per frame
