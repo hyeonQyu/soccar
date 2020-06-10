@@ -72,49 +72,52 @@ public class BallController : MonoBehaviour
             _ball.material.bounciness = 1;
         }
 
-
-        // 어떤 플레이어의 득점인지 판단하기 위해 가장 마지막에 접촉한 플레이어를 저장해야 함(레그돌과 부딪힘으로 바꿔야댐) /// 바꿔야 할 부분
-        if(LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
-        {
-            GameObject player = collision.transform.root.gameObject;
-            Debug.Log("루트 이름: " + player.name);
-            _lastPlayer = player;
-        }
-       
         // 다른 물체에 부딪히면 탄성을 원래대로
         _ball.material.bounciness = 0.8f;
+
+        if(LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
+        {
+            //transform.position = collision.transform.root.GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).position;
+            _rigidBody.velocity = Vector3.zero;
+        }
     }
 
-    //private void OnCollisionStay(Collision collision) 
-    //{
-    //    // 드리블
-    //    Debug.Log("layer name = " + LayerMask.LayerToName(collision.gameObject.layer));
-        
-    //    GameObject collisionObject = collision.gameObject;
+    private void OnCollisionStay(Collision collision) 
+    {
+        GameObject collisionObject = collision.gameObject;
 
-    //    if(collisionObject.layer.Equals(LayerMask.NameToLayer("RagDoll")))
-    //    {
-    //        // 드리블 속도
-    //        _rigidBody.velocity = collision.gameObject.transform.forward * _dribbleSpeed;
+        if(collisionObject.layer.Equals(LayerMask.NameToLayer("RagDoll")))
+        {
+           // 드리블 속도
+           _rigidBody.velocity = collision.gameObject.transform.forward * _dribbleSpeed;
 
-    //        // if(collisionObject.transform.root.GetChild(0).gameObject.GetComponent<Animator>().HasState(0, Animator.StringToHash("Base Layer.Shooting")))
-    //        // {
-    //        //     Debug.Log("what " + collision.collider);
-    //        //     if(collision.collider.CompareTag("RightLeg"))
-    //        //     {
-    //        //         Debug.Log("Shoot");
-    //        //         // 살짝 위로 올라가도록
-    //        //         _rigidBody.velocity = _lastPlayer.transform.forward * _shootSpeed + new Vector3(0, 3, 0);
-    //        //     }
-    //        // }
-    //    }
-    //}
+            if(collisionObject.transform.root.GetChild(0).gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).fullPathHash
+            == Animator.StringToHash("Base Layer.Shooting"))
+            {
+                Debug.Log("what " + collision.collider);
+                if(collision.gameObject.CompareTag("RightLeg"))
+                {
+                    Debug.Log("Shoot");
+                    // 살짝 위로 올라가도록
+                    _rigidBody.velocity = _lastPlayer.transform.forward * _shootSpeed + new Vector3(0, 3, 0);
+                }
+            }
+        }
+    }
 
     private void OnCollisionExit(Collision collision)
     {
         if(collision.gameObject.CompareTag("Net"))
         {
             _isOnNet = false;
+        }
+
+        // 어떤 플레이어의 득점인지 판단하기 위해 가장 마지막에 접촉한 플레이어를 저장해야 함(레그돌과 부딪힘으로 바꿔야댐)
+        if(LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
+        {
+            GameObject player = collision.transform.root.gameObject;
+            _lastPlayer = player;
+            Debug.Log(transform.gameObject.name + "의 마지막 플레이어 = " + collision.transform.root.gameObject.name)
         }
     }
 
