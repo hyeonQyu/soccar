@@ -3651,7 +3651,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 8a84d185f3feaaf41a6074ea2cb0bbd8, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.841
+  m_Volume: 0.563
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -11171,7 +11171,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 447535440}
   m_LocalRotation: {x: -0, y: -0, z: 0.0000000037252903, w: 1}
-  m_LocalPosition: {x: -4.17, y: 0, z: 1.3610001}
+  m_LocalPosition: {x: -8.2, y: -0, z: 1.3610001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1983023804}
@@ -13450,7 +13450,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 557597724}
   m_LocalRotation: {x: -0, y: -0, z: 0.0000000037252903, w: 1}
-  m_LocalPosition: {x: 2.8149986, y: 0, z: 1.3610001}
+  m_LocalPosition: {x: 8.76, y: 0, z: 1.3610001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 371496716}
@@ -26082,6 +26082,7 @@ GameObject:
   - component: {fileID: 1096193094}
   - component: {fileID: 1096193095}
   - component: {fileID: 1096193092}
+  - component: {fileID: 1096193093}
   m_Layer: 8
   m_Name: RightLeg
   m_TagString: Untagged
@@ -26199,6 +26200,18 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &1096193093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1096193090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b76c55573cfbd34180cf89d37d7216f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!54 &1096193094
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -34795,7 +34808,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7bc15086f32d7be4ebe0d19dae4e0d56, type: 2}
+  - {fileID: 2100000, guid: 68c775f183299d04eaba1d9e83c235fb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -38186,7 +38199,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1525151372}
   m_LocalRotation: {x: -0, y: -0, z: 0.0000000037252903, w: 1}
-  m_LocalPosition: {x: 1.4090004, y: 0, z: 1.3610001}
+  m_LocalPosition: {x: -0.26, y: -0, z: 1.3610001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2110445786}
@@ -43774,7 +43787,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1758568071}
   m_LocalRotation: {x: -0, y: -0, z: 0.0000000037252903, w: 1}
-  m_LocalPosition: {x: -1.4159994, y: 0, z: 1.3610001}
+  m_LocalPosition: {x: 5.9, y: 0, z: 1.3610001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1358522588}
@@ -47200,7 +47213,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1904000941}
   m_LocalRotation: {x: -0, y: -0, z: 0.0000000037252903, w: 1}
-  m_LocalPosition: {x: -2.816002, y: 0, z: 1.3610001}
+  m_LocalPosition: {x: -4.24, y: -0, z: 1.3610001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1749752779}
@@ -49402,6 +49415,7 @@ GameObject:
   - component: {fileID: 2003166206}
   - component: {fileID: 2003166204}
   - component: {fileID: 2003166205}
+  - component: {fileID: 2003166207}
   m_Layer: 8
   m_Name: RightLeg
   m_TagString: Untagged
@@ -49548,6 +49562,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2003166207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2003166202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b76c55573cfbd34180cf89d37d7216f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2007246909
 GameObject:
   m_ObjectHideFlags: 0
@@ -52996,7 +53022,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3363049091309805827}
   m_LocalRotation: {x: -0, y: -0, z: 0.0000000037252903, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.3610001}
+  m_LocalPosition: {x: 2.95, y: 0, z: 1.3610001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7769069558973634970}
