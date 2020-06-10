@@ -24,17 +24,18 @@ namespace AnimFollow
 			bool ignore = false;
 			if (!(collision.transform.name == "Ground") && collision.transform.root != this.transform.root)
 			{
-				foreach (string ignoreTag in ignoreCollidersWithTag)
-				{
-					if (collision.transform.tag == ignoreTag)
-					{
-						ignore = true;
-						break;
-					}
-				}
-
+				//foreach(string ignoreTag in ignoreCollidersWithTag)
+				//{
+				//	if(collision.transform.tag == ignoreTag)
+				//	{
+				//		ignore = true;
+				//		break;
+				//	}
+				//}
+				string collisionTag = collision.gameObject.tag;
 				// Ignore RagDoll collision
-				if (collision.transform.root.gameObject.tag.Equals("Player"))
+				if(collision.transform.root.gameObject.tag.Equals("Player") || collisionTag.Equals("Ball") ||
+						collisionTag.Equals("Fense") || collisionTag.Equals("Post") || collisionTag.Equals("Net"))
 				{
 					ignore = true;
 				}
@@ -70,19 +71,20 @@ namespace AnimFollow
 		void OnCollisionExit(Collision collision)
 		{
 			bool ignore = false;
-			if (!(collision.transform.name == "Terrain") && collision.transform.root != this.transform.root)
+			if (!(collision.transform.name == "Ground") && collision.transform.root != this.transform.root)
 			{
-				foreach (string ignoreTag in ignoreCollidersWithTag)
-				{
-					if (collision.transform.tag == ignoreTag)
-					{
-						ignore = true;
-						break;
-					}
-				}
-
-				// Ignore RagDoll collision
-				if (collision.transform.root.gameObject.tag.Equals("Player"))
+				//foreach(string ignoreTag in ignoreCollidersWithTag)
+				//{
+				//	if(collision.transform.tag == ignoreTag)
+				//	{
+				//		ignore = true;
+				//		break;
+				//	}
+				//}
+				string collisionTag = collision.gameObject.tag;
+				//Ignore RagDoll collision
+				if(collision.transform.root.gameObject.tag.Equals("Player") || collisionTag.Equals("Ball") ||
+						collisionTag.Equals("Fense") || collisionTag.Equals("Post") || collisionTag.Equals("Net"))
 				{
 					ignore = true;
 				}

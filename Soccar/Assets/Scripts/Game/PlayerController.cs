@@ -43,11 +43,10 @@ public static class PlayerController
     public static bool IsPlayersInitialized { get; private set; }
 
     // 플레이어 컴포넌트
-    [HideInInspector] public static Vector3 GlideFree = Vector3.zero;   // Set from RagdollControl
     [HideInInspector] public static bool InhibitRun { get; set; }    // Set from RagdollControl
     public static bool InhibitMove { get; set; }     // Set from RagdollControl
     public static float AnimatorSpeed = 1.3f;   // Read by RagdollControl
-	private static Animator _animator;			// Reference to the animator component.
+	public static Animator Animator { get; private set; }			// Reference to the animator component.
 	public static AnimFollow.HashIDs_AF Hash;			// Reference to the HashIDs.
     public static readonly int version = 7; // The version of this script
     public static void SetPlayers()
@@ -121,7 +120,7 @@ public static class PlayerController
         AlterEgo.transform.position = Player.transform.position;
         
         // Set Animation
-        _animator = Player.GetComponent<Animator>();
+        Animator = Player.GetComponent<Animator>();
         Hash = Player.GetComponent<AnimFollow.HashIDs_AF>();
 
         IsPlayersInitialized = true;
@@ -226,14 +225,14 @@ public static class PlayerController
             Player.transform.rotation = Quaternion.LookRotation(direction.normalized);
         }
 
-        _animator.SetFloat(Hash.speedFloat, (_playerSpeed / 5f), 0.1f, Time.fixedDeltaTime);
+        Animator.SetFloat(Hash.speedFloat, (_playerSpeed / 5f), 0.1f, Time.fixedDeltaTime);
 
-        _animator.SetBool(Hash.jump, false);
-        _animator.SetBool(Hash.tackle, false);
-        _animator.SetBool(Hash.shoot, false);
+        Animator.SetBool(Hash.jump, false);
+        Animator.SetBool(Hash.tackle, false);
+        Animator.SetBool(Hash.shoot, false);
 
         // 현재 state에 있음
-        if(!_animator.IsInTransition(0))
+        if(!Animator.IsInTransition(0))
         {
             //if(_animator.GetCurrentAnimatorStateInfo(0).nameHash == Animator.StringToHash("Base Layer.Shooting")
             //        || _animator.GetCurrentAnimatorStateInfo(0).nameHash == Animator.StringToHash("Base Layer.Jumping")
@@ -242,18 +241,18 @@ public static class PlayerController
 
             if(Input.GetKey(KeyCode.Space))
             {
-                _animator.SetBool(Hash.jump, true);
+                Animator.SetBool(Hash.jump, true);
                 
             }
 
             else if (Input.GetKey(KeyCode.A))
             {
-                _animator.SetBool(Hash.tackle, true);
+                Animator.SetBool(Hash.tackle, true);
             }
 
             else if (Input.GetKey(KeyCode.D))
             {
-                _animator.SetBool(Hash.shoot, true);
+                Animator.SetBool(Hash.shoot, true);
             }
         }
     }
@@ -299,10 +298,4 @@ public static class PlayerController
         Players = null;
         Player = null;
     }
-	public static void OnAnimatorMove ()
-	{
-        Vector3 glideFree2 = Vector3.zero;
-		glideFree2 = Vector3.Lerp (glideFree2, GlideFree, .05f);
-		AlterEgo.transform.position += _animator.deltaPosition + glideFree2;
-	}
 }

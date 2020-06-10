@@ -452,9 +452,9 @@ namespace AnimFollow
 			
 			// Adjust player movements if ragdoll distortion is large, e.g. if we are walking into a wall
 			if (noContactTime < .3f && !(gettingUp || falling))
-				PlayerController.GlideFree = new Vector3(-limbError.x, 0f, -limbError.z) * glideFree;
+				SimpleFootIK_AF.GlideFree = new Vector3(-limbError.x, 0f, -limbError.z) * glideFree;
 			else
-				PlayerController.GlideFree = Vector3.zero;
+				SimpleFootIK_AF.GlideFree = Vector3.zero;
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

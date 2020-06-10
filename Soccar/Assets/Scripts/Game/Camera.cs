@@ -41,7 +41,7 @@ public class Camera : MonoBehaviour
                                                            // + (_distance * PlayerController.BackwardVector);
         Vector3 targetPosition = new Vector3(PlayerController.Player.transform.position.x, _height, PlayerController.Player.transform.position.z)
                                                             + (_distance * PlayerController.BackwardVector);
-        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 2f);
+        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 4f);
         transform.eulerAngles = new Vector3(_angle, -PlayerController.Theta, 0);
     }
 }
