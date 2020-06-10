@@ -46,7 +46,7 @@ public static class PlayerController
     [HideInInspector] public static bool InhibitRun { get; set; }    // Set from RagdollControl
     public static bool InhibitMove { get; set; }     // Set from RagdollControl
     public static float AnimatorSpeed = 1.3f;   // Read by RagdollControl
-	public static Animator Animator { get; private set; }			// Reference to the animator component.
+	public static Animator PlayerAnimator { get; private set; }			// Reference to the animator component.
 	public static AnimFollow.HashIDs_AF Hash;			// Reference to the HashIDs.
     public static readonly int version = 7; // The version of this script
     public static void SetPlayers()
@@ -120,7 +120,7 @@ public static class PlayerController
         AlterEgo.transform.position = Player.transform.position;
         
         // Set Animation
-        Animator = Player.GetComponent<Animator>();
+        PlayerAnimator = Player.GetComponent<Animator>();
         Hash = Player.GetComponent<AnimFollow.HashIDs_AF>();
 
         IsPlayersInitialized = true;
@@ -160,6 +160,18 @@ public static class PlayerController
     {
         if(InhibitMove)
             return;
+
+        PlayerAnimator.SetBool(Hash.jump, false);
+        PlayerAnimator.SetBool(Hash.tackle, false);
+        PlayerAnimator.SetBool(Hash.shoot, false);
+
+        // 현재 태클 혹은 슛 상태이면 분신을 움직이지 못하도록 함
+        int animHash = PlayerAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash;
+        if(animHash == Animator.StringToHash("Base Layer.Shoot") || animHash == Animator.StringToHash("Base Layer.Tackle"))
+        {
+            Debug.Log("태클이나 슛 중");
+            return;
+        }
         
         // 상대 좌표
         Vector3 myPosition = Vector3.zero;
@@ -225,34 +237,24 @@ public static class PlayerController
             Player.transform.rotation = Quaternion.LookRotation(direction.normalized);
         }
 
-        Animator.SetFloat(Hash.speedFloat, (_playerSpeed / 5f), 0.1f, Time.fixedDeltaTime);
-
-        Animator.SetBool(Hash.jump, false);
-        Animator.SetBool(Hash.tackle, false);
-        Animator.SetBool(Hash.shoot, false);
+        PlayerAnimator.SetFloat(Hash.speedFloat, (_playerSpeed / 5f), 0.1f, Time.fixedDeltaTime);
 
         // 현재 state에 있음
-        if(!Animator.IsInTransition(0))
+        if(!PlayerAnimator.IsInTransition(0))
         {
-            //if(_animator.GetCurrentAnimatorStateInfo(0).nameHash == Animator.StringToHash("Base Layer.Shooting")
-            //        || _animator.GetCurrentAnimatorStateInfo(0).nameHash == Animator.StringToHash("Base Layer.Jumping")
-            //        || _animator.GetCurrentAnimatorStateInfo(0).nameHash == Animator.StringToHash("Base Layer.Soccer Tackle"))
-            //    return;
-
             if(Input.GetKey(KeyCode.Space))
             {
-                Animator.SetBool(Hash.jump, true);
-                
+                PlayerAnimator.SetBool(Hash.jump, true);  
             }
 
             else if (Input.GetKey(KeyCode.A))
             {
-                Animator.SetBool(Hash.tackle, true);
+                PlayerAnimator.SetBool(Hash.tackle, true);
             }
 
             else if (Input.GetKey(KeyCode.D))
             {
-                Animator.SetBool(Hash.shoot, true);
+                PlayerAnimator.SetBool(Hash.shoot, true);
             }
         }
     }

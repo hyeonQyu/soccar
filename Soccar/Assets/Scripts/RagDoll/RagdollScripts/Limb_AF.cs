@@ -64,8 +64,8 @@ namespace AnimFollow
                 return;
             if (collision.gameObject.tag.Equals("Ground") || collision.gameObject.tag.Equals("Ball"))
 				return;
-			Vector3 hipPosition = transform.root.GetChild(1).gameObject.GetComponent<AnimFollow.RagdollControl_AF>().ragdollRootBone.position;
-			PlayerController.AlterEgo.transform.position = new Vector3(hipPosition.x, PlayerController.AlterEgo.transform.position.y, hipPosition.z);
+			Vector3 avatarPosition = transform.root.GetChild(0).position;
+			PlayerController.AlterEgo.transform.position = new Vector3(avatarPosition.x, PlayerController.AlterEgo.transform.position.y, avatarPosition.z);
 		}
 		
 		void OnCollisionExit(Collision collision)
