@@ -14,10 +14,10 @@ ModelImporter:
     second: Jumping
   - first:
       74: 1924547055722548843
-    second: Running
+    second: Run
   - first:
       74: 6320875903580670152
-    second: Walking
+    second: Walk
   - first:
       74: 2126547105437587583
     second: Shooting
@@ -200,7 +200,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Running
+      name: Run
       takeName: Armature|Running Fastly
       internalID: 0
       firstFrame: 0
@@ -229,7 +229,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Walking
+      name: Walk
       takeName: Armature|Running Slowly
       internalID: 0
       firstFrame: 0

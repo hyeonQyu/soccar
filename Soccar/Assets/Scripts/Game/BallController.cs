@@ -76,7 +76,6 @@ public class BallController : MonoBehaviour
 
         if(LayerMask.LayerToName(other.layer).Equals("RagDoll"))
         {
-            //transform.position = collision.transform.root.GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).position;
             _rigidBody.velocity = Vector3.zero;
         }
     }
@@ -89,16 +88,15 @@ public class BallController : MonoBehaviour
         {
             _collisionAnimator = collisionObject.transform.root.GetChild(0).gameObject.GetComponent<Animator>();
 
-           // 드리블 속도
-           _rigidBody.velocity = collision.transform.forward * _collisionAnimator.GetFloat("Speed") * 5.0f;
+            // 드리블
+           _rigidBody.velocity = collision.transform.forward * _collisionAnimator.GetFloat("SpeedFloat") * 5.0f;
 
-            if(_collisionAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash
-            == Animator.StringToHash("Base Layer.Shoot"))
+            // 슛
+            if(_collisionAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash == PlayerController.Hash.Shoot && collision.gameObject.name.Equals("RightLeg"))
             {
-                Debug.Log("충돌한 오브젝트 = " + collision.collider);
-                Debug.Log("Shoot");
+                Debug.Log("(Shoot)충돌한 오브젝트 = " + collision.gameObject.name);
                 // 살짝 위로 올라가도록
-                _rigidBody.AddForce(collision.transform.forward * _shootSpeed + new Vector3(0, 3, 0));
+                _rigidBody.AddForce(collision.transform.root.GetChild(0).forward * _shootSpeed + new Vector3(0, 3, 0));
             }
         }
     }
@@ -113,8 +111,7 @@ public class BallController : MonoBehaviour
         // 어떤 플레이어의 득점인지 판단하기 위해 가장 마지막에 접촉한 플레이어를 저장해야 함(레그돌과 부딪힘으로 바꿔야댐)
         if(LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
         {
-            GameObject player = collision.transform.root.gameObject;
-            _lastPlayer = player;
+            _lastPlayer = collision.transform.root.gameObject;
             Debug.Log(transform.gameObject.name + "의 마지막 플레이어 = " + collision.transform.root.gameObject.name);
         }
     }
