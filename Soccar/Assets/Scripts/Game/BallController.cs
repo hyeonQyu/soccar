@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
+    private Animator _collisionAnimator;
     private Collider _ball;
     private Rigidbody _rigidBody;
     private float _shootSpeed;
-    private float _dribbleSpeed;
     public bool IsFeverBall { get; set; }
     private GameObject _lastPlayer;
     public GameObject LastPlayer
@@ -34,8 +34,7 @@ public class BallController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _shootSpeed = 10.0f;
-        _dribbleSpeed = 2.5f;
+        _shootSpeed = 500.0f;
         _ball = GetComponent<Collider>();
         _rigidBody = GetComponent<Rigidbody>();
     }
@@ -75,7 +74,7 @@ public class BallController : MonoBehaviour
         // 다른 물체에 부딪히면 탄성을 원래대로
         _ball.material.bounciness = 0.8f;
 
-        if(LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
+        if(LayerMask.LayerToName(other.layer).Equals("RagDoll"))
         {
             //transform.position = collision.transform.root.GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).position;
             _rigidBody.velocity = Vector3.zero;
@@ -88,19 +87,18 @@ public class BallController : MonoBehaviour
 
         if(collisionObject.layer.Equals(LayerMask.NameToLayer("RagDoll")))
         {
-           // 드리블 속도
-           _rigidBody.velocity = collision.gameObject.transform.forward * _dribbleSpeed;
+            _collisionAnimator = collisionObject.transform.root.GetChild(0).gameObject.GetComponent<Animator>();
 
-            if(collisionObject.transform.root.GetChild(0).gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).fullPathHash
-            == Animator.StringToHash("Base Layer.Shooting"))
+           // 드리블 속도
+           _rigidBody.velocity = collision.transform.forward * _collisionAnimator.GetFloat("Speed") * 5.0f;
+
+            if(_collisionAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash
+            == Animator.StringToHash("Base Layer.Shoot"))
             {
-                Debug.Log("what " + collision.collider);
-                if(collision.gameObject.CompareTag("RightLeg"))
-                {
-                    Debug.Log("Shoot");
-                    // 살짝 위로 올라가도록
-                    _rigidBody.velocity = _lastPlayer.transform.forward * _shootSpeed + new Vector3(0, 3, 0);
-                }
+                Debug.Log("충돌한 오브젝트 = " + collision.collider);
+                Debug.Log("Shoot");
+                // 살짝 위로 올라가도록
+                _rigidBody.AddForce(collision.transform.forward * _shootSpeed + new Vector3(0, 3, 0));
             }
         }
     }
@@ -117,7 +115,7 @@ public class BallController : MonoBehaviour
         {
             GameObject player = collision.transform.root.gameObject;
             _lastPlayer = player;
-            Debug.Log(transform.gameObject.name + "의 마지막 플레이어 = " + collision.transform.root.gameObject.name)
+            Debug.Log(transform.gameObject.name + "의 마지막 플레이어 = " + collision.transform.root.gameObject.name);
         }
     }
 
