@@ -4,7 +4,10 @@ using System.Collections;
 namespace AnimFollow
 {
 	public partial class SimpleFootIK_AF : MonoBehaviour
-	{	
+	{
+		[HideInInspector] public static Vector3 GlideFree = Vector3.zero;
+		private Vector3 _glideFree2 = Vector3.zero;
+
 		void Awake()
 		{
 			Awake2();
@@ -30,5 +33,12 @@ namespace AnimFollow
 
 			animFollow.DoAnimFollow();
 		}
+
+		//public void OnAnimatorMove()
+		//{
+		//	//_glideFree2 = Vector3.Lerp(_glideFree2, GlideFree, .05f);
+		//	////PlayerController.AlterEgo.transform.position += PlayerController.Animator.deltaPosition + _glideFree2;
+		//	//transform.position += PlayerController.Animator.deltaPosition + _glideFree2;
+		//}
 	}
 }
