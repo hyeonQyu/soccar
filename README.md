@@ -1,2 +1,2 @@
 # soccar.io
-<3
+<http://3soccar.io>
