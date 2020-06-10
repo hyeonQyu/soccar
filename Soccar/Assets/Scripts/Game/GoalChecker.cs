@@ -24,7 +24,7 @@ public class GoalChecker : MonoBehaviour
                 ballController.IsScored = true;
                 scorer.GetComponent<PlayerInformation>().Scores(ref _player, ballController.IsFeverBall);
 
-                // 3초 대기
+                // 2초 대기
                 StartCoroutine(MoveBall(ball));
             }
         }
@@ -32,7 +32,7 @@ public class GoalChecker : MonoBehaviour
 
     private IEnumerator MoveBall(GameObject ball)
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
         // 공을 중앙으로 이동시킴
         ball.transform.position = new Vector3(0, 10, 0);
         ball.GetComponent<BallController>().IsScored = false;

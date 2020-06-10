@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BallController : MonoBehaviour
+public class BallController:MonoBehaviour
 {
     private Collider _ball;
     private Rigidbody _rigidBody;
@@ -18,18 +18,7 @@ public class BallController : MonoBehaviour
         }
     }
     private bool _isOnNet;
-    private bool _isScored;
-    public bool IsScored
-    {
-        set
-        {
-            _isScored = value;
-        }
-        get
-        {
-            return _isScored;
-        }
-    }
+    public bool IsScored { get; set; }
 
     // Start is called before the first frame update
     void Start()

@@ -4,6 +4,8 @@ using socket.io;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms.Impl;
+using System.Collections;
+//using System.Numerics;
 
 public class NetworkManager : MonoBehaviour
 {
@@ -32,6 +34,14 @@ public class NetworkManager : MonoBehaviour
 
     // 플레이어들의 점수
     private Text[] _scores;
+    [SerializeField]
+    private Text _scorer;
+    [SerializeField]
+    private Text _conceder;
+    [SerializeField]
+    private GameObject _scoreMark;
+    private Coroutine _scoreNotificationCoroutine;
+    private string[] _colors = { "<color=#008200>", "<color=#000082>", "<color=#820000>", "<color=#828200>", "<color=#820082>", "<color=#828282>" };
 
     // 로비
     public void SetWebSocket(SceneMedium sceneMedium, LobbyNetworkLinker lobbyNetworkLinker = null)
@@ -180,6 +190,10 @@ public class NetworkManager : MonoBehaviour
             {
                 _scores[i].text = receivingScore.ScoreBoard[i].ToString();
             }
+
+            if(_scoreNotificationCoroutine != null)
+                StopCoroutine(_scoreNotificationCoroutine);
+            _scoreNotificationCoroutine = StartCoroutine(NoticeScore(receivingScore.Scorer, receivingScore.Conceder));
         });
 
         Socket.On("disconnection", (string data) =>
@@ -238,5 +252,21 @@ public class NetworkManager : MonoBehaviour
     {
         string data = str.Replace("\\", "");
         return data.Substring(1, data.Length - 2);
+    }
+
+    private IEnumerator NoticeScore(int scorer, int conceder)
+    {
+        _scorer.text = _colors[scorer] + PlayerController.PlayerInformations[scorer].PlayerName + "</color>";
+        _conceder.text = _colors[conceder] + PlayerController.PlayerInformations[conceder].PlayerName + "</color>";
+
+        _scorer.transform.localScale = new Vector3(1, 1, 1);
+        _conceder.transform.localScale = new Vector3(1, 1, 1);
+        _scoreMark.transform.localScale = new Vector3(1, 1, 1);
+
+        yield return new WaitForSeconds(4);
+
+        _scorer.transform.localScale = new Vector3(0, 0, 0);
+        _conceder.transform.localScale = new Vector3(0, 0, 0);
+        _scoreMark.transform.localScale = new Vector3(0, 0, 0);
     }
 }

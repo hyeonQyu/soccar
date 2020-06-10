@@ -153,6 +153,8 @@ io.on('connection', function(socket) {
         }
 
         var sendingData = new Object();
+        sendingData.Scorer = scorer;
+        sendingData.Conceder = conceder;
         sendingData.ScoreBoard = SCORE_BOARD;
         var datas = JSON.stringify(sendingData);
         io.emit('score', datas);

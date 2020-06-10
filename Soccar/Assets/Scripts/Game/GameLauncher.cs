@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,7 +28,7 @@ public class GameLauncher : MonoBehaviour
     private int _seconds = 300;
 
     public static bool IsReadyToKickOff;
-    private bool _isKickOff;
+    private bool _isKickOff;    
 
     // 플레이어 움직임 보간에 사용
     public static RoutineScheduler RoutineScheduler { get; private set; }

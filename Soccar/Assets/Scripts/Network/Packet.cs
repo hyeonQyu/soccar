@@ -113,6 +113,8 @@ public class Packet
     public class ReceivingScore
     {
         public int[] ScoreBoard;
+        public int Scorer;
+        public int Conceder;
     }
 
     // 대기중인 방 정보 수신
