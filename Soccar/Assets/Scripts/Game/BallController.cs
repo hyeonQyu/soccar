@@ -108,7 +108,7 @@ public class BallController : MonoBehaviour
             transform.position += direction * 0.5f;
 
             // 살짝 위로 올라가도록
-            _rigidBody.velocity = direction * Input.GetAxis("Sensitivity") * _shootSpeed + new Vector3(0, 3.0f, 0) * Time.fixedDeltaTime;
+            _rigidBody.velocity = direction * Input.GetAxis("Sensitivity") * _shootSpeed + new Vector3(0, 3.0f, 0);
         }
 
     }

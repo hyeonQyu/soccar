@@ -7,9 +7,10 @@ public class TackleEvent : MonoBehaviour
     private Animator _animator;
     private float _tackleForce;
     // Start is called before the first frame update
+    private GameObject otherRagDoll;
     void Start()
     {
-        _tackleForce = 5.0f;
+        _tackleForce = 3.0f;
         _animator = transform.root.GetChild(0).gameObject.GetComponent<Animator>();
     }
     private void OnCollisionEnter(Collision other)
@@ -18,14 +19,12 @@ public class TackleEvent : MonoBehaviour
         {
             if (transform.root.gameObject.GetInstanceID() != other.transform.root.gameObject.GetInstanceID())
             {
-                Debug.Log("충돌 당하는 놈 " + other.gameObject.name);
-                if (LayerMask.LayerToName(other.gameObject.layer).Equals("RagDoll") && other.gameObject.name.Equals("RightLeg"))
+                Debug.Log("태클 당하는 놈" + other.transform.root.gameObject.name);
+                otherRagDoll = other.transform.root.GetChild(1).gameObject;
+                if (LayerMask.LayerToName(other.gameObject.layer).Equals("RagDoll") && !otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().falling)
                 {
-                    Debug.Log("태클 당하는 놈" + other.transform.root.gameObject.name);
-                    Vector3 ss = new Vector3(0, 1, 0);
-                    Debug.Log("속도no = " + ss * _tackleForce);
-                    Debug.Log("속도 = " + ss * _tackleForce * Time.fixedDeltaTime);
-                    other.transform.root.GetChild(1).GetChild(0).GetChild(0).position += Vector3.up * _tackleForce * Time.fixedDeltaTime;  // 수정해야함
+                    otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().falling = true;
+                    other.transform.root.GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * _tackleForce);
                 }
             }
         }
