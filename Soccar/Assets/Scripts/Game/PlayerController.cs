@@ -161,11 +161,10 @@ public static class PlayerController
         if(InhibitMove)
             return;
 
-        // 현재 태클 혹은 슛 상태이면 분신을 움직이지 못하도록 함
+        // 현재 태클 상태이면 분신을 움직이지 못하도록 함
         int animHash = PlayerAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash;
-        if(animHash == Hash.Shoot || animHash == Hash.Tackle)
+        if(animHash == Hash.Tackle)
         {
-            // Debug.Log("태클이나 슛 중");
             return;
         }
         
@@ -279,13 +278,13 @@ public static class PlayerController
         //Players[_playerIndex].transform.Translate(movingPosition);
     }
 
-    private static bool IsOutOfStadium(Vector3 alterEgoPosition, Vector3 movingPosition)
+    public static bool IsOutOfStadium(Vector3 curPosition, Vector3 movingPosition)
     {
-        Vector2 alterEgoVector2 = new Vector2(alterEgoPosition.x, alterEgoPosition.z);
+        Vector2 alterEgoVector2 = new Vector2(curPosition.x, curPosition.z);
         Vector2 movingVector2 = new Vector2(movingPosition.x, movingPosition.z);
 
         double radius = Vector2.Distance(alterEgoVector2 + movingVector2, new Vector2(0, 0));
-        if(radius > 11.3f)
+        if(radius > 11.1f)
             return true;
 
         return false;
