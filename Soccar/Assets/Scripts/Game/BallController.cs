@@ -88,6 +88,8 @@ public class BallController : MonoBehaviour
         {
             _collisionAnimator = collisionObject.transform.root.GetChild(0).gameObject.GetComponent<Animator>();
 
+            Debug.Log("D 눌렀을 때 민감도 = " + Input.GetAxis("Sensitivity"));
+
             // 드리블
            _rigidBody.velocity = collision.transform.forward * _collisionAnimator.GetFloat("SpeedFloat") * 5.0f;
 

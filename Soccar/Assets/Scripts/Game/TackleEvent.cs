@@ -5,12 +5,10 @@ using UnityEngine;
 public class TackleEvent : MonoBehaviour
 {
     private Animator _animator;
-    private float _shootSpeed;
     // Start is called before the first frame update
     void Start()
     {
         _animator = transform.root.GetChild(0).gameObject.GetComponent<Animator>();
-        _shootSpeed = 5.0f;
     }
     private void OnCollisionEnter(Collision other)
     {
