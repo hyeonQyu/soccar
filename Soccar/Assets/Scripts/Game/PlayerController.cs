@@ -165,7 +165,7 @@ public static class PlayerController
         int animHash = PlayerAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash;
         if(animHash == Hash.Shoot || animHash == Hash.Tackle)
         {
-            Debug.Log("태클이나 슛 중");
+            // Debug.Log("태클이나 슛 중");
             return;
         }
         

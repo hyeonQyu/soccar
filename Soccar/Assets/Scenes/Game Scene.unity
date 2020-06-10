@@ -2324,7 +2324,11 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -9183905149932219833, guid: 9bc95f1228cf64d4ea3182e7ee6ee384, type: 3}
+    - {fileID: -2281183447287127232, guid: 9bc95f1228cf64d4ea3182e7ee6ee384, type: 3}
+    - {fileID: -4825905211837199388, guid: 9bc95f1228cf64d4ea3182e7ee6ee384, type: 3}
+    - {fileID: -3594552308547990989, guid: 9bc95f1228cf64d4ea3182e7ee6ee384, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9bc95f1228cf64d4ea3182e7ee6ee384, type: 3}
 --- !u!1 &190444784 stripped
 GameObject:
@@ -4312,23 +4316,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 349a75047cde8c04c99c4509c56c5c65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedFloat: 0
-  frontTrigger: 0
-  backTrigger: 0
-  frontMirrorTrigger: 0
-  backMirrorTrigger: 0
-  idle: 0
-  jump: 0
-  tackle: 0
-  shoot: 0
-  getupFront: 0
-  getupBack: 0
-  getupFrontMirror: 0
-  getupBackMirror: 0
-  anyStateToGetupFront: 0
-  anyStateToGetupBack: 0
-  anyStateToGetupFrontMirror: 0
-  anyStateToGetupBackMirror: 0
+  SpeedFloat: 0
+  FrontTrigger: 0
+  BackTrigger: 0
+  FrontMirrorTrigger: 0
+  BackMirrorTrigger: 0
+  Idle: 0
+  Walk: 0
+  Run: 0
+  Jump: 0
+  Tackle: 0
+  Shoot: 0
+  JumpTrigger: 0
+  TackleTrigger: 0
+  ShootTrigger: 0
+  GetupFront: 0
+  GetupBack: 0
+  GetupFrontMirror: 0
+  GetupBackMirror: 0
+  AnyStateToGetupFront: 0
+  AnyStateToGetupBack: 0
+  AnyStateToGetupFrontMirror: 0
+  AnyStateToGetupBackMirror: 0
 --- !u!114 &371496714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10118,6 +10127,11 @@ PrefabInstance:
       propertyPath: m_CapsuleColliders.Array.data[11]
       value: 
       objectReference: {fileID: 1470943288}
+    - target: {fileID: 3071178588448958200, guid: 00eee465143592f4faaaf8d824e0c733,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 22e3e787d60f3dc44a45ca802bca0c6b, type: 2}
     - target: {fileID: 3210211229667020180, guid: 00eee465143592f4faaaf8d824e0c733,
         type: 3}
       propertyPath: m_CapsuleColliders.Array.size
@@ -11085,6 +11099,7 @@ GameObject:
   - component: {fileID: 857373122}
   - component: {fileID: 857373120}
   - component: {fileID: 857373121}
+  - component: {fileID: 857373123}
   m_Layer: 8
   m_Name: RightLeg
   m_TagString: Untagged
@@ -11232,6 +11247,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &857373123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 857373118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b76c55573cfbd34180cf89d37d7216f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &859063525
 GameObject:
   m_ObjectHideFlags: 0
@@ -13073,6 +13100,11 @@ PrefabInstance:
       propertyPath: m_CapsuleColliders.Array.data[11]
       value: 
       objectReference: {fileID: 1470943288}
+    - target: {fileID: 3071178588448958200, guid: 00eee465143592f4faaaf8d824e0c733,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e56838e290e3b9c4e82bc825efda552a, type: 2}
     - target: {fileID: 3210211229667020180, guid: 00eee465143592f4faaaf8d824e0c733,
         type: 3}
       propertyPath: m_CapsuleColliders.Array.size
@@ -18731,23 +18763,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 349a75047cde8c04c99c4509c56c5c65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedFloat: 0
-  frontTrigger: 0
-  backTrigger: 0
-  frontMirrorTrigger: 0
-  backMirrorTrigger: 0
-  idle: 0
-  jump: 0
-  tackle: 0
-  shoot: 0
-  getupFront: 0
-  getupBack: 0
-  getupFrontMirror: 0
-  getupBackMirror: 0
-  anyStateToGetupFront: 0
-  anyStateToGetupBack: 0
-  anyStateToGetupFrontMirror: 0
-  anyStateToGetupBackMirror: 0
+  SpeedFloat: 0
+  FrontTrigger: 0
+  BackTrigger: 0
+  FrontMirrorTrigger: 0
+  BackMirrorTrigger: 0
+  Idle: 0
+  Walk: 0
+  Run: 0
+  Jump: 0
+  Tackle: 0
+  Shoot: 0
+  JumpTrigger: 0
+  TackleTrigger: 0
+  ShootTrigger: 0
+  GetupFront: 0
+  GetupBack: 0
+  GetupFrontMirror: 0
+  GetupBackMirror: 0
+  AnyStateToGetupFront: 0
+  AnyStateToGetupBack: 0
+  AnyStateToGetupFrontMirror: 0
+  AnyStateToGetupBackMirror: 0
 --- !u!114 &1358522586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19839,6 +19876,7 @@ GameObject:
   - component: {fileID: 1470943289}
   - component: {fileID: 1470943287}
   - component: {fileID: 1470943288}
+  - component: {fileID: 1470943290}
   m_Layer: 8
   m_Name: RightLeg
   m_TagString: Untagged
@@ -19986,6 +20024,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1470943290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1470943285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b76c55573cfbd34180cf89d37d7216f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1474458411
 GameObject:
   m_ObjectHideFlags: 0
@@ -23503,23 +23553,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 349a75047cde8c04c99c4509c56c5c65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedFloat: 0
-  frontTrigger: 0
-  backTrigger: 0
-  frontMirrorTrigger: 0
-  backMirrorTrigger: 0
-  idle: 0
-  jump: 0
-  tackle: 0
-  shoot: 0
-  getupFront: 0
-  getupBack: 0
-  getupFrontMirror: 0
-  getupBackMirror: 0
-  anyStateToGetupFront: 0
-  anyStateToGetupBack: 0
-  anyStateToGetupFrontMirror: 0
-  anyStateToGetupBackMirror: 0
+  SpeedFloat: 0
+  FrontTrigger: 0
+  BackTrigger: 0
+  FrontMirrorTrigger: 0
+  BackMirrorTrigger: 0
+  Idle: 0
+  Walk: 0
+  Run: 0
+  Jump: 0
+  Tackle: 0
+  Shoot: 0
+  JumpTrigger: 0
+  TackleTrigger: 0
+  ShootTrigger: 0
+  GetupFront: 0
+  GetupBack: 0
+  GetupFrontMirror: 0
+  GetupBackMirror: 0
+  AnyStateToGetupFront: 0
+  AnyStateToGetupBack: 0
+  AnyStateToGetupFrontMirror: 0
+  AnyStateToGetupBackMirror: 0
 --- !u!114 &1749752777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25618,6 +25673,11 @@ PrefabInstance:
       propertyPath: m_CapsuleColliders.Array.data[11]
       value: 
       objectReference: {fileID: 1470943288}
+    - target: {fileID: 3071178588448958200, guid: 00eee465143592f4faaaf8d824e0c733,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8c72152876f2ad74391a3b4b839348ac, type: 2}
     - target: {fileID: 3210211229667020180, guid: 00eee465143592f4faaaf8d824e0c733,
         type: 3}
       propertyPath: m_CapsuleColliders.Array.size
@@ -26010,6 +26070,7 @@ GameObject:
   - component: {fileID: 1871667706}
   - component: {fileID: 1871667704}
   - component: {fileID: 1871667705}
+  - component: {fileID: 1871667707}
   m_Layer: 8
   m_Name: RightLeg
   m_TagString: Untagged
@@ -26157,6 +26218,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1871667707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871667702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b76c55573cfbd34180cf89d37d7216f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1873301854
 GameObject:
   m_ObjectHideFlags: 0
@@ -26706,6 +26779,11 @@ PrefabInstance:
       propertyPath: m_CapsuleColliders.Array.data[11]
       value: 
       objectReference: {fileID: 1470943288}
+    - target: {fileID: 3071178588448958200, guid: 00eee465143592f4faaaf8d824e0c733,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3f1aca8d2f57de8448b3a2b8aa38a980, type: 2}
     - target: {fileID: 3210211229667020180, guid: 00eee465143592f4faaaf8d824e0c733,
         type: 3}
       propertyPath: m_CapsuleColliders.Array.size
@@ -27745,23 +27823,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 349a75047cde8c04c99c4509c56c5c65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedFloat: 0
-  frontTrigger: 0
-  backTrigger: 0
-  frontMirrorTrigger: 0
-  backMirrorTrigger: 0
-  idle: 0
-  jump: 0
-  tackle: 0
-  shoot: 0
-  getupFront: 0
-  getupBack: 0
-  getupFrontMirror: 0
-  getupBackMirror: 0
-  anyStateToGetupFront: 0
-  anyStateToGetupBack: 0
-  anyStateToGetupFrontMirror: 0
-  anyStateToGetupBackMirror: 0
+  SpeedFloat: 0
+  FrontTrigger: 0
+  BackTrigger: 0
+  FrontMirrorTrigger: 0
+  BackMirrorTrigger: 0
+  Idle: 0
+  Walk: 0
+  Run: 0
+  Jump: 0
+  Tackle: 0
+  Shoot: 0
+  JumpTrigger: 0
+  TackleTrigger: 0
+  ShootTrigger: 0
+  GetupFront: 0
+  GetupBack: 0
+  GetupFrontMirror: 0
+  GetupBackMirror: 0
+  AnyStateToGetupFront: 0
+  AnyStateToGetupBack: 0
+  AnyStateToGetupFrontMirror: 0
+  AnyStateToGetupBackMirror: 0
 --- !u!114 &1983023802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29075,6 +29158,11 @@ PrefabInstance:
       propertyPath: m_CapsuleColliders.Array.data[11]
       value: 
       objectReference: {fileID: 1470943288}
+    - target: {fileID: 3071178588448958200, guid: 00eee465143592f4faaaf8d824e0c733,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 64d1bdfda52fa514db75d7cae1dafa64, type: 2}
     - target: {fileID: 3210211229667020180, guid: 00eee465143592f4faaaf8d824e0c733,
         type: 3}
       propertyPath: m_CapsuleColliders.Array.size
@@ -29452,23 +29540,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 349a75047cde8c04c99c4509c56c5c65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedFloat: 0
-  frontTrigger: 0
-  backTrigger: 0
-  frontMirrorTrigger: 0
-  backMirrorTrigger: 0
-  idle: 0
-  jump: 0
-  tackle: 0
-  shoot: 0
-  getupFront: 0
-  getupBack: 0
-  getupFrontMirror: 0
-  getupBackMirror: 0
-  anyStateToGetupFront: 0
-  anyStateToGetupBack: 0
-  anyStateToGetupFrontMirror: 0
-  anyStateToGetupBackMirror: 0
+  SpeedFloat: 0
+  FrontTrigger: 0
+  BackTrigger: 0
+  FrontMirrorTrigger: 0
+  BackMirrorTrigger: 0
+  Idle: 0
+  Walk: 0
+  Run: 0
+  Jump: 0
+  Tackle: 0
+  Shoot: 0
+  JumpTrigger: 0
+  TackleTrigger: 0
+  ShootTrigger: 0
+  GetupFront: 0
+  GetupBack: 0
+  GetupFrontMirror: 0
+  GetupBackMirror: 0
+  AnyStateToGetupFront: 0
+  AnyStateToGetupBack: 0
+  AnyStateToGetupFrontMirror: 0
+  AnyStateToGetupBackMirror: 0
 --- !u!114 &2110445784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30221,6 +30314,11 @@ PrefabInstance:
       propertyPath: m_CapsuleColliders.Array.data[11]
       value: 
       objectReference: {fileID: 1470943288}
+    - target: {fileID: 3071178588448958200, guid: 00eee465143592f4faaaf8d824e0c733,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9ce90711deb34274bb8fc1a8f41a80e3, type: 2}
     - target: {fileID: 3210211229667020180, guid: 00eee465143592f4faaaf8d824e0c733,
         type: 3}
       propertyPath: m_CapsuleColliders.Array.size
@@ -30942,6 +31040,7 @@ GameObject:
   - component: {fileID: 8439884763398546322}
   - component: {fileID: 8439884763398546321}
   - component: {fileID: 3363049091331414355}
+  - component: {fileID: 3202049683270038922}
   m_Layer: 8
   m_Name: RightLeg
   m_TagString: Untagged
@@ -30949,6 +31048,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &3202049683270038922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3202049683270038921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b76c55573cfbd34180cf89d37d7216f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3275250352018581303
 GameObject:
   m_ObjectHideFlags: 0
@@ -31007,23 +31118,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 349a75047cde8c04c99c4509c56c5c65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedFloat: 0
-  frontTrigger: 0
-  backTrigger: 0
-  frontMirrorTrigger: 0
-  backMirrorTrigger: 0
-  idle: 0
-  jump: 0
-  tackle: 0
-  shoot: 0
-  getupFront: 0
-  getupBack: 0
-  getupFrontMirror: 0
-  getupBackMirror: 0
-  anyStateToGetupFront: 0
-  anyStateToGetupBack: 0
-  anyStateToGetupFrontMirror: 0
-  anyStateToGetupBackMirror: 0
+  SpeedFloat: 0
+  FrontTrigger: 0
+  BackTrigger: 0
+  FrontMirrorTrigger: 0
+  BackMirrorTrigger: 0
+  Idle: 0
+  Walk: 0
+  Run: 0
+  Jump: 0
+  Tackle: 0
+  Shoot: 0
+  JumpTrigger: 0
+  TackleTrigger: 0
+  ShootTrigger: 0
+  GetupFront: 0
+  GetupBack: 0
+  GetupFrontMirror: 0
+  GetupBackMirror: 0
+  AnyStateToGetupFront: 0
+  AnyStateToGetupBack: 0
+  AnyStateToGetupFrontMirror: 0
+  AnyStateToGetupBackMirror: 0
 --- !u!114 &3363049091049811242
 MonoBehaviour:
   m_ObjectHideFlags: 0

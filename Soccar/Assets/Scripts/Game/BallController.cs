@@ -8,6 +8,8 @@ public class BallController:MonoBehaviour
     private Collider _ball;
     private Rigidbody _rigidBody;
     private float _shootSpeed;
+    private bool _isShoot;
+    private bool _isDribble;
     public bool IsFeverBall { get; set; }
     private GameObject _lastPlayer;
     public GameObject LastPlayer
@@ -23,7 +25,7 @@ public class BallController:MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _shootSpeed = 500.0f;
+        _shootSpeed = 20.0f;
         _ball = GetComponent<Collider>();
         _rigidBody = GetComponent<Rigidbody>();
     }
@@ -63,32 +65,30 @@ public class BallController:MonoBehaviour
         // 다른 물체에 부딪히면 탄성을 원래대로
         _ball.material.bounciness = 0.8f;
 
+        _isShoot = false;
+
         if(LayerMask.LayerToName(other.layer).Equals("RagDoll"))
         {
+            // 마지막 사용자 기록
+            _lastPlayer = collision.transform.root.gameObject;
+            // 공을 멈추기 위해서
             _rigidBody.velocity = Vector3.zero;
+            _collisionAnimator = _lastPlayer.transform.GetChild(0).gameObject.GetComponent<Animator>();
+
+            // 슈팅
+            if(_collisionAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash == PlayerController.Hash.Shoot && collision.gameObject.name.Equals("RightLeg"))
+            {
+                _isShoot = true;
+            }
         }
     }
 
     private void OnCollisionStay(Collision collision) 
     {
-        GameObject collisionObject = collision.gameObject;
-
-        if(collisionObject.layer.Equals(LayerMask.NameToLayer("RagDoll")))
+        if(LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
         {
-            _collisionAnimator = collisionObject.transform.root.GetChild(0).gameObject.GetComponent<Animator>();
-
-            Debug.Log("D 눌렀을 때 민감도 = " + Input.GetAxis("Sensitivity"));
-
             // 드리블
            _rigidBody.velocity = collision.transform.forward * _collisionAnimator.GetFloat("SpeedFloat") * 5.0f;
-
-            // 슛
-            if(_collisionAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash == PlayerController.Hash.Shoot && collision.gameObject.name.Equals("RightLeg"))
-            {
-                Debug.Log("(Shoot)충돌한 오브젝트 = " + collision.gameObject.name);
-                // 살짝 위로 올라가도록
-                _rigidBody.AddForce(collision.transform.root.GetChild(0).forward * _shootSpeed + new Vector3(0, 3, 0));
-            }
         }
     }
 
@@ -99,12 +99,17 @@ public class BallController:MonoBehaviour
             _isOnNet = false;
         }
 
-        // 어떤 플레이어의 득점인지 판단하기 위해 가장 마지막에 접촉한 플레이어를 저장해야 함(레그돌과 부딪힘으로 바꿔야댐)
-        if(LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
+        if( LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll") && _isShoot)
         {
-            _lastPlayer = collision.transform.root.gameObject;
-            Debug.Log(transform.gameObject.name + "의 마지막 플레이어 = " + collision.transform.root.gameObject.name);
+            // 방향은 Avatar가 바라보는 방향
+            Vector3 direction = collision.transform.root.GetChild(0).forward;
+            // Debug.Log("Shoot!!");
+            // 한 번만 실행하도록 위치 바꿔줌
+            transform.position += direction * 0.5f;
+            _rigidBody.velocity = direction * Input.GetAxis("Sensitivity") * _shootSpeed + new Vector3(0, 3.0f, 0);
+            
         }
+
     }
 
     private IEnumerator MoveBallOnNet()
