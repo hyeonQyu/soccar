@@ -46,6 +46,7 @@ public class Packet
         public Vector3[] BallPositions;
         public int PlayerIndex;
         public Vector3 PlayerPosition;
+        public Vector3 PlayerRotation;
         public int AnimHashCode;
         public float PlayerSpeed;
 
@@ -54,6 +55,7 @@ public class Packet
             BallPositions = new Vector3[2];
             PlayerIndex = playerIndex;
             PlayerPosition = new Vector3();
+            PlayerRotation = new Vector3();
             AnimHashCode = 0;
             PlayerSpeed = 0;
         }
@@ -64,6 +66,7 @@ public class Packet
     {
         public Vector3[] BallPositions;
         public Vector3[] PlayerPositions;
+        public Vector3[] PlayerRotations;
         public int[] AnimHashCodes;
         public float[] PlayerSpeeds;
 
@@ -73,6 +76,7 @@ public class Packet
 
             BallPositions = new Vector3[2];
             PlayerPositions = new Vector3[length];
+            PlayerRotations = new Vector3[length];
             AnimHashCodes = new int[length];
             PlayerSpeeds = new float[length];
         }
