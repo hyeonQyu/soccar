@@ -6,12 +6,10 @@ using System;
 public class TackleEvent : MonoBehaviour
 {
     private Animator _animator;
-    private float _tackleForce;
     // Start is called before the first frame update
     private GameObject otherRagDoll;
     void Start()
     {
-        _tackleForce = 3.0f;
         _animator = transform.root.GetChild(0).gameObject.GetComponent<Animator>();
     }
     private void OnCollisionEnter(Collision other)
@@ -25,13 +23,15 @@ public class TackleEvent : MonoBehaviour
                 {
                     Debug.Log("태클 당하는 놈" + other.transform.root.gameObject.name);
                     otherRagDoll = other.transform.root.GetChild(1).gameObject;
-                    if (!otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().falling && !otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().gettingUp)
+                    if (other.gameObject.tag.Equals("Leg") && !otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().falling &&
+                    !otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().gettingUp && !other.gameObject.GetComponent<AnimFollow.Limb_AF>().IsTackled)
                     {
+                        Debug.Log("한 번 태클");
                         // Set avatar's animation to idle
-                        other.transform.root.GetChild(0).gameObject.GetComponent<Animator>().SetFloat(PlayerController.Hash.SpeedFloat, 0f, 0.1f, Time.fixedDeltaTime);
-
-                        otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().falling = true;
-                        other.transform.root.GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * _tackleForce);
+                        other.transform.root.GetChild(0).gameObject.GetComponent<Animator>().SetFloat(PlayerController.Hash.SpeedFloat, 0f);
+                        // otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().falling = true;
+                        // 충돌된 오브젝트의 물리를 받도록 조정
+                        other.gameObject.GetComponent<AnimFollow.Limb_AF>().IsTackled = true;
                     }
                 }
             }

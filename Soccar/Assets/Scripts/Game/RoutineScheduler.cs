@@ -87,7 +87,7 @@ public class RoutineScheduler : MonoBehaviour
                     );
                     Vector3 newVector = new Vector3(PlayerController.Players[j].transform.position.x, 0.1f, PlayerController.Players[j].transform.position.z);
                     PlayerController.MiniMapManager.Players[j].transform.localPosition = newVector;
-                    PlayerController.PlayerAnimators[j].SetFloat(hash.SpeedFloat, receivingTransform.PlayerSpeeds[j] / 5, 0.1f, Time.fixedDeltaTime);
+                    PlayerController.PlayerAnimators[j].SetFloat(hash.SpeedFloat, receivingTransform.PlayerSpeeds[j] / 5);
 
                     // 애니메이션을 실행시키지 않는 조건
                     if (receivingTransform.AnimHashCodes[j] == 0 || PlayerController.PlayerAnimators[j].IsInTransition(0))

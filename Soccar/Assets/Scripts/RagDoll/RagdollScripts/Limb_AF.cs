@@ -12,6 +12,7 @@ namespace AnimFollow
 
 		RagdollControl_AF ragdollControl;
 		string[] ignoreCollidersWithTag;
+		public bool IsTackled = false;
 			
 		void OnEnable()
 		{
@@ -40,6 +41,13 @@ namespace AnimFollow
 					ignore = true;
 				}
 
+				if(IsTackled)
+				{
+					Debug.Log("태클 당함");
+					IsTackled = false;
+					ignore = false;
+				}
+				Debug.Log("이그노어(Enter) = " + ignore);
 				if (!ignore)
 				{
 					ragdollControl.numberOfCollisions++;
@@ -87,7 +95,7 @@ namespace AnimFollow
 				{
 					ignore = true;
 				}
-
+				Debug.Log("이그노어(Exit) = " + ignore);
 				if (!ignore)
 				{
 					ragdollControl.numberOfCollisions--;

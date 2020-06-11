@@ -9,6 +9,7 @@ TagManager:
   - Net
   - Post
   - Fense
+  - Leg
   layers:
   - Default
   - TransparentFX

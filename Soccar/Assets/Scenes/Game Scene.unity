@@ -5347,7 +5347,7 @@ GameObject:
   - component: {fileID: 436404130}
   m_Layer: 8
   m_Name: LeftLeg
-  m_TagString: Untagged
+  m_TagString: Leg
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5505,7 +5505,7 @@ GameObject:
   m_Layer: 0
   m_Name: Player5
   m_TagString: Player
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -6675,7 +6675,7 @@ GameObject:
   m_Layer: 0
   m_Name: Player0
   m_TagString: Player
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -7440,7 +7440,7 @@ GameObject:
   - component: {fileID: 612305163}
   m_Layer: 8
   m_Name: LeftLeg
-  m_TagString: Untagged
+  m_TagString: Leg
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11504,7 +11504,7 @@ GameObject:
   - component: {fileID: 857373123}
   m_Layer: 8
   m_Name: RightLeg
-  m_TagString: Untagged
+  m_TagString: Leg
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15254,7 +15254,7 @@ GameObject:
   - component: {fileID: 1096193095}
   m_Layer: 8
   m_Name: RightLeg
-  m_TagString: Untagged
+  m_TagString: Leg
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17769,7 +17769,7 @@ GameObject:
   - component: {fileID: 1264065390}
   m_Layer: 8
   m_Name: LeftLeg
-  m_TagString: Untagged
+  m_TagString: Leg
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -20304,7 +20304,7 @@ GameObject:
   - component: {fileID: 1470943290}
   m_Layer: 8
   m_Name: RightLeg
-  m_TagString: Untagged
+  m_TagString: Leg
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21284,7 +21284,7 @@ GameObject:
   m_Layer: 0
   m_Name: Player3
   m_TagString: Player
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -24079,7 +24079,7 @@ GameObject:
   m_Layer: 0
   m_Name: Player1
   m_TagString: Player
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -24777,7 +24777,7 @@ GameObject:
   - component: {fileID: 1791972856}
   m_Layer: 8
   m_Name: LeftLeg
-  m_TagString: Untagged
+  m_TagString: Leg
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25632,7 +25632,7 @@ GameObject:
   - component: {fileID: 1853853948}
   m_Layer: 8
   m_Name: LeftLeg
-  m_TagString: Untagged
+  m_TagString: Leg
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -26519,7 +26519,7 @@ GameObject:
   - component: {fileID: 1871667707}
   m_Layer: 8
   m_Name: RightLeg
-  m_TagString: Untagged
+  m_TagString: Leg
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -26870,7 +26870,7 @@ GameObject:
   m_Layer: 0
   m_Name: Player4
   m_TagString: Player
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -28608,7 +28608,7 @@ GameObject:
   - component: {fileID: 2003166205}
   m_Layer: 8
   m_Name: RightLeg
-  m_TagString: Untagged
+  m_TagString: Leg
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31549,7 +31549,7 @@ GameObject:
   - component: {fileID: 3202049683270038922}
   m_Layer: 8
   m_Name: RightLeg
-  m_TagString: Untagged
+  m_TagString: Leg
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32056,7 +32056,7 @@ GameObject:
   m_Layer: 0
   m_Name: Player2
   m_TagString: Player
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -34381,7 +34381,7 @@ GameObject:
   - component: {fileID: 8574726124706559538}
   m_Layer: 8
   m_Name: LeftLeg
-  m_TagString: Untagged
+  m_TagString: Leg
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
