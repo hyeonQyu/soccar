@@ -35,22 +35,33 @@ public class RoutineScheduler : MonoBehaviour
     {
         Vector3[] destPositions = receivingTransform.PlayerPositions;
         float t = 0;
-        Vector3 directionVector;
+        AnimFollow.HashIDs_AF hash = PlayerController.Hash;
+
         for (int k = 0; k < destPositions.Length; k++)
         {
+            // 태클 중인 경우 플레이어를 회전시키지 않음
+            try
+            {
+                if(PlayerController.PlayerAnimators[k].GetCurrentAnimatorStateInfo(0).fullPathHash == hash.Tackle
+                        || receivingTransform.AnimHashCodes[k] == hash.TackleTrigger)
+                    continue;
+            }
+            catch(MissingReferenceException e) { }
+
             if(k != PlayerController.PlayerIndex)
             {
-                directionVector = destPositions[k] - prePositions[k];
-                directionVector.y = 0;
+                PlayerController.Players[k].transform.eulerAngles = receivingTransform.PlayerRotations[k];
+                //directionVector = destPositions[k] - prePositions[k];
+                //directionVector.y = 0;
             
-                if (directionVector != Vector3.zero)
-                {
-                    try
-                    {
-                        PlayerController.Players[k].transform.rotation = Quaternion.LookRotation(directionVector.normalized);
-                    }
-                    catch(MissingReferenceException e) { }
-                }
+                //if (directionVector != Vector3.zero)
+                //{
+                //    try
+                //    {
+                //        PlayerController.Players[k].transform.rotation = Quaternion.LookRotation(directionVector.normalized);
+                //    }
+                //    catch(MissingReferenceException e) { }
+                //}
             }
         }
 
@@ -70,13 +81,13 @@ public class RoutineScheduler : MonoBehaviour
                     PlayerController.Players[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
                     Vector3 newVector = new Vector3(PlayerController.Players[j].transform.position.x, 0.1f, PlayerController.Players[j].transform.position.z);
                     PlayerController.MiniMapManager.Players[j].transform.localPosition = newVector;
-                    PlayerController.PlayerAnimators[j].SetFloat(PlayerController.Hash.SpeedFloat, receivingTransform.PlayerSpeeds[j] / 5, 0.1f, Time.fixedDeltaTime);
+                    PlayerController.PlayerAnimators[j].SetFloat(hash.SpeedFloat, receivingTransform.PlayerSpeeds[j] / 5, 0.1f, Time.fixedDeltaTime);
 
                     // 애니메이션을 실행시키지 않는 조건
                     if(receivingTransform.AnimHashCodes[j] == 0 || PlayerController.PlayerAnimators[j].IsInTransition(0))
                         continue;
                     int curAnimHashCode = PlayerController.PlayerAnimators[j].GetCurrentAnimatorStateInfo(0).fullPathHash;
-                    if(curAnimHashCode == PlayerController.Hash.Tackle || curAnimHashCode == PlayerController.Hash.Shoot || curAnimHashCode == PlayerController.Hash.Jump)
+                    if(curAnimHashCode == hash.Tackle || curAnimHashCode == hash.Shoot || curAnimHashCode == hash.Jump)
                         continue;
 
                     // 애니메이션 실행

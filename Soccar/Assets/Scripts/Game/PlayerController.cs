@@ -266,6 +266,7 @@ public static class PlayerController
         Packet.SendingTransform sendingTransform = new Packet.SendingTransform(PlayerIndex);
 
         sendingTransform.PlayerPosition = AlterEgo.transform.position;
+        sendingTransform.PlayerRotation = Player.transform.eulerAngles;
         sendingTransform.BallPositions[0] = GameLauncher.Balls[0].transform.position;
         sendingTransform.BallPositions[1] = GameLauncher.Balls[1].transform.position;
         sendingTransform.AnimHashCode = AnimHashCode;

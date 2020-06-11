@@ -33,6 +33,6 @@ public class TackleEvent : MonoBehaviour
                 }
             }
         }
-        catch (NullReferenceException) { return; }
+        catch (Exception) { return; }
     }
 }
