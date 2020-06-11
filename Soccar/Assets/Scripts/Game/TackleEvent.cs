@@ -25,7 +25,7 @@ public class TackleEvent : MonoBehaviour
                 {
                     Debug.Log("태클 당하는 놈" + other.transform.root.gameObject.name);
                     otherRagDoll = other.transform.root.GetChild(1).gameObject;
-                    if (!otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().falling && otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().gettingUp)
+                    if (!otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().falling && !otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().gettingUp)
                     {
                         // Set avatar's animation to idle
                         other.transform.root.GetChild(0).gameObject.GetComponent<Animator>().SetFloat(PlayerController.Hash.SpeedFloat, 0f, 0.1f, Time.fixedDeltaTime);
