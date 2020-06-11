@@ -41,41 +41,40 @@ public class Packet
     }
 
     // 공 + 절대좌표 전송
-    public class SendingAbsolutePositions
+    public class SendingTransform
     {
         public Vector3[] BallPositions;
         public int PlayerIndex;
         public Vector3 PlayerPosition;
+        public int AnimHashCode;
+        public float PlayerSpeed;
 
-        //public BallsPosition BallsPosition;
-        //public PersonalPosition MyPosition;
-
-        public SendingAbsolutePositions(int playerIndex)
+        public SendingTransform(int playerIndex)
         {
             BallPositions = new Vector3[2];
             PlayerIndex = playerIndex;
             PlayerPosition = new Vector3();
-            //BallsPosition = new BallsPosition();
-            //MyPosition = new PersonalPosition(playerIndex);
+            AnimHashCode = 0;
+            PlayerSpeed = 0;
         }
     }
 
     // 공 + 플레이어 좌표 수신
-    public class ReceivingPositions
+    public class ReceivingTransform
     {
         public Vector3[] BallPositions;
         public Vector3[] PlayerPositions;
+        public int[] AnimHashCodes;
+        public float[] PlayerSpeeds;
 
-        //public BallsPosition BallsPosition;
-        //public PlayersPosition PlayersPosition;
-
-        public ReceivingPositions()
+        public ReceivingTransform()
         {
-            BallPositions = new Vector3[2];
-            PlayerPositions = new Vector3[PlayerController.Players.Length];
+            int length = PlayerController.Players.Length;
 
-            //BallsPosition = new BallsPosition();
-            //PlayersPosition = new PlayersPosition();
+            BallPositions = new Vector3[2];
+            PlayerPositions = new Vector3[length];
+            AnimHashCodes = new int[length];
+            PlayerSpeeds = new float[length];
         }
     }
 

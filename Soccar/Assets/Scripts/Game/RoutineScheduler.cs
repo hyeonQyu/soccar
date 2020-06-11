@@ -8,7 +8,7 @@ public class RoutineScheduler : MonoBehaviour
     private Coroutine _movePlayersCoroutine = null;
     private Coroutine _moveBallsCoroutine = null;
 
-    public void StartMoving(Packet.ReceivingPositions receivingPositions)
+    public void StartMoving(Packet.ReceivingTransform receivingTransform)
     {
         // 현재 공, 플레이어 위치 저장
         Vector3[] currentPlayerPositions = new Vector3[GameLauncher.Headcount];
@@ -27,12 +27,13 @@ public class RoutineScheduler : MonoBehaviour
         }
 
         // 플레이어와 공 움직임
-        _movePlayersCoroutine = StartCoroutine(MovePlayers(currentPlayerPositions, receivingPositions.PlayerPositions));
-        _moveBallsCoroutine = StartCoroutine(MoveBalls(currentBallPositions, receivingPositions.BallPositions));
+        _movePlayersCoroutine = StartCoroutine(MovePlayers(currentPlayerPositions, receivingTransform));
+        _moveBallsCoroutine = StartCoroutine(MoveBalls(currentBallPositions, receivingTransform.BallPositions));
     }
 
-    private IEnumerator MovePlayers(Vector3[] prePositions, Vector3[] destPositions)
+    private IEnumerator MovePlayers(Vector3[] prePositions, Packet.ReceivingTransform receivingTransform)
     {
+        Vector3[] destPositions = receivingTransform.PlayerPositions;
         float t = 0;
         Vector3 directionVector;
         for (int k = 0; k < destPositions.Length; k++)
@@ -61,15 +62,25 @@ public class RoutineScheduler : MonoBehaviour
             {
                 try
                 {
-                    //if(j == PlayerController.PlayerIndex)
-                    //    continue;
-                    if (!PlayerController.Players[j].transform.root.GetChild(1).gameObject.GetComponent<AnimFollow.RagdollControl_AF>().falling &&
-                        !PlayerController.Players[j].transform.root.GetChild(1).gameObject.GetComponent<AnimFollow.RagdollControl_AF>().gettingUp)
-                    {
-                        PlayerController.Players[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
-                        Vector3 newVector = new Vector3(PlayerController.Players[j].transform.position.x, 0.1f, PlayerController.Players[j].transform.position.z);
-                        PlayerController.MiniMapManager.Players[j].transform.localPosition = newVector;
-                    }
+                    if(PlayerController.Players[j].transform.root.GetChild(1).gameObject.GetComponent<AnimFollow.RagdollControl_AF>().falling ||
+                        PlayerController.Players[j].transform.root.GetChild(1).gameObject.GetComponent<AnimFollow.RagdollControl_AF>().gettingUp)
+                        continue;
+
+                    // 플레이어 이동
+                    PlayerController.Players[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
+                    Vector3 newVector = new Vector3(PlayerController.Players[j].transform.position.x, 0.1f, PlayerController.Players[j].transform.position.z);
+                    PlayerController.MiniMapManager.Players[j].transform.localPosition = newVector;
+                    PlayerController.PlayerAnimators[j].SetFloat(PlayerController.Hash.SpeedFloat, receivingTransform.PlayerSpeeds[j] / 5, 0.1f, Time.fixedDeltaTime);
+
+                    // 애니메이션을 실행시키지 않는 조건
+                    if(receivingTransform.AnimHashCodes[j] == 0 || PlayerController.PlayerAnimators[j].IsInTransition(0))
+                        continue;
+                    int curAnimHashCode = PlayerController.PlayerAnimators[j].GetCurrentAnimatorStateInfo(0).fullPathHash;
+                    if(curAnimHashCode == PlayerController.Hash.Tackle || curAnimHashCode == PlayerController.Hash.Shoot || curAnimHashCode == PlayerController.Hash.Jump)
+                        continue;
+
+                    // 애니메이션 실행
+                    PlayerController.PlayerAnimators[j].SetTrigger(receivingTransform.AnimHashCodes[j]);
                 }
                 catch (Exception e) { }
             }
