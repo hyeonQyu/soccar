@@ -124,7 +124,6 @@ public static class PlayerController
 
         Player = Players[PlayerIndex];
         PlayerInformations[PlayerIndex].PlayerName = playerName;
-        AlterEgo.transform.position = Player.transform.position;
         
         // Set Animation
         Hash = Player.GetComponent<AnimFollow.HashIDs_AF>();
@@ -238,7 +237,7 @@ public static class PlayerController
         // Player 방향
         if (direction != Vector3.zero)
         {
-            Player.transform.rotation = Quaternion.LookRotation(direction.normalized);
+            AlterEgo.transform.rotation = Quaternion.LookRotation(direction.normalized);
         }
 
         //PlayerAnimator.SetFloat(Hash.SpeedFloat, (_playerSpeed / 5f), 0.1f, Time.fixedDeltaTime);
@@ -266,7 +265,7 @@ public static class PlayerController
         Packet.SendingTransform sendingTransform = new Packet.SendingTransform(PlayerIndex);
 
         sendingTransform.PlayerPosition = AlterEgo.transform.position;
-        sendingTransform.PlayerRotation = Player.transform.eulerAngles;
+        sendingTransform.PlayerRotation = AlterEgo.transform.eulerAngles;
         sendingTransform.BallPositions[0] = GameLauncher.Balls[0].transform.position;
         sendingTransform.BallPositions[1] = GameLauncher.Balls[1].transform.position;
         sendingTransform.AnimHashCode = AnimHashCode;

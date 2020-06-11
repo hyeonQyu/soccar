@@ -52,7 +52,6 @@ namespace AnimFollow
 			{
 				if (transform.root.GetChild(0).gameObject.GetInstanceID() != PlayerController.Player.GetInstanceID())
 				{
-                    // 항상 여기로 들어온다 !! 밑으로 절대 안가 !!
 					return;
 				}
 			}
@@ -64,8 +63,8 @@ namespace AnimFollow
                 return;
             if (collision.gameObject.tag.Equals("Ground") || collision.gameObject.tag.Equals("Ball"))
 				return;
-			Vector3 avatarPosition = transform.root.GetChild(0).position;
-			PlayerController.AlterEgo.transform.position = new Vector3(avatarPosition.x, PlayerController.AlterEgo.transform.position.y, avatarPosition.z);
+			Vector3 ragdollPosition = transform.root.GetChild(1).GetChild(0).GetChild(0).position;
+			PlayerController.AlterEgo.transform.position = new Vector3(ragdollPosition.x, PlayerController.AlterEgo.transform.position.y, ragdollPosition.z);
 		}
 		
 		void OnCollisionExit(Collision collision)

@@ -45,24 +45,10 @@ public class RoutineScheduler : MonoBehaviour
                 if(PlayerController.PlayerAnimators[k].GetCurrentAnimatorStateInfo(0).fullPathHash == hash.Tackle
                         || receivingTransform.AnimHashCodes[k] == hash.TackleTrigger)
                     continue;
+
+                PlayerController.Players[k].transform.eulerAngles = receivingTransform.PlayerRotations[k];
             }
             catch(MissingReferenceException e) { }
-
-            if(k != PlayerController.PlayerIndex)
-            {
-                PlayerController.Players[k].transform.eulerAngles = receivingTransform.PlayerRotations[k];
-                //directionVector = destPositions[k] - prePositions[k];
-                //directionVector.y = 0;
-            
-                //if (directionVector != Vector3.zero)
-                //{
-                //    try
-                //    {
-                //        PlayerController.Players[k].transform.rotation = Quaternion.LookRotation(directionVector.normalized);
-                //    }
-                //    catch(MissingReferenceException e) { }
-                //}
-            }
         }
 
         for(int i = 0; i < 10; i++)
