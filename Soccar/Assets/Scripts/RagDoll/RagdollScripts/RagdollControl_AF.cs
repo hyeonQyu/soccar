@@ -365,7 +365,8 @@ namespace AnimFollow
 				{
 					Debug.Log("쓰러짐1(Player" + transform.root.GetComponent<PlayerInformation>().PlayerIndex + ")");
                     // Lerp force to zero from residual values
-
+					if (transform.root.GetComponent<PlayerInformation>().PlayerIndex == PlayerController.PlayerIndex)
+							PlayerController.InhibitMove = true;
                     // 이영재가 추가함 20.06.09
                     if (transform.root.GetComponent<PlayerInformation>().PlayerIndex == PlayerController.PlayerIndex)
                     {

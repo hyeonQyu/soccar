@@ -209,7 +209,6 @@ public static class PlayerController
 
             _isMoved = true;
         }
-
         direction = myPosition;
         myPosition = myPosition.normalized;
 
