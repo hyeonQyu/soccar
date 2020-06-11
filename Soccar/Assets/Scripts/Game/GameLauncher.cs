@@ -144,7 +144,10 @@ public class GameLauncher : MonoBehaviour
             IsCrowdScream = false;
 
             if(_crowdScreamCoroutine != null)
+            {
                 StopCoroutine(_crowdScreamCoroutine);
+                _sound.CrowdGoal.volume = 0.5f;
+            }
             _crowdScreamCoroutine = StartCoroutine(CrowdScream());
         }
     }
