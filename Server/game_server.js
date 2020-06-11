@@ -108,8 +108,8 @@ io.on('connection', function(socket) {
         PLAYERS_TRANFORM.positions[data.PlayerIndex].z = data.PlayerPosition.z;
 
         PLAYERS_TRANFORM.playerSpeeds[data.PlayerIndex] = data.PlayerSpeed;
-        if(PLAYERS_TRANFORM.animHashCodes == 0){
-            PLAYERS_TRANFORM.animHashCodes = data.AnimHashCode
+        if(PLAYERS_TRANFORM.animHashCodes[data.PlayerIndex] == 0){
+            PLAYERS_TRANFORM.animHashCodes[data.PlayerIndex] = data.AnimHashCode
         }
 
         var timeDiff = Date.now() - TIME_STAMP;
