@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class TackleEvent : MonoBehaviour
 {
@@ -15,18 +16,23 @@ public class TackleEvent : MonoBehaviour
     }
     private void OnCollisionEnter(Collision other)
     {
-        if (_animator.GetCurrentAnimatorStateInfo(0).fullPathHash == Animator.StringToHash("Base Layer.Tackle"))
+        try
         {
-            if (transform.root.gameObject.GetInstanceID() != other.transform.root.gameObject.GetInstanceID())
+            if (_animator.GetCurrentAnimatorStateInfo(0).fullPathHash == PlayerController.Hash.Tackle)
             {
-                Debug.Log("태클 당하는 놈" + other.transform.root.gameObject.name);
-                otherRagDoll = other.transform.root.GetChild(1).gameObject;
-                if (LayerMask.LayerToName(other.gameObject.layer).Equals("RagDoll") && !otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().falling)
+                if (LayerMask.LayerToName(other.gameObject.layer).Equals("RagDoll") &&
+                transform.root.gameObject.GetInstanceID() != other.transform.root.gameObject.GetInstanceID())
                 {
-                    otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().falling = true;
-                    other.transform.root.GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * _tackleForce);
+                    Debug.Log("태클 당하는 놈" + other.transform.root.gameObject.name);
+                    otherRagDoll = other.transform.root.GetChild(1).gameObject;
+                    if (!otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().falling)
+                    {
+                        otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().falling = true;
+                        other.transform.root.GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * _tackleForce);
+                    }
                 }
             }
         }
+        catch (NullReferenceException) { return; }
     }
 }
