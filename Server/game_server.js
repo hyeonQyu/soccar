@@ -18,22 +18,30 @@ var CONNECTED_CLIENT_COUNT = totalPlayer;
 // 상대위치 이동정도 및 절대위치를 보관
 var PLAYERS_TRANFORM = new Object();
     var positions = [];
+    var rotations = [];
     var playerSpeeds = [];
     var animHashCodes = [];
     for(var j = 0; j < totalPlayer; j++){
         var position = new Object();
+        var rotation = new Object();
         position.x = j * 5;
         position.y = 3.5;
         position.z = j * 5;
+
+        rotation.x = 0;
+        rotation.y = 0;
+        rotation.z = 0;
 
         playerSpeeds.push(0);
         animHashCodes.push(0);
 
         positions.push(position);
+        rotations.push(rotation);
     }
 PLAYERS_TRANFORM.positions = positions;
 PLAYERS_TRANFORM.playerSpeeds = playerSpeeds;
 PLAYERS_TRANFORM.animHashCodes = animHashCodes;
+PLAYERS_TRANFORM.rotations = rotations;
 
 // 변수 초기화
 var INDEX_TO_SOCKET_ID = [];
@@ -106,6 +114,9 @@ io.on('connection', function(socket) {
         PLAYERS_TRANFORM.positions[data.PlayerIndex].x = data.PlayerPosition.x;
         PLAYERS_TRANFORM.positions[data.PlayerIndex].y = data.PlayerPosition.y;
         PLAYERS_TRANFORM.positions[data.PlayerIndex].z = data.PlayerPosition.z;
+        PLAYERS_TRANFORM.rotations[data.PlayerIndex].x = data.PlayerRotation.x;
+        PLAYERS_TRANFORM.rotations[data.PlayerIndex].y = data.PlayerRotation.y;
+        PLAYERS_TRANFORM.rotations[data.PlayerIndex].z = data.PlayerRotation.z;
 
         PLAYERS_TRANFORM.playerSpeeds[data.PlayerIndex] = data.PlayerSpeed;
         if(PLAYERS_TRANFORM.animHashCodes[data.PlayerIndex] == 0){
@@ -118,6 +129,7 @@ io.on('connection', function(socket) {
         if(timeDiff > 40){
             sendingPosition.BallPositions = ballsPositions;
             sendingPosition.PlayerPositions = PLAYERS_TRANFORM.positions;
+            sendingPosition.PlayerRotations = PLAYERS_TRANFORM.rotations;
             sendingPosition.AnimHashCodes = PLAYERS_TRANFORM.animHashCodes;
             sendingPosition.PlayerSpeeds = PLAYERS_TRANFORM.playerSpeeds;
             var datas = JSON.stringify(sendingPosition);
