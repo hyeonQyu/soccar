@@ -16,17 +16,22 @@ var isFirst = true;
 var CONNECTED_CLIENT_COUNT = totalPlayer;
 
 // 상대위치 이동정도 및 절대위치를 보관
-var PLAYERS_POSITION = new Object();
+var PLAYERS_TRANFORM = new Object();
     var positions = [];
+    var playerSpeeds = [];
+    var animHashCodes = [];
     for(var j = 0; j < totalPlayer; j++){
         var position = new Object();
         position.x = j * 5;
         position.y = 3.5;
         position.z = j * 5;
 
+        playerSpeeds.push(0);
+        animHashCodes.push(0);
+
         positions.push(position);
     }
-PLAYERS_POSITION.Positions = positions;
+PLAYERS_TRANFORM.positions = positions;
 
 // 변수 초기화
 var INDEX_TO_SOCKET_ID = [];
@@ -53,7 +58,7 @@ for(var i = 0; i < 2; i++){
 
 var sendingPosition = new Object();
 sendingPosition.BallPositions = ballsPositions;
-//sendingPosition.PlayerPositions = PLAYERS_POSITION.Positions;
+//sendingPosition.PlayerPositions = PLAYERS_TRANFORM.positions;
 
 io.on('connection', function(socket) {
 
@@ -81,16 +86,10 @@ io.on('connection', function(socket) {
         }
     });
 
-    socket.on('absolute_position', function(data){
+    socket.on('transform', function(data){
         if(isFirst){
             TIME_STAMP = Date.now();
             isFirst = false;
-
-            for(var i = 0; i < totalPlayer; i++){
-                PLAYERS_POSITION.Positions[i].x = j * 5;
-                PLAYERS_POSITION.Positions[i].y = 3.5;
-                PLAYERS_POSITION.Positions[i].z = j * 5;
-            }
         }
 
         //  슈퍼클라이언트에게서 공의 절대위치 수신
@@ -102,22 +101,33 @@ io.on('connection', function(socket) {
             }
         }
 
-        PLAYERS_POSITION.Positions[data.PlayerIndex].x = data.PlayerPosition.x;
-        PLAYERS_POSITION.Positions[data.PlayerIndex].y = data.PlayerPosition.y;
-        PLAYERS_POSITION.Positions[data.PlayerIndex].z = data.PlayerPosition.z;
+        PLAYERS_TRANFORM.positions[data.PlayerIndex].x = data.PlayerPosition.x;
+        PLAYERS_TRANFORM.positions[data.PlayerIndex].y = data.PlayerPosition.y;
+        PLAYERS_TRANFORM.positions[data.PlayerIndex].z = data.PlayerPosition.z;
+
+        PLAYERS_TRANFORM.playerSpeeds[data.PlayerIndex] = data.PlayerSpeed;
+        if(PLAYERS_TRANFORM.animHashCodes == 0){
+            PLAYERS_TRANFORM.animHashCodes = data.AnimHashCode
+        }
 
         var timeDiff = Date.now() - TIME_STAMP;
 
-        // 20ms마다 절대 좌표 + 공
+        // 40ms마다 절대 좌표 + 공
         if(timeDiff > 40){
             sendingPosition.BallPositions = ballsPositions;
-            sendingPosition.PlayerPositions = PLAYERS_POSITION.Positions;
+            sendingPosition.PlayerPositions = PLAYERS_TRANFORM.positions;
+            sendingPosition.AnimHashCodes = PLAYERS_TRANFORM.animHashCodes;
+            sendingPosition.PlayerSpeeds = PLAYERS_TRANFORM.playerSpeeds;
             var datas = JSON.stringify(sendingPosition);
             //console.log('절대' + datas);
 
-            io.emit('absolute_position', datas);
+             io.emit('transform', datas);
             TIME_STAMP = Date.now();
+            for(var i = 0; i < totalPlayer; i++){
+                PLAYERS_TRANFORM.animHashCodes[i] = 0;
+            }
         }
+
     });
 
     socket.on('change_super_client', function(data){
