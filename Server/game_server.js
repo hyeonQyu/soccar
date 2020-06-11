@@ -32,6 +32,8 @@ var PLAYERS_TRANFORM = new Object();
         positions.push(position);
     }
 PLAYERS_TRANFORM.positions = positions;
+PLAYERS_TRANFORM.playerSpeeds = playerSpeeds;
+PLAYERS_TRANFORM.animHashCodes = animHashCodes;
 
 // 변수 초기화
 var INDEX_TO_SOCKET_ID = [];
