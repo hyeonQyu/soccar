@@ -17,6 +17,10 @@ public class GameLauncher : MonoBehaviour
 
     // 사운드 관리
     private Sound _sound;
+    public static bool IsCrowdScream { get; set; }
+    private Coroutine _crowdScreamCoroutine;
+    [SerializeField]
+    private float _fadeTime;
 
     // 씬 매개체
     private SceneMedium _sceneMedium;
@@ -133,6 +137,32 @@ public class GameLauncher : MonoBehaviour
         // 움직임 입력
         PlayerController.InputRelativePosition();
         PlayerController.InputAbsolutePostion();
+
+        // 관중 환호
+        if(IsCrowdScream)
+        {
+            IsCrowdScream = false;
+
+            if(_crowdScreamCoroutine != null)
+                StopCoroutine(_crowdScreamCoroutine);
+            _crowdScreamCoroutine = StartCoroutine(CrowdScream());
+        }
+    }
+
+    private IEnumerator CrowdScream()
+    {
+        float startVolume = _sound.CrowdGoal.volume;
+        _sound.CrowdGoal.Play();
+
+        while(_sound.CrowdGoal.volume > 0)
+        {
+            Debug.Log("Sound 작아짐");
+            _sound.CrowdGoal.volume -= startVolume * Time.fixedDeltaTime / _fadeTime;
+            yield return null;
+        }
+
+        _sound.CrowdGoal.Stop();
+        _sound.CrowdGoal.volume = startVolume;
     }
 
     private string ToDoubleDigit(string str)

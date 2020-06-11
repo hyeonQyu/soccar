@@ -194,6 +194,8 @@ public class NetworkManager : MonoBehaviour
             if(_scoreNotificationCoroutine != null)
                 StopCoroutine(_scoreNotificationCoroutine);
             _scoreNotificationCoroutine = StartCoroutine(NoticeScore(receivingScore.Scorer, receivingScore.Conceder));
+
+            GameLauncher.IsCrowdScream = true;
         });
 
         Socket.On("disconnection", (string data) =>

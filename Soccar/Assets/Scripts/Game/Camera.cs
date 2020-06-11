@@ -43,10 +43,12 @@ public class Camera : MonoBehaviour
         Vector3 playerPosition = PlayerController.Player.transform.position;
         Vector3 goalPostPosition = PlayerController.GoalPosts[PlayerController.PlayerIndex].transform.position;
 
+        // 골대로부터 특정 거리
         float distanceBackward = Vector3.Distance(playerPosition, goalPostPosition + 2.35f * PlayerController.BackwardVector);
         float distanceRight = Vector3.Distance(playerPosition, goalPostPosition + 7 * PlayerController.RightVector);
         float distanceLeft = Vector3.Distance(playerPosition, goalPostPosition + 7 * PlayerController.LeftVector);
 
+        // 골대에 가까워지면 시야가 방해되므로 카메라의 회전 및 높이를 변경
         float height = _height;
         float angle = _angle;
         float distance = _distance;
@@ -56,13 +58,7 @@ public class Camera : MonoBehaviour
             float distanceMin = Mathf.Min(tmpDistanceBackward, distanceLeft, distanceRight);
             if(distanceMin == tmpDistanceBackward)
                 distanceMin = distanceBackward;
-            if(distanceMin == distanceBackward)
-                Debug.Log("distance backward");
-            else if(distanceMin == distanceLeft)
-                Debug.Log("distance left");
-            else
-                Debug.Log("distance right");
-            Debug.Log("distance " + distanceMin);
+
             height = -distanceMin + 8.7f;
             angle = -11f * distanceMin + 80;
             distance = 0.4f * distanceMin + 3.3f;

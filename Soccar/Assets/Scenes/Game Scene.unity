@@ -21361,6 +21361,7 @@ MonoBehaviour:
   - {fileID: 1674397771}
   - {fileID: 969897005}
   _networkManagerObject: {fileID: 1489427009}
+  _fadeTime: 6.3
   _txtTime: {fileID: 360387856}
 --- !u!4 &1564077113
 Transform:
@@ -25975,7 +25976,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 7d0906eed4ce29c49958cf060a450520, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
