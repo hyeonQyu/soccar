@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+//using System.Numerics;
 using UnityEngine;
 
 public class Camera : MonoBehaviour
@@ -70,7 +71,7 @@ public class Camera : MonoBehaviour
                                                             + (distance * PlayerController.BackwardVector);
         transform.position = Vector3.Lerp(transform.position, targetPosition, lerpSpeed);
 
-        Vector3 rotation = new Vector3(angle, -PlayerController.Theta, 0);
+        Vector3 rotation = new Vector3(angle, transform.eulerAngles.y, 0);
         transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, rotation, lerpSpeed / 2);
     }
 }
