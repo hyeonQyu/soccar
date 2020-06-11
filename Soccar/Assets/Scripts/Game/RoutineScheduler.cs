@@ -67,7 +67,7 @@ public class RoutineScheduler : MonoBehaviour
                         !PlayerController.Players[j].transform.root.GetChild(1).gameObject.GetComponent<AnimFollow.RagdollControl_AF>().gettingUp)
                     {
                         PlayerController.Players[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
-                        Vector3 newVector = new Vector3(PlayerController.Players[j].transform.position.x, 1, PlayerController.Players[j].transform.position.z);
+                        Vector3 newVector = new Vector3(PlayerController.Players[j].transform.position.x, 0.1f, PlayerController.Players[j].transform.position.z);
                         PlayerController.MiniMapManager.Players[j].transform.localPosition = newVector;
                     }
                 }
@@ -90,7 +90,7 @@ public class RoutineScheduler : MonoBehaviour
             {
                 if(PlayerController.PlayerIndex != PlayerController.SuperClientIndex)
                     GameLauncher.Balls[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
-                Vector3 newVector = new Vector3(GameLauncher.Balls[j].transform.position.x, 2, GameLauncher.Balls[j].transform.position.z);
+                Vector3 newVector = new Vector3(GameLauncher.Balls[j].transform.position.x, 0.2f, GameLauncher.Balls[j].transform.position.z);
                 PlayerController.MiniMapManager.Balls[j].transform.localPosition = newVector;
             }
 
