@@ -42,17 +42,30 @@ public class BallController : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         GameObject other = collision.gameObject;
+        float force = Mathf.Abs(_rigidBody.velocity.x) + Mathf.Abs(_rigidBody.velocity.z);
+        float bouncingForce = Mathf.Abs(_rigidBody.velocity.x) + Mathf.Abs(_rigidBody.velocity.y * 2f) + Mathf.Abs(_rigidBody.velocity.z);
 
         // 땅에 부딪히면 탄성 감소
         if (other.CompareTag("Ground"))
         {
             _ball.material.bounciness *= 0.8f;
+
+            GameLauncher.Sound.BounceBall.volume = bouncingForce / 20f;
+            GameLauncher.Sound.BounceBall.Play();
+
             return;
         }
         // 그물은 공을 튀기지 않기 때문에 그물 위에 올라가면 공을 내려줘야 함
         else if (other.CompareTag("Net"))
         {
             _ball.material.bounciness *= 0.01f;
+
+            if(other.name.Equals("Back"))
+            {
+                GameLauncher.Sound.GoalNet.volume = force / 10f;
+                GameLauncher.Sound.GoalNet.Play();
+            }
+
             _isOnNet = true;
             StartCoroutine(MoveBallOnNet());
             return;
@@ -60,6 +73,20 @@ public class BallController : MonoBehaviour
         else if (other.CompareTag("Fense"))
         {
             _ball.material.bounciness = 1;
+
+            GameLauncher.Sound.HitFense.volume = force / 30f;
+            GameLauncher.Sound.HitFense.Play();
+
+            return;
+        }
+        else if(other.CompareTag("Post"))
+        {
+            _ball.material.bounciness = 1;
+
+            GameLauncher.Sound.HitPost.volume = force / 20f;
+            GameLauncher.Sound.HitPost.Play();
+
+            return;
         }
 
         // 다른 물체에 부딪히면 탄성을 원래대로
@@ -116,9 +143,10 @@ public class BallController : MonoBehaviour
             float power = Input.GetAxis("Sensitivity");
             if(power < 0.5f)
                 power = 0.5f;
-
             // 살짝 위로 올라가도록
             _rigidBody.velocity = direction * power * _shootSpeed + new Vector3(Random.Range(-2.5f, 2.5f), Random.Range(5f, 10f) * power, Random.Range(-2.5f, 2.5f));
+            GameLauncher.Sound.KickBall.volume = power;
+            GameLauncher.Sound.KickBall.Play();
         }
 
     }

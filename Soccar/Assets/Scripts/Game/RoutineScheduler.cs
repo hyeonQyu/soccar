@@ -2,11 +2,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RoutineScheduler : MonoBehaviour
 {
-    private Coroutine _movePlayersCoroutine = null;
-    private Coroutine _moveBallsCoroutine = null;
+    private Coroutine _movePlayersCoroutine;
+    private Coroutine _moveBallsCoroutine;
+
+    private Coroutine _scoreNotificationCoroutine;
+
+    private Coroutine _crowdScreamCoroutine;
+
+    [SerializeField]
+    private Text _scorer;
+    [SerializeField]
+    private Text _conceder;
+    [SerializeField]
+    private GameObject _scoreMark;
+    private string[] _colors = { "<color=#008200>", "<color=#000082>", "<color=#820000>", "<color=#828200>", "<color=#820082>", "<color=#828282>" };
+
+    [SerializeField]
+    private float _fadeTime;
 
     public void StartMoving(Packet.ReceivingTransform receivingTransform)
     {
@@ -117,5 +133,55 @@ public class RoutineScheduler : MonoBehaviour
         {
             StopCoroutine(_moveBallsCoroutine);
         }
+    }
+
+    public void NoticeScore(int scorer, int conceder)
+    {
+        if(_scoreNotificationCoroutine != null)
+            StopCoroutine(_scoreNotificationCoroutine);
+        _scoreNotificationCoroutine = StartCoroutine(NoticeScoreCoroutine(scorer, conceder));
+    }
+
+    private IEnumerator NoticeScoreCoroutine(int scorer, int conceder)
+    {
+        _scorer.text = _colors[scorer] + PlayerController.PlayerInformations[scorer].PlayerName + "</color>";
+        _conceder.text = _colors[conceder] + PlayerController.PlayerInformations[conceder].PlayerName + "</color>";
+
+        _scorer.transform.localScale = new Vector3(1, 1, 1);
+        _conceder.transform.localScale = new Vector3(1, 1, 1);
+        _scoreMark.transform.localScale = new Vector3(1, 1, 1);
+
+        yield return new WaitForSeconds(4);
+
+        _scorer.transform.localScale = new Vector3(0, 0, 0);
+        _conceder.transform.localScale = new Vector3(0, 0, 0);
+        _scoreMark.transform.localScale = new Vector3(0, 0, 0);
+    }
+
+    public void CrowdScream()
+    {
+        // 관중 환호
+        if(_crowdScreamCoroutine != null)
+        {
+            StopCoroutine(_crowdScreamCoroutine);
+            GameLauncher.Sound.CrowdGoal.volume = 0.5f;
+        }
+        _crowdScreamCoroutine = StartCoroutine(CrowdScreamCoroutine());
+    }
+
+    private IEnumerator CrowdScreamCoroutine()
+    {
+        float startVolume = GameLauncher.Sound.CrowdGoal.volume;
+        GameLauncher.Sound.CrowdGoal.Play();
+
+        // 볼륨 페이드아웃
+        while(GameLauncher.Sound.CrowdGoal.volume > 0)
+        {
+            GameLauncher.Sound.CrowdGoal.volume -= startVolume * Time.fixedDeltaTime / _fadeTime;
+            yield return null;
+        }
+
+        GameLauncher.Sound.CrowdGoal.Stop();
+        GameLauncher.Sound.CrowdGoal.volume = startVolume;
     }
 }
