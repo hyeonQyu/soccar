@@ -34,11 +34,11 @@ namespace AnimFollow
 			animFollow.DoAnimFollow();
 		}
 
-		public void OnAnimatorMove()
-		{
-			_glideFree2 = Vector3.Lerp(_glideFree2, GlideFree, .05f);
-			PlayerController.AlterEgo.transform.position += PlayerController.PlayerAnimators[PlayerController.PlayerIndex].deltaPosition + _glideFree2;
-			transform.position += PlayerController.PlayerAnimators[PlayerController.PlayerIndex].deltaPosition + _glideFree2;
-		}
+		// public void OnAnimatorMove()
+		// {
+		// 	_glideFree2 = Vector3.Lerp(_glideFree2, GlideFree, .05f);
+		// 	PlayerController.AlterEgo.transform.position += PlayerController.PlayerAnimators[PlayerController.PlayerIndex].deltaPosition + _glideFree2;
+		// 	transform.position += PlayerController.PlayerAnimators[PlayerController.PlayerIndex].deltaPosition + _glideFree2;
+		// }
 	}
 }
