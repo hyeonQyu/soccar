@@ -27,6 +27,9 @@ public static class PlayerController
     private static float _playerSpeed;
     public static float Theta { get; private set; }
 
+    public static int AnimHashCode { get; set; }
+    public static int PrevHashCode { get; set; }
+
     public static Vector3 RightVector { get; private set; }
     public static Vector3 LeftVector { get; private set; }
     public static Vector3 ForwardVector { get; private set; }
@@ -46,9 +49,10 @@ public static class PlayerController
     [HideInInspector] public static bool InhibitRun { get; set; }    // Set from RagdollControl
     public static bool InhibitMove { get; set; }     // Set from RagdollControl
     public static float AnimatorSpeed = 1.3f;   // Read by RagdollControl
-	public static Animator PlayerAnimator { get; private set; }			// Reference to the animator component.
+	public static Animator[] PlayerAnimators { get; private set; }			// Reference to the animator component.
 	public static AnimFollow.HashIDs_AF Hash;			// Reference to the HashIDs.
     public static readonly int version = 7; // The version of this script
+
     public static void SetPlayers()
     {
         _speed = 2.5f;
@@ -59,6 +63,7 @@ public static class PlayerController
         PlayerInformations = new PlayerInformation[GameLauncher.Headcount];
         MiniMapManager = new MiniMapManager(GameLauncher.Headcount);
         IsConnectPlayers = new bool[GameLauncher.Headcount];
+        PlayerAnimators = new Animator[GameLauncher.Headcount];
         for(int i = 0; i < 6; i++)
         {
             string suffix = i.ToString();
@@ -74,6 +79,8 @@ public static class PlayerController
 
                 // Avatar를 가리킴
                 Players[i] = Players[i].transform.GetChild(0).gameObject;
+
+                PlayerAnimators[i] = Players[i].GetComponent<Animator>();
             }
             else
             {
@@ -120,7 +127,6 @@ public static class PlayerController
         AlterEgo.transform.position = Player.transform.position;
         
         // Set Animation
-        PlayerAnimator = Player.GetComponent<Animator>();
         Hash = Player.GetComponent<AnimFollow.HashIDs_AF>();
 
         IsPlayersInitialized = true;
@@ -164,12 +170,13 @@ public static class PlayerController
             return;
 
         // 현재 태클 상태이면 분신을 움직이지 못하도록 함
-        int animHash = PlayerAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash;
+        int animHash = PlayerAnimators[PlayerIndex].GetCurrentAnimatorStateInfo(0).fullPathHash;
         if(animHash == Hash.Tackle)
         {
+            AnimHashCode = 0;
             return;
         }
-        
+
         // 상대 좌표
         Vector3 myPosition = Vector3.zero;
         Vector3 direction = Vector3.zero;
@@ -234,38 +241,38 @@ public static class PlayerController
             Player.transform.rotation = Quaternion.LookRotation(direction.normalized);
         }
 
-        PlayerAnimator.SetFloat(Hash.SpeedFloat, (_playerSpeed / 5f), 0.1f, Time.fixedDeltaTime);
+        //PlayerAnimator.SetFloat(Hash.SpeedFloat, (_playerSpeed / 5f), 0.1f, Time.fixedDeltaTime);
 
-        // 현재 state에 있음
-        if(!PlayerAnimator.IsInTransition(0))
+        if(Input.GetKeyDown(KeyCode.Space))
         {
-            if(Input.GetKeyDown(KeyCode.Space))
-            {
-                PlayerAnimator.SetTrigger(Hash.JumpTrigger);  
-            }
-
-            else if (Input.GetKeyDown(KeyCode.A))
-            {
-                PlayerAnimator.SetTrigger(Hash.TackleTrigger);
-            }
-
-            else if (Input.GetKeyDown(KeyCode.D))
-            {
-                PlayerAnimator.SetTrigger(Hash.ShootTrigger);
-            }
+            AnimHashCode = Hash.JumpTrigger;
+            //PlayerAnimator.SetTrigger(Hash.JumpTrigger);  
+        }
+        else if(Input.GetKeyDown(KeyCode.A))
+        {
+            AnimHashCode = Hash.TackleTrigger;
+            //PlayerAnimator.SetTrigger(Hash.TackleTrigger);
+        }
+        else if(Input.GetKeyDown(KeyCode.D))
+        {
+            AnimHashCode = Hash.ShootTrigger;
+            //PlayerAnimator.SetTrigger(Hash.ShootTrigger);
         }
     }
 
     // 공 + 절대좌표 전송
     public static void InputAbsolutePostion()
     {
-        Packet.SendingAbsolutePositions sendingAbsolutePositions = new Packet.SendingAbsolutePositions(PlayerIndex);
-        sendingAbsolutePositions.PlayerPosition = AlterEgo.transform.position;
-        //sendingAbsolutePositions.PlayerPosition = Players[PlayerIndex].transform.position;
-        sendingAbsolutePositions.BallPositions[0] = GameLauncher.Balls[0].transform.position;
-        sendingAbsolutePositions.BallPositions[1] = GameLauncher.Balls[1].transform.position;
+        Packet.SendingTransform sendingTransform = new Packet.SendingTransform(PlayerIndex);
 
-        NetworkManager.Send<Packet.SendingAbsolutePositions>("absolute_position", sendingAbsolutePositions);
+        sendingTransform.PlayerPosition = AlterEgo.transform.position;
+        sendingTransform.BallPositions[0] = GameLauncher.Balls[0].transform.position;
+        sendingTransform.BallPositions[1] = GameLauncher.Balls[1].transform.position;
+        sendingTransform.AnimHashCode = AnimHashCode;
+        sendingTransform.PlayerSpeed = _playerSpeed;
+
+        NetworkManager.Send<Packet.SendingTransform>("transform", sendingTransform);
+        AnimHashCode = 0;
     }
 
     // 자신의 분신을 움직임

@@ -156,13 +156,13 @@ public class NetworkManager : MonoBehaviour
             PlayerController.PlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
         });
 
-        // 절대 좌표 + 공
-        Socket.On("absolute_position", (string data) =>
+        // 플레이어 + 공
+        Socket.On("transform", (string data) =>
         {
             data = ToJsonFormat(data);
 
             // 캐릭터 및 공 이동
-            Packet.ReceivingPositions receivingPositions = JsonUtility.FromJson<Packet.ReceivingPositions>(data);
+            Packet.ReceivingTransform receivingPositions = JsonUtility.FromJson<Packet.ReceivingTransform>(data);
             GameLauncher.RoutineScheduler.StopMoving();
             GameLauncher.RoutineScheduler.StartMoving(receivingPositions);
             //PlayerController.Move(receivingPositions.PlayerPositions, PlayerController.Absolute);
