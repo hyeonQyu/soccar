@@ -115,7 +115,7 @@ public class RoutineScheduler : MonoBehaviour
 
         if(_moveBallsCoroutine != null)
         {
-
+            StopCoroutine(_moveBallsCoroutine);
         }
     }
 }
