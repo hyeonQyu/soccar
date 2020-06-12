@@ -184,9 +184,14 @@ io.on('connection', function(socket) {
         io.emit('score', datas);
     });
 
+    socket.on('tackle_event', function(data){
+        console.log('in tackle_event : '+ data.PlayerIndex +' is tackeld!');
+        io.emit(data);
+    });
+
     socket.on('end_game', function(data){
 
-    })
+    });
 
     socket.on('disconnect', function(data){
         var i;
