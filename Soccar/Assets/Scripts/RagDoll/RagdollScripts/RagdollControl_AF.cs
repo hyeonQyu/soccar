@@ -236,9 +236,9 @@ namespace AnimFollow
 			// Fall if: we hit with high enough speed or if the distortion of the character to large
 			if (IsTackled || numberOfCollisions > 0 && (collisionSpeed > graceSpeed || (!(gettingUp || falling) && limbErrorMagnitude > noGhostLimit))) //|| (limbErrorMagnitude > noGhostLimit2 && orientated))
 			{
+				IsTackled = false;
 				if (!falling)
 				{
-					IsTackled = false;
 					ragdollRootBone.GetComponent<Rigidbody>().AddForce(Vector3.up * 100f);
 					// The initial strength immediately after the impact
 					if (!animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.Idle) && ! getupState) // If not in idle state

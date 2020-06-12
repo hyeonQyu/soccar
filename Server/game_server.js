@@ -8,11 +8,13 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
-var TIME_STAMP = 0;
+var TRANSFORM_TIME_STAMP = 0;
+var RUNNING_TIME_STAMP = 0;
 
 var SUPER_CLIENT_INDEX = 0;
 
 var isFirst = true;
+var isEnd = false;
 
 var CONNECTED_CLIENT_COUNT = totalPlayer;
 
@@ -47,11 +49,13 @@ PLAYERS_TRANFORM.rotations = rotations;
 // 변수 초기화
 var INDEX_TO_SOCKET_ID = [];
 var SCORE_BOARD = [];
+var GOAL_COUNTS = [];
 var PLAYERS_NAME = [];
 for(var i = 0; i < totalPlayer; i++){
     INDEX_TO_SOCKET_ID.push('');
     PLAYERS_NAME.push('');
     SCORE_BOARD.push(0);
+    GOAL_COUNTS.push(0);
 }
 
 var LOADED_PLAYER_INDEX = [];
@@ -94,12 +98,13 @@ io.on('connection', function(socket) {
             sendingData.PlayerNames = PLAYERS_NAME;
             var datas = JSON.stringify(sendingData);
             io.emit('kick_off', datas);
+            RUNNING_TIME_STAMP = Date.now();
         }
     });
 
     socket.on('transform', function(data){
         if(isFirst){
-            TIME_STAMP = Date.now();
+            TRANSFORM_TIME_STAMP = Date.now();
             isFirst = false;
         }
 
@@ -124,10 +129,29 @@ io.on('connection', function(socket) {
             PLAYERS_TRANFORM.animHashCodes[data.PlayerIndex] = data.AnimHashCode
         }
 
-        var timeDiff = Date.now() - TIME_STAMP;
+        
+        var timeDiff = Date.now() - TRANSFORM_TIME_STAMP;
 
+        if(!isEnd && Date.now() - RUNNING_TIME_STAMP > 300000){
+            isEnd = true;
+            var winnerIndex = 0;
+            for(var i = 1; i < totalPlayer; i++){
+                if(SCORE_BOARD[i] < SCORE_BOARD[winnerIndex]){
+                    continue;
+                }
+                else if(SCORE_BOARD[i] == SCORE_BOARD[winnerIndex]){
+                    if(GOAL_COUNTS[i] > GOAL_COUNTS[winnerIndex]){
+                        winnerIndex = i;
+                    }
+                }
+                else{
+                    winnerIndex = i;
+                }
+            }
+            io.emit('end_game', JSON.stringify(winnerIndex));
+        }
         // 40ms마다 절대 좌표 + 공
-        if(timeDiff > 40){
+        else if(timeDiff > 40){
             sendingPosition.BallPositions = ballsPositions;
             sendingPosition.PlayerPositions = PLAYERS_TRANFORM.positions;
             sendingPosition.PlayerRotations = PLAYERS_TRANFORM.rotations;
@@ -137,7 +161,7 @@ io.on('connection', function(socket) {
             //console.log('절대' + datas);
 
              io.emit('transform', datas);
-            TIME_STAMP = Date.now();
+            TRANSFORM_TIME_STAMP = Date.now();
             for(var i = 0; i < totalPlayer; i++){
                 PLAYERS_TRANFORM.animHashCodes[i] = 0;
             }
@@ -164,6 +188,7 @@ io.on('connection', function(socket) {
         }
         else if(flag == 1){
             SCORE_BOARD[scorer] += 3;
+            GOAL_COUNTS[scorer] += 1;
             SCORE_BOARD[conceder] -= 2;
             if(SCORE_BOARD[conceder] < 0){
                 SCORE_BOARD[conceder] = 0;
@@ -171,6 +196,7 @@ io.on('connection', function(socket) {
         }
         else{
             SCORE_BOARD[scorer] += 2;
+            GOAL_COUNTS[scorer] += 1;
             SCORE_BOARD[conceder] -= 1;
             if(SCORE_BOARD[conceder] < 0){
                 SCORE_BOARD[conceder] = 0;
