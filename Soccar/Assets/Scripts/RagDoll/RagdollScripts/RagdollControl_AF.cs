@@ -2,6 +2,7 @@
 #define SIMPLEFOOTIK
 using UnityEngine;
 using System.Collections;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace AnimFollow
 {
@@ -201,7 +202,7 @@ namespace AnimFollow
 				animFollow.angularDrag = angularDrag;
 				animFollow.drag = drag;
 				simpleFootIK.userNeedsToFixStuff = true; // Just disabling footIK
-				PlayerController.InhibitMove = true;
+				SetInhibitMoveFlag(true);
 
 				Renderer ragdollRenderer;
 				if ((ragdollRenderer = transform.GetComponentInChildren<Renderer>()) && !ragdollRenderer.isVisible)
@@ -235,9 +236,9 @@ namespace AnimFollow
 			// Fall if: we hit with high enough speed or if the distortion of the character to large
 			if (IsTackled || numberOfCollisions > 0 && (collisionSpeed > graceSpeed || (!(gettingUp || falling) && limbErrorMagnitude > noGhostLimit))) //|| (limbErrorMagnitude > noGhostLimit2 && orientated))
 			{
+				IsTackled = false;
 				if (!falling)
 				{
-					IsTackled = false;
 					ragdollRootBone.GetComponent<Rigidbody>().AddForce(Vector3.up * 100f);
 					// The initial strength immediately after the impact
 					if (!animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.Idle) && ! getupState) // If not in idle state
@@ -321,7 +322,7 @@ namespace AnimFollow
 						}
 						else if (!(isInTransitionToGetup || getupState)) // Getting up is done. We are back in Idle (if not delayed)
 						{
-							PlayerController.InhibitMove = false; // Master is able to move again
+							SetInhibitMoveFlag(false); // Master is able to move again
 #if SIMPLEFOOTIK
 							simpleFootIK.extraYLerp = 1f;
 #endif
@@ -369,9 +370,8 @@ namespace AnimFollow
 				else // Falling
 				{
 					Debug.Log("쓰러짐1(Player" + transform.root.GetComponent<PlayerInformation>().PlayerIndex + ")");
-                    // Lerp force to zero from residual values
-					if (transform.root.GetComponent<PlayerInformation>().PlayerIndex == PlayerController.PlayerIndex)
-							PlayerController.InhibitMove = true;
+					// Lerp force to zero from residual values
+					SetInhibitMoveFlag(true);
                     // 이영재가 추가함 20.06.09
                     if (transform.root.GetComponent<PlayerInformation>().PlayerIndex == PlayerController.PlayerIndex)
                     {
@@ -392,8 +392,7 @@ namespace AnimFollow
 						Debug.Log("쓰러짐2(Player" + transform.root.GetComponent<PlayerInformation>().PlayerIndex + ")");
 						gettingUp = true;
 						orientate = true;
-						if (transform.root.GetComponent<PlayerInformation>().PlayerIndex == PlayerController.PlayerIndex)
-							PlayerController.InhibitMove = true;
+						SetInhibitMoveFlag(true);
 						animator.speed = masterFallAnimatorSpeedFactor * animatorSpeed * 4; // Animation speed during transition to get up state
 						animFollow.maxTorque = 0f; // These strengths shold be zero to avoid twitching during orientation
 						animFollow.maxForce = 0f;
@@ -559,6 +558,12 @@ namespace AnimFollow
 				print ("This will never show and is here just to avoid a compiler warning");
 
 			return(true);
+		}
+
+		private void SetInhibitMoveFlag(bool flag)
+		{
+			if(transform.root.GetComponent<PlayerInformation>().PlayerIndex == PlayerController.PlayerIndex)
+				PlayerController.InhibitMove = flag;
 		}
 	}
 }

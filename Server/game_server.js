@@ -2,6 +2,7 @@ var port = Number(process.argv.slice(2,3));
 var totalPlayer = Number(process.argv.slice(3));
 
 var express = require('express');
+const { send } = require('process');
 var app = express();
 
 var server = require('http').createServer(app);
@@ -184,9 +185,22 @@ io.on('connection', function(socket) {
         io.emit('score', datas);
     });
 
+    socket.on('tackle_event', function(data){
+        console.log('in tackle_event : '+ data.PlayerIndex +' is tackeld!');
+        var sendingData = new Object();
+        sendingData.PlayerIndex = data.PlayerIndex;
+        sendingData.PlayerPosition = new Object();
+        sendingData.PlayerPosition.x = data.PlayerPosition.x;
+        sendingData.PlayerPosition.y = data.PlayerPosition.y;
+        sendingData.PlayerPosition.z = data.PlayerPosition.z;
+
+        var datas = JSON.stringify(sendingData);
+        io.emit('tackle_event', datas);
+    });
+
     socket.on('end_game', function(data){
 
-    })
+    });
 
     socket.on('disconnect', function(data){
         var i;

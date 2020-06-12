@@ -159,6 +159,17 @@ public class NetworkManager : MonoBehaviour
             GameLauncher.RoutineScheduler.StartMoving(receivingPositions);
         });
 
+        // 누군가 태클에 의해 넘어짐
+        Socket.On("tackle_event", (string data) =>
+        {
+            data = ToJsonFormat(data);
+
+            Packet.ReceivingTackleEvent receiveTackleEvent = JsonUtility.FromJson<Packet.ReceivingTackleEvent>(data);
+            Transform tackledAvatar = PlayerController.Players[receiveTackleEvent.PlayerIndex].transform;
+            tackledAvatar.position = receiveTackleEvent.PlayerPosition;
+            tackledAvatar.root.GetChild(1).gameObject.GetComponent<AnimFollow.RagdollControl_AF>().IsTackled = true;
+        });
+
         Socket.On("kick_off", (string data) =>
         {
             data = ToJsonFormat(data);
