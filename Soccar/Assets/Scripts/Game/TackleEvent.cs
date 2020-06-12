@@ -31,7 +31,7 @@ public class TackleEvent : MonoBehaviour
                         other.transform.root.GetChild(0).gameObject.GetComponent<Animator>().SetFloat(PlayerController.Hash.SpeedFloat, 0f);
                         // otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().falling = true;
                         // 충돌된 오브젝트의 물리를 받도록 조정
-                        other.gameObject.GetComponent<AnimFollow.Limb_AF>().IsTackled = true;
+                        otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().IsTackled = true;
                     }
                 }
             }

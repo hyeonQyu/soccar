@@ -129,6 +129,7 @@ namespace AnimFollow
 		float noContactTime = 10f;					// The game time since last the ragdoll was in contact with another collider (zero when in contact)
 		Quaternion rootboneToForward;			// Rotation of ragdollRootBone relative to transform.forward
 		[HideInInspector] public bool shotByBullet = false;
+		public bool IsTackled = false;
 		bool userNeedsToAssignStuff = false;	// If this is true then ....
 		bool delayedGetupDone = false;			// Used to delay setting gettingUp to false if still in contakt after get up state
 		bool localTorqUserSetting;				// Saves the user setting from AnimFollow
@@ -232,10 +233,12 @@ namespace AnimFollow
 			// inhibit movements in PlayerMovement script, falling, orientate master. ease ragdoll to master pose, play getup animation, go to full strength and anable movements again. 
 
 			// Fall if: we hit with high enough speed or if the distortion of the character to large
-			if (shotByBullet || numberOfCollisions > 0 && (collisionSpeed > graceSpeed || (!(gettingUp || falling) && limbErrorMagnitude > noGhostLimit)) || (limbErrorMagnitude > noGhostLimit2 && orientated))
+			if (IsTackled || numberOfCollisions > 0 && (collisionSpeed > graceSpeed || (!(gettingUp || falling) && limbErrorMagnitude > noGhostLimit)) || (limbErrorMagnitude > noGhostLimit2 && orientated))
 			{
 				if (!falling)
 				{
+					IsTackled = false;
+					ragdollRootBone.GetComponent<Rigidbody>().AddForce(Vector3.up * 100f);
 					// The initial strength immediately after the impact
 					if (!animator.GetCurrentAnimatorStateInfo(0).fullPathHash.Equals(hash.Idle) && ! getupState) // If not in idle state
 					{
@@ -338,6 +341,7 @@ namespace AnimFollow
 								Debug.Log("Set gettingUP = false");
                                 gettingUp = false; // Getting up is done
 								numberOfCollisions = 0;
+								ragdollRootBone.position = PlayerController.AlterEgo.transform.position;
 								delayedGetupDone = false;
 								PlayerController.InhibitRun = false;
 							}
