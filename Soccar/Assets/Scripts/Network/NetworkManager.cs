@@ -206,7 +206,10 @@ public class NetworkManager : MonoBehaviour
         {
             int winner = int.Parse(data.Substring(1, data.Length - 2));
 
+            if(winner == PlayerController.PlayerIndex)
+                GameLauncher.IsWinner = true;
             GameLauncher.IsEndGame = true;
+            
             StartCoroutine(EndWhistle(winner));
 
             // 패자 플레이어를 눕힘

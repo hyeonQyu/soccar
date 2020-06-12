@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -12,8 +10,6 @@ public class IntroManager : MonoBehaviour
     private Image _mainScreenPanel;
     [SerializeField]
     private Image _pressAnyKey;
-
-    private SceneManager _sceneManager;
 
     public static bool IsLogoDestroyed { get; set; }
     public static bool IsMainDestroyed { get; set; }

@@ -209,6 +209,9 @@ public class ButtonController : MonoBehaviour
         Destroy(GameObject.Find("(singleton) socket.io.SocketManager"));
         Destroy(GameObject.Find("MainThreadDispatcher"));
 
+        // static 요소 초기화
+        GameLauncher.InitializeStatic();
+
         SceneManager.LoadScene("Lobby Scene");
     }
 

@@ -11,6 +11,8 @@ public class GameLauncher : MonoBehaviour
     private GameObject[] _scoreBoard;
     [SerializeField]
     private GameObject _moveLobbyButton;
+    [SerializeField]
+    private GameObject _gameResult;
 
     // 네트워크
     [SerializeField]
@@ -31,9 +33,11 @@ public class GameLauncher : MonoBehaviour
     private float _time = 300;
     private int _seconds = 300;
 
-    public static bool IsReadyToKickOff;
+    public static bool IsReadyToKickOff { get; set; }
     private bool _isKickOff;
-    public static bool IsEndGame;
+    public static bool IsEndGame { get; set; }
+    private bool _isEndGameComponentsActivated;
+    public static bool IsWinner { get; set; }
 
     // 플레이어 움직임 보간에 사용
     public static RoutineScheduler RoutineScheduler { get; private set; }
@@ -65,6 +69,7 @@ public class GameLauncher : MonoBehaviour
         }
 
         _moveLobbyButton.SetActive(false);
+        _gameResult.SetActive(false);
 
         // 네트워크 설정
         _networkManager = _networkManagerObject.GetComponent<NetworkManager>();
@@ -134,8 +139,8 @@ public class GameLauncher : MonoBehaviour
 
         if(IsEndGame)
         {
-            if(!_moveLobbyButton.activeSelf)
-                _moveLobbyButton.SetActive(true);
+            if(!_isEndGameComponentsActivated)
+                Invoke("ActiveEndGameComponents", 2);
             return;
         }
 
@@ -150,6 +155,34 @@ public class GameLauncher : MonoBehaviour
         // 움직임 입력
         PlayerController.InputRelativePosition();
         PlayerController.InputAbsolutePostion();
+    }
+
+    // 게임 결과 및 로비로 이동 버튼 표시
+    private void ActiveEndGameComponents()
+    {
+        if(!_moveLobbyButton.activeSelf)
+        {
+            Image gameResultImage = _gameResult.GetComponent<Image>();
+            if(IsWinner)
+                gameResultImage.sprite = Resources.Load<Sprite>("UI/Victory");
+            else
+                gameResultImage.sprite = Resources.Load<Sprite>("UI/Defeat");
+
+            _gameResult.SetActive(true);
+            _moveLobbyButton.SetActive(true);
+            _isEndGameComponentsActivated = true;
+
+            _isEndGameComponentsActivated = true;
+        }
+    }
+
+    public static void InitializeStatic()
+    {
+        Headcount = 0;
+        IsReadyToKickOff = false;
+        IsWinner = false;
+        IsEndGame = false;
+        IsCrowdScream = false;
     }
 
     private string ToDoubleDigit(string str)
