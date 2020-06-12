@@ -10151,7 +10151,6 @@ MonoBehaviour:
   _angle: 25
   _height: 3.7
   _weightBackward: 0.6
-  IsFirstRun: 1
   _miniMapCam: {fileID: 1145474567}
 --- !u!1 &761087444
 GameObject:
@@ -29003,7 +29002,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 20964a9c4629c48cea3f58bc4acf9fb6, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.7
   m_Pitch: 1
   Loop: 0
   Mute: 0
