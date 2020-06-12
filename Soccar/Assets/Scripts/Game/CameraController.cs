@@ -16,6 +16,8 @@ public class CameraController : MonoBehaviour
     private float _weightBackward = 0.6f;
 
     private bool _isFirstRun = true;
+    private bool _isEndGame;
+    private int _winner;
 
     [SerializeField]
     private Camera _miniMapCam;
@@ -30,10 +32,14 @@ public class CameraController : MonoBehaviour
             _isFirstRun = false;
             Debug.Log("==카메라 세팅됨");
         }
-        if (!_isFirstRun)
+        if (!_isFirstRun && !_isEndGame)
         {
             // 카메라의 position을 실시간으로 업데이트함
             ChangeCameraView();
+        }
+        else if(_isEndGame)
+        {
+            MoveToWinner(_winner);
         }
     }
 
@@ -79,16 +85,19 @@ public class CameraController : MonoBehaviour
     public void MoveToWinner(int winner)
     {
         Debug.Log("Move To Winner");
-        _isFirstRun = true;
+        _isEndGame = true;
+        _winner = winner;
         Transform winnerTransform = PlayerController.Players[winner].transform;
         float lerpSpeed = Time.deltaTime * 2f;
 
         // 위치 이동
-        transform.position = Vector3.Lerp(transform.position, winnerTransform.forward * 1.5f, lerpSpeed);
+        Vector3 forwardPosition = winnerTransform.position + winnerTransform.forward * 1.5f + new Vector3(0, 1, 0);
+        transform.position = Vector3.Lerp(transform.position, forwardPosition, lerpSpeed);
 
         // 승자 플레이어를 비춤
         Vector3 direction = winnerTransform.position - transform.position;
         Quaternion rotation = Quaternion.LookRotation(direction.normalized);
-        transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, rotation.eulerAngles, lerpSpeed);
+        Vector3 angle = rotation.eulerAngles + new Vector3(-23, 0, 0);
+        transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, angle, lerpSpeed);
     }
 }
