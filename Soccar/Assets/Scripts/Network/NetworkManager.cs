@@ -282,7 +282,7 @@ public class NetworkManager : MonoBehaviour
 
     private IEnumerator EndWhistle(int winner)
     {
-        //GameLauncher.Sound.EndWhistle.Play();
+        GameLauncher.Sound.EndWhistle.Play();
         yield return new WaitForSeconds(0.6f);
         GameLauncher.Sound.CrowdGoal.volume = 1;
         GameLauncher.Sound.CrowdGoal.Play();
