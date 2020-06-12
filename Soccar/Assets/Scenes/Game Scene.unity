@@ -1908,7 +1908,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: da9304cc75dc92046924e57c16f5b7e4, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -2798,6 +2798,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Ball
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 3c00f758bd735cf44be07429beb81d55,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c00f758bd735cf44be07429beb81d55, type: 3}
@@ -4789,7 +4794,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: a1b08245cb8b8eb48af43886ad5e21fa, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -6498,7 +6503,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 81e1b7e58d56b0843bf0649a827a759c, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -7236,6 +7241,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Ball
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 3c00f758bd735cf44be07429beb81d55,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c00f758bd735cf44be07429beb81d55, type: 3}
@@ -10779,6 +10789,11 @@ PrefabInstance:
       propertyPath: m_CapsuleColliders.Array.data[11]
       value: 
       objectReference: {fileID: 1470943288}
+    - target: {fileID: 7569446896420656919, guid: 00eee465143592f4faaaf8d824e0c733,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.392
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 00eee465143592f4faaaf8d824e0c733, type: 3}
 --- !u!4 &761311018 stripped
@@ -13772,6 +13787,11 @@ PrefabInstance:
       propertyPath: m_CapsuleColliders.Array.data[11]
       value: 
       objectReference: {fileID: 1470943288}
+    - target: {fileID: 7569446896420656919, guid: 00eee465143592f4faaaf8d824e0c733,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.3920002
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 00eee465143592f4faaaf8d824e0c733, type: 3}
 --- !u!4 &1007310053 stripped
@@ -26369,6 +26389,11 @@ PrefabInstance:
       propertyPath: m_CapsuleColliders.Array.data[11]
       value: 
       objectReference: {fileID: 1470943288}
+    - target: {fileID: 7569446896420656919, guid: 00eee465143592f4faaaf8d824e0c733,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.3920002
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 00eee465143592f4faaaf8d824e0c733, type: 3}
 --- !u!4 &1870853455 stripped
@@ -27495,6 +27520,11 @@ PrefabInstance:
       propertyPath: m_CapsuleColliders.Array.data[11]
       value: 
       objectReference: {fileID: 1470943288}
+    - target: {fileID: 7569446896420656919, guid: 00eee465143592f4faaaf8d824e0c733,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.3920002
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 00eee465143592f4faaaf8d824e0c733, type: 3}
 --- !u!4 &1920338115 stripped
@@ -29894,6 +29924,11 @@ PrefabInstance:
       propertyPath: m_CapsuleColliders.Array.data[11]
       value: 
       objectReference: {fileID: 1470943288}
+    - target: {fileID: 7569446896420656919, guid: 00eee465143592f4faaaf8d824e0c733,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.3920002
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 00eee465143592f4faaaf8d824e0c733, type: 3}
 --- !u!4 &2094496836 stripped
@@ -31070,6 +31105,11 @@ PrefabInstance:
       propertyPath: m_CapsuleColliders.Array.data[11]
       value: 
       objectReference: {fileID: 1470943288}
+    - target: {fileID: 7569446896420656919, guid: 00eee465143592f4faaaf8d824e0c733,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.3920002
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 00eee465143592f4faaaf8d824e0c733, type: 3}
 --- !u!1 &432789147335621263
