@@ -207,7 +207,19 @@ public class NetworkManager : MonoBehaviour
             int winner = int.Parse(data.Substring(1, data.Length - 2));
 
             GameLauncher.IsEndGame = true;
-            StartCoroutine(EndGame(winner));
+            StartCoroutine(EndWhistle(winner));
+
+            // 패자 플레이어를 눕힘
+            for(int i = 0; i < GameLauncher.Headcount; i++)
+            {
+                if(PlayerController.IsConnectPlayers[i] && i != winner)
+                {
+                    Destroy(PlayerController.Players[i]);
+                }
+            }
+
+            // 카메라를 승자 플레이어에게로
+            _camera.GetComponent<CameraController>().MoveToWinner(winner);
         });
 
         Socket.On("disconnection", (string data) =>
@@ -268,24 +280,12 @@ public class NetworkManager : MonoBehaviour
         return data.Substring(1, data.Length - 2);
     }
 
-    private IEnumerator EndGame(int winner)
+    private IEnumerator EndWhistle(int winner)
     {
         GameLauncher.Sound.EndWhistle.Play();
         yield return new WaitForSeconds(0.6f);
+        GameLauncher.Sound.CrowdGoal.volume = 1;
         GameLauncher.Sound.CrowdGoal.Play();
         yield return new WaitForSeconds(3);
-
-        // 패자 플레이어를 눕힘
-        for(int i = 0; i < GameLauncher.Headcount; i++)
-        {
-            if(PlayerController.IsConnectPlayers[i] && i != winner)
-            {
-                Destroy(PlayerController.Players[i]);
-            }
-        }
-        yield return new WaitForSeconds(0.6f);
-
-        // 카메라를 승자 플레이어에게로
-        _camera.GetComponent<CameraController>().MoveToWinner(winner);
     }
 }

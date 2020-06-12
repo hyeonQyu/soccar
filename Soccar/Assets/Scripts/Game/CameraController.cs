@@ -23,7 +23,6 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        Debug.Log("카메라 " + PlayerController.IsPlayersInitialized);
         if(PlayerController.IsPlayersInitialized && _isFirstRun)
         {
             _miniMapCam.transform.eulerAngles = new Vector3(90, -PlayerController.Theta, 0);
@@ -83,6 +82,7 @@ public class CameraController : MonoBehaviour
 
     public void MoveToWinner(int winner)
     {
+        Debug.Log("Move To Winner");
         _isFirstRun = true;
         Transform winnerTransform = PlayerController.Players[winner].transform;
         float lerpSpeed = Time.deltaTime * 2f;
