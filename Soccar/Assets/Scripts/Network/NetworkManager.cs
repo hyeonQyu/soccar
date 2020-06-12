@@ -36,7 +36,7 @@ public class NetworkManager : MonoBehaviour
     private Text[] _scores;
 
     [SerializeField]
-    private Camera _camera;
+    private GameObject _camera;
 
     // 로비
     public void SetWebSocket(SceneMedium sceneMedium, LobbyNetworkLinker lobbyNetworkLinker = null)
@@ -214,7 +214,7 @@ public class NetworkManager : MonoBehaviour
             {
                 if(PlayerController.IsConnectPlayers[i] && i != winner)
                 {
-                    Destroy(PlayerController.Players[i]);
+                    PlayerController.Players[i].SetActive(false);
                 }
             }
 
@@ -282,7 +282,7 @@ public class NetworkManager : MonoBehaviour
 
     private IEnumerator EndWhistle(int winner)
     {
-        GameLauncher.Sound.EndWhistle.Play();
+        //GameLauncher.Sound.EndWhistle.Play();
         yield return new WaitForSeconds(0.6f);
         GameLauncher.Sound.CrowdGoal.volume = 1;
         GameLauncher.Sound.CrowdGoal.Play();

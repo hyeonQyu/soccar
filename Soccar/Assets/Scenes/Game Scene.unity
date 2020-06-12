@@ -10151,6 +10151,7 @@ MonoBehaviour:
   _angle: 25
   _height: 3.7
   _weightBackward: 0.6
+  IsFirstRun: 1
   _miniMapCam: {fileID: 1145474567}
 --- !u!1 &761087444
 GameObject:
@@ -20847,7 +20848,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bfdbd055d0519941a12e680e319c7cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _camera: {fileID: 753853558}
+  _camera: {fileID: 753853556}
 --- !u!4 &1489427011
 Transform:
   m_ObjectHideFlags: 0
