@@ -13,6 +13,8 @@ public class IntroManager : MonoBehaviour
     [SerializeField]
     private Image _pressAnyKey;
 
+    private SceneManager _sceneManager;
+
     public static bool IsLogoDestroyed { get; set; }
     public static bool IsMainDestroyed { get; set; }
 

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ButtonController : MonoBehaviour
@@ -29,7 +30,11 @@ public class ButtonController : MonoBehaviour
     public void Start()
     {
         _alertPanel = GameObject.Find("Alert Panel");
-        _alertMessage = _alertPanel.transform.Find("Message").gameObject.GetComponent<Text>();
+        try
+        {
+            _alertMessage = _alertPanel.transform.Find("Message").gameObject.GetComponent<Text>();
+        }
+        catch(NullReferenceException) { }
 
         _createRoomPanel = GameObject.Find("Create Room Panel");
         _inputRoomName = _createRoomPanel.transform.Find("InputField").GetComponent<InputField>();
@@ -188,6 +193,23 @@ public class ButtonController : MonoBehaviour
     {
         _buttonClickSound.Play();
         _networkManager.Send("start_game", _roomKey.text);
+    }
+
+    public void OnClickMoveLobby()
+    {
+        SceneMedium sceneMedium = GameObject.Find("Scene Medium").GetComponent<SceneMedium>();
+        sceneMedium.IsAfterGame = true;
+        sceneMedium.Port = 80;
+
+        // 게임 서버와 연결 해제
+        _networkManager = GameObject.Find("Network Manager").GetComponent<NetworkManager>();
+        _networkManager.Send("disconnection", "");
+
+        // 웹소켓 관련 요소 삭제
+        Destroy(GameObject.Find("(singleton) socket.io.SocketManager"));
+        Destroy(GameObject.Find("MainThreadDispatcher"));
+
+        SceneManager.LoadScene("Lobby Scene");
     }
 
     private bool IsAlphabetNumeric(string str, bool isNickname)

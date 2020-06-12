@@ -9,6 +9,8 @@ public class GameLauncher : MonoBehaviour
     private GameObject _loadingGameScenePanel;
     [SerializeField]
     private GameObject[] _scoreBoard;
+    [SerializeField]
+    private GameObject _moveLobbyButton;
 
     // 네트워크
     [SerializeField]
@@ -61,6 +63,8 @@ public class GameLauncher : MonoBehaviour
         {
             Destroy(_scoreBoard[i]);
         }
+
+        _moveLobbyButton.SetActive(false);
 
         // 네트워크 설정
         _networkManager = _networkManagerObject.GetComponent<NetworkManager>();
@@ -129,7 +133,11 @@ public class GameLauncher : MonoBehaviour
         }
 
         if(IsEndGame)
+        {
+            if(!_moveLobbyButton.activeSelf)
+                _moveLobbyButton.SetActive(true);
             return;
+        }
 
         // 경기 시작 휘슬이 울린 후 타이머 시작
         if(_seconds >= 0)

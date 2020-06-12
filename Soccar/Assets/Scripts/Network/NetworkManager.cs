@@ -246,9 +246,9 @@ public class NetworkManager : MonoBehaviour
                 Send("change_super_client", PlayerController.SuperClientIndex.ToString());
 
             // 연결이 끊어진 플레이어에 대한 오브젝트 삭제
-            Destroy(PlayerController.Players[disconnectPlayerIndex]);
-            Destroy(PlayerController.GoalPosts[disconnectPlayerIndex]);
-            Destroy(PlayerController.MiniMapManager.Players[disconnectPlayerIndex]);
+            PlayerController.Players[disconnectPlayerIndex].SetActive(false);
+            PlayerController.GoalPosts[disconnectPlayerIndex].SetActive(false);
+            PlayerController.MiniMapManager.Players[disconnectPlayerIndex].SetActive(false);
         });
     }
 

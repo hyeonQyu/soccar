@@ -20,8 +20,10 @@ public class LobbyManager : MonoBehaviour
     private GameObject _buttonControllerObject;
     [SerializeField]
     private GameObject _networkManagerObject;
-    [SerializeField]
-    private GameObject _sceneMediumObject;
+    //[SerializeField]
+    //private GameObject _sceneMediumObject;
+
+    private SceneMedium _sceneMedium;
 
     private InputField _chatMessage;
 
@@ -53,13 +55,25 @@ public class LobbyManager : MonoBehaviour
         _room = new Room(_roomPanel);
 
         _lobbyNetworkLinker = new LobbyNetworkLinker(_roomManager, _room, _roomPanel, _alertPanel);
+        _sceneMedium = GameObject.Find("Scene Medium").GetComponent<SceneMedium>();
         _networkManager = _networkManagerObject.GetComponent<NetworkManager>();
-        _networkManager.SetWebSocket(_sceneMediumObject.GetComponent<SceneMedium>(), _lobbyNetworkLinker);
+        _networkManager.SetWebSocket(_sceneMedium, _lobbyNetworkLinker);
 
         _chatMessage = _roomPanel.transform.Find("Message").GetComponent<InputField>();
         _buttonController = _buttonControllerObject.GetComponent<ButtonController>();
 
-        CurrentPanel = OnLoginPanel;
+        // 게임 첫 실행
+        if(!_sceneMedium.IsAfterGame)
+        {
+            CurrentPanel = OnLoginPanel;
+        }
+        // 게임 플레이 후 로비 씬 전환
+        else
+        {
+            PlayerName = _sceneMedium.PlayerName;
+            CurrentPanel = 0;
+            Destroy(GameObject.Find("Login Panel"));
+        }
     }
 
     // Update is called once per frame
