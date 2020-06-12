@@ -2352,9 +2352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bfdbd055d0519941a12e680e319c7cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scorer: {fileID: 0}
-  _conceder: {fileID: 0}
-  _scoreMark: {fileID: 0}
+  _camera: {fileID: 0}
 --- !u!1 &424896156
 GameObject:
   m_ObjectHideFlags: 0

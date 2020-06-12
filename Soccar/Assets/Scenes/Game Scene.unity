@@ -10144,7 +10144,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 753853556}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 225fd25c77fce4016ad6e7d101d721c3, type: 3}
+  m_Script: {fileID: 11500000, guid: dce90dbc5f617b44f9e873f864570421, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _distance: 5.3
@@ -20847,6 +20847,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bfdbd055d0519941a12e680e319c7cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _camera: {fileID: 0}
 --- !u!4 &1489427011
 Transform:
   m_ObjectHideFlags: 0

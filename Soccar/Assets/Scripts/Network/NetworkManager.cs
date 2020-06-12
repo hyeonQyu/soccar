@@ -205,7 +205,7 @@ public class NetworkManager : MonoBehaviour
         Socket.On("end_game", (string data) =>
         {
             int winner = int.Parse(data.Substring(1, data.Length - 2));
-            
+
             GameLauncher.IsEndGame = true;
             StartCoroutine(EndGame(winner));
         });

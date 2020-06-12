@@ -23,6 +23,7 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
+        Debug.Log("카메라 " + PlayerController.IsPlayersInitialized);
         if(PlayerController.IsPlayersInitialized && _isFirstRun)
         {
             _miniMapCam.transform.eulerAngles = new Vector3(90, -PlayerController.Theta, 0);
