@@ -233,7 +233,7 @@ namespace AnimFollow
 			// inhibit movements in PlayerMovement script, falling, orientate master. ease ragdoll to master pose, play getup animation, go to full strength and anable movements again. 
 
 			// Fall if: we hit with high enough speed or if the distortion of the character to large
-			if (IsTackled || numberOfCollisions > 0 && (collisionSpeed > graceSpeed || (!(gettingUp || falling) && limbErrorMagnitude > noGhostLimit)) || (limbErrorMagnitude > noGhostLimit2 && orientated))
+			if (IsTackled || numberOfCollisions > 0 && (collisionSpeed > graceSpeed || (!(gettingUp || falling) && limbErrorMagnitude > noGhostLimit))) //|| (limbErrorMagnitude > noGhostLimit2 && orientated))
 			{
 				if (!falling)
 				{
@@ -341,7 +341,7 @@ namespace AnimFollow
 								Debug.Log("Set gettingUP = false");
                                 gettingUp = false; // Getting up is done
 								numberOfCollisions = 0;
-								ragdollRootBone.position = PlayerController.AlterEgo.transform.position;
+								//ragdollRootBone.position = PlayerController.AlterEgo.transform.position;
 								delayedGetupDone = false;
 								PlayerController.InhibitRun = false;
 							}

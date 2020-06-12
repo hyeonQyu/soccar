@@ -40,9 +40,10 @@ namespace AnimFollow
 					ignore = true;
 				}
 
-				Debug.Log("이그노어(Enter) = " + ignore);
+				
 				if (!ignore)
 				{
+					Debug.Log("이그노어(Enter) = " + ignore);
 					ragdollControl.numberOfCollisions++;
 					ragdollControl.collisionSpeed = collision.relativeVelocity.magnitude;
 //					Debug.Log (collision.transform.name + "\nincreasing");

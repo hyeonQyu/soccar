@@ -24,7 +24,7 @@ public class TackleEvent : MonoBehaviour
                     Debug.Log("태클 당하는 놈" + other.transform.root.gameObject.name);
                     otherRagDoll = other.transform.root.GetChild(1).gameObject;
                     if (other.gameObject.tag.Equals("Leg") && !otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().falling &&
-                    !otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().gettingUp && !other.gameObject.GetComponent<AnimFollow.Limb_AF>().IsTackled)
+                    !otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().gettingUp)
                     {
                         Debug.Log("한 번 태클");
                         // Set avatar's animation to idle
