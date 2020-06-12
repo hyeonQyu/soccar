@@ -8,9 +8,12 @@ public class TackleEvent : MonoBehaviour
     private Animator _animator;
     // Start is called before the first frame update
     private GameObject otherRagDoll;
+    private NetworkManager _networkManager;
+
     void Start()
     {
         _animator = transform.root.GetChild(0).gameObject.GetComponent<Animator>();
+        _networkManager = GameObject.Find("Network Manager").GetComponent<NetworkManager>();
     }
     private void OnCollisionEnter(Collision other)
     {
@@ -26,12 +29,15 @@ public class TackleEvent : MonoBehaviour
                     if (other.gameObject.tag.Equals("Leg") && !otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().falling &&
                     !otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().gettingUp)
                     {
-                        Debug.Log("한 번 태클");
-                        // Set avatar's animation to idle
-                        other.transform.root.GetChild(0).gameObject.GetComponent<Animator>().SetFloat(PlayerController.Hash.SpeedFloat, 0f);
-                        // otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().falling = true;
-                        // 충돌된 오브젝트의 물리를 받도록 조정
-                        otherRagDoll.GetComponent<AnimFollow.RagdollControl_AF>().IsTackled = true;
+                        if(other.transform.root.gameObject.GetComponent<PlayerInformation>().PlayerIndex == PlayerController.PlayerIndex)
+                        {
+                            PlayerController.InhibitMove = true;
+                            // Set avatar's animation to idle
+                            other.transform.root.GetChild(0).gameObject.GetComponent<Animator>().SetFloat(PlayerController.Hash.SpeedFloat, 0f);
+
+                            Packet.SendingTackleEvent sendingTackleEvent = new Packet.SendingTackleEvent(PlayerController.PlayerIndex, PlayerController.AlterEgo.transform.position);
+                            _networkManager.Send<Packet.SendingTackleEvent>("tackle_event", sendingTackleEvent);
+                        }
                     }
                 }
             }

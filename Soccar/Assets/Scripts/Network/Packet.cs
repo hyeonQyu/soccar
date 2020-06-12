@@ -82,6 +82,24 @@ public class Packet
         }
     }
 
+    public class SendingTackleEvent
+    {
+        public int PlayerIndex;
+        public Vector3 PlayerPosition;
+
+        public SendingTackleEvent(int playerIndex, Vector3 playerPosition)
+        {
+            PlayerIndex = playerIndex;
+            PlayerPosition = playerPosition;
+        }
+    }
+
+    public class ReceivingTackleEvent
+    {
+        public int PlayerIndex;
+        public Vector3 PlayerPosition;
+    }
+
     public class SendingCompleteLoading
     {
         public int PlayerIndex;
