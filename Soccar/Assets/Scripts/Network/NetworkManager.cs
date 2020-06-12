@@ -35,6 +35,9 @@ public class NetworkManager : MonoBehaviour
     // 플레이어들의 점수
     private Text[] _scores;
 
+    [SerializeField]
+    private Camera _camera;
+
     // 로비
     public void SetWebSocket(SceneMedium sceneMedium, LobbyNetworkLinker lobbyNetworkLinker = null)
     {
@@ -199,6 +202,14 @@ public class NetworkManager : MonoBehaviour
             GameLauncher.RoutineScheduler.CrowdScream();
         });
 
+        Socket.On("end_game", (string data) =>
+        {
+            int winner = int.Parse(data.Substring(1, data.Length - 2));
+            
+            GameLauncher.IsEndGame = true;
+            StartCoroutine(EndGame(winner));
+        });
+
         Socket.On("disconnection", (string data) =>
         {
             int disconnectPlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
@@ -255,5 +266,26 @@ public class NetworkManager : MonoBehaviour
     {
         string data = str.Replace("\\", "");
         return data.Substring(1, data.Length - 2);
+    }
+
+    private IEnumerator EndGame(int winner)
+    {
+        GameLauncher.Sound.EndWhistle.Play();
+        yield return new WaitForSeconds(0.6f);
+        GameLauncher.Sound.CrowdGoal.Play();
+        yield return new WaitForSeconds(3);
+
+        // 패자 플레이어를 눕힘
+        for(int i = 0; i < GameLauncher.Headcount; i++)
+        {
+            if(PlayerController.IsConnectPlayers[i] && i != winner)
+            {
+                Destroy(PlayerController.Players[i]);
+            }
+        }
+        yield return new WaitForSeconds(0.6f);
+
+        // 카메라를 승자 플레이어에게로
+        _camera.GetComponent<CameraController>().MoveToWinner(winner);
     }
 }

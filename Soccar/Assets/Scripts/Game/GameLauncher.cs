@@ -30,7 +30,8 @@ public class GameLauncher : MonoBehaviour
     private int _seconds = 300;
 
     public static bool IsReadyToKickOff;
-    private bool _isKickOff;    
+    private bool _isKickOff;
+    public static bool IsEndGame;
 
     // 플레이어 움직임 보간에 사용
     public static RoutineScheduler RoutineScheduler { get; private set; }
@@ -127,10 +128,16 @@ public class GameLauncher : MonoBehaviour
             return;
         }
 
+        if(IsEndGame)
+            return;
+
         // 경기 시작 휘슬이 울린 후 타이머 시작
-        _time -= Time.deltaTime;
-        _seconds = (int)Math.Round(_time);
-        _txtTime.text = (_seconds / 60).ToString() + ":" + ToDoubleDigit((_seconds % 60).ToString());
+        if(_seconds >= 0)
+        {
+            _time -= Time.deltaTime;
+            _seconds = (int)Math.Round(_time);
+            _txtTime.text = (_seconds / 60).ToString() + ":" + ToDoubleDigit((_seconds % 60).ToString());
+        }
 
         // 움직임 입력
         PlayerController.InputRelativePosition();

@@ -15,6 +15,7 @@ public class Sound
     public AudioSource HitFense { get; private set; }
     public AudioSource BounceBall { get; private set; }
     public AudioSource GoalNet { get; private set; }
+    public AudioSource EndWhistle { get; private set; }
 
     // 로비
 
@@ -34,6 +35,7 @@ public class Sound
             HitFense = _sounds.transform.Find("Hit Fense").GetComponent<AudioSource>();
             BounceBall = _sounds.transform.Find("Bounce Ball").GetComponent<AudioSource>();
             GoalNet = _sounds.transform.Find("Goal Net").GetComponent<AudioSource>();
+            EndWhistle = _sounds.transform.Find("End Whistle").GetComponent<AudioSource>();
         }
         // 로비
         else

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 //using System.Numerics;
 using UnityEngine;
 
-public class Camera : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
     [SerializeField]
     private float _distance = 5.3f;
@@ -14,10 +14,11 @@ public class Camera : MonoBehaviour
     private float _height = 3.7f;
     [SerializeField]
     private float _weightBackward = 0.6f;
+
     private bool _isFirstRun = true;
 
     [SerializeField]
-    private UnityEngine.Camera _miniMapCam;
+    private Camera _miniMapCam;
 
     // Update is called once per frame
     void LateUpdate()
@@ -73,5 +74,20 @@ public class Camera : MonoBehaviour
 
         Vector3 rotation = new Vector3(angle, transform.eulerAngles.y, 0);
         transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, rotation, lerpSpeed / 2);
+    }
+
+    public void MoveToWinner(int winner)
+    {
+        _isFirstRun = true;
+        Transform winnerTransform = PlayerController.Players[winner].transform;
+        float lerpSpeed = Time.deltaTime * 2f;
+
+        // 위치 이동
+        transform.position = Vector3.Lerp(transform.position, winnerTransform.forward * 1.5f, lerpSpeed);
+
+        // 승자 플레이어를 비춤
+        Vector3 direction = winnerTransform.position - transform.position;
+        Quaternion rotation = Quaternion.LookRotation(direction.normalized);
+        transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, rotation.eulerAngles, lerpSpeed);
     }
 }
