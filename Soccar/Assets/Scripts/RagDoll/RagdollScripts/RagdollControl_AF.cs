@@ -337,6 +337,7 @@ namespace AnimFollow
 							{
 								Debug.Log("Set gettingUP = false");
                                 gettingUp = false; // Getting up is done
+								numberOfCollisions = 0;
 								delayedGetupDone = false;
 								PlayerController.InhibitRun = false;
 							}
