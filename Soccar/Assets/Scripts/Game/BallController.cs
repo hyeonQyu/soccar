@@ -115,8 +115,12 @@ public class BallController : MonoBehaviour
     {
         if (LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
         {
-            // 드리블
-            _rigidBody.velocity = collision.transform.forward * _collisionAnimator.GetFloat("SpeedFloat") * 5.0f;
+            try
+            {
+                // 드리블
+                _rigidBody.velocity = collision.transform.forward * _collisionAnimator.GetFloat("SpeedFloat") * 5.0f;
+            }
+            catch(MissingReferenceException) { }
         }
     }
 

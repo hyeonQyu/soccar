@@ -157,7 +157,6 @@ public class NetworkManager : MonoBehaviour
             Packet.ReceivingTransform receivingPositions = JsonUtility.FromJson<Packet.ReceivingTransform>(data);
             GameLauncher.RoutineScheduler.StopMoving();
             GameLauncher.RoutineScheduler.StartMoving(receivingPositions);
-            //PlayerController.Move(receivingPositions.PlayerPositions, PlayerController.Absolute);
         });
 
         Socket.On("kick_off", (string data) =>
