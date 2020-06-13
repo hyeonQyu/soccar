@@ -15,7 +15,7 @@ namespace AnimFollow
 		// public int deadBool;
 		public int SpeedFloat;
 		// public int sneakingBool;
-
+		public int EndInt;
 		public int FrontTrigger;
 		public int BackTrigger;
 		public int FrontMirrorTrigger;
@@ -51,6 +51,7 @@ namespace AnimFollow
 
 			// These are used by the RagdollControll script and must exist exactly as below
 			SpeedFloat = Animator.StringToHash("SpeedFloat");
+			EndInt = Animator.StringToHash("EndInt");
 
 			Idle = Animator.StringToHash("Base Layer.Move.Idle"); 
 			Walk = Animator.StringToHash("Base Layer.Move.Walk");

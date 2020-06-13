@@ -1,10 +1,11 @@
-﻿using System;
+﻿// using System;
 using UnityEngine;
 using socket.io;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms.Impl;
 using System.Collections;
+using System;
 //using System.Numerics;
 
 public class NetworkManager : MonoBehaviour
@@ -285,6 +286,8 @@ public class NetworkManager : MonoBehaviour
 
     private IEnumerator EndGame(int winner)
     {
+        PlayerController.PlayerAnimators[winner].SetInteger(PlayerController.Hash.EndInt, UnityEngine.Random.Range(0, 2));
+        
         GameLauncher.Sound.EndWhistle.Play();
         yield return new WaitForSeconds(1);
         GameLauncher.Sound.CrowdGoal.volume = 1;
