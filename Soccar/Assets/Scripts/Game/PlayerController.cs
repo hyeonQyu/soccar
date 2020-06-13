@@ -265,7 +265,6 @@ public static class PlayerController
             sendingTransform.BallRotations[i] = GameLauncher.Balls[i].transform.rotation;
             if(i == 0)
             {
-                Debug.Log("Ball " + sendingTransform.BallRotations[i].w);
                 //Debug.Log("Ball Quaternion " + sendingTransform.BallRotations[i]);
                 //Debug.Log("Ball Eueler " + GameLauncher.Balls[i].transform.eulerAngles);
             }
