@@ -243,17 +243,14 @@ public static class PlayerController
         if(Input.GetKeyDown(KeyCode.Space))
         {
             AnimHashCode = Hash.JumpTrigger;
-            //PlayerAnimator.SetTrigger(Hash.JumpTrigger);  
         }
         else if(Input.GetKeyDown(KeyCode.A))
         {
             AnimHashCode = Hash.TackleTrigger;
-            //PlayerAnimator.SetTrigger(Hash.TackleTrigger);
         }
         else if(Input.GetKeyDown(KeyCode.D))
         {
             AnimHashCode = Hash.ShootTrigger;
-            //PlayerAnimator.SetTrigger(Hash.ShootTrigger);
         }
     }
 

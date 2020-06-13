@@ -54,7 +54,7 @@ public class GameLauncher : MonoBehaviour
         Headcount = _sceneMedium.Headcount;
 
         RoutineScheduler = GetComponent<RoutineScheduler>();
-        PlayerController.SetPlayers();
+        PlayerController.SetPlayers();       
 
         // 스코어보드 배치
         int n = Headcount - 1;

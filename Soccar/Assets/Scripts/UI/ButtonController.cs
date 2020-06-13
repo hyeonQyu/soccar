@@ -29,24 +29,22 @@ public class ButtonController : MonoBehaviour
 
     public void Start()
     {
-        _alertPanel = GameObject.Find("Alert Panel");
+        _networkManager = GameObject.Find("Network Manager").GetComponent<NetworkManager>();
+
+
         try
         {
+            _buttonClickSound = GameObject.Find("Button Click Sound").GetComponent<AudioSource>();
+
+            _alertPanel = GameObject.Find("Alert Panel");
             _alertMessage = _alertPanel.transform.Find("Message").gameObject.GetComponent<Text>();
+            _createRoomPanel = GameObject.Find("Create Room Panel");
+            _inputRoomName = _createRoomPanel.transform.Find("InputField").GetComponent<InputField>();
+            _roomPanel = GameObject.Find("Room Panel");
+            _roomKey = _roomPanel.transform.Find("Room Key").GetComponent<Text>();
+            _message = _roomPanel.transform.Find("Message").GetComponent<InputField>();            
         }
-        catch(NullReferenceException) { }
-
-        _createRoomPanel = GameObject.Find("Create Room Panel");
-        _inputRoomName = _createRoomPanel.transform.Find("InputField").GetComponent<InputField>();
-
-        _roomPanel = GameObject.Find("Room Panel");
-        _roomKey = _roomPanel.transform.Find("Room Key").GetComponent<Text>();
-
-        _message = _roomPanel.transform.Find("Message").GetComponent<InputField>();
-
-        _buttonClickSound = GameObject.Find("Button Click Sound").GetComponent<AudioSource>();
-
-        _networkManager = GameObject.Find("Network Manager").GetComponent<NetworkManager>();
+        catch(NullReferenceException) { }     
     }
 
     public void OnClickLogin()

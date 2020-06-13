@@ -149,6 +149,12 @@ public class NetworkManager : MonoBehaviour
         Socket.On("player_index", (string data) =>
         {
             PlayerController.PlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
+            // 슈퍼 클라이언트가 아니면 공이 물리엔진의 영향을 받지 않음
+            if(PlayerController.PlayerIndex != PlayerController.SuperClientIndex)
+            {
+                for(int i = 0; i < 2; i++)
+                    GameLauncher.Balls[i].GetComponent<Rigidbody>().isKinematic = true;
+            }
         });
 
         // 플레이어 + 공
@@ -171,6 +177,7 @@ public class NetworkManager : MonoBehaviour
             Transform tackledAvatar = PlayerController.Players[receiveTackleEvent.PlayerIndex].transform;
             tackledAvatar.position = receiveTackleEvent.PlayerPosition;
             tackledAvatar.root.GetChild(1).gameObject.GetComponent<AnimFollow.RagdollControl_AF>().IsTackled = true;
+            GameLauncher.Sound.Fall.Play();
         });
 
         Socket.On("kick_off", (string data) =>
@@ -210,11 +217,7 @@ public class NetworkManager : MonoBehaviour
                 GameLauncher.IsWinner = true;
             GameLauncher.IsEndGame = true;
             
-            StartCoroutine(EndWhistle(winner));
-
-            
-
-            
+            StartCoroutine(EndGame(winner));
         });
 
         Socket.On("disconnection", (string data) =>
@@ -275,7 +278,7 @@ public class NetworkManager : MonoBehaviour
         return data.Substring(1, data.Length - 2);
     }
 
-    private IEnumerator EndWhistle(int winner)
+    private IEnumerator EndGame(int winner)
     {
         GameLauncher.Sound.EndWhistle.Play();
         yield return new WaitForSeconds(1);
