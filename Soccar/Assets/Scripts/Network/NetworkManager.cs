@@ -226,6 +226,7 @@ public class NetworkManager : MonoBehaviour
             int disconnectPlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
 
             PlayerController.IsConnectPlayers[disconnectPlayerIndex] = false;
+            _scores[disconnectPlayerIndex].transform.parent.GetComponent<Image>().color = new Color(0, 0, 0);
 
             // 슈퍼 클라이언트 인덱스 변경
             if (disconnectPlayerIndex == PlayerController.SuperClientIndex)

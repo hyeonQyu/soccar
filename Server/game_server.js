@@ -262,36 +262,38 @@ io.on('connection', function(socket) {
     });
 
     socket.on('disconnect', function(data){
-        var i;
-        for(i = 0; i < totalPlayer; i++){
-            if(INDEX_TO_SOCKET_ID[i] == socket.id){
+        var disconnectedIndex;
+        for(disconnectedIndex = 0; disconnectedIndex < totalPlayer; disconnectedIndex++){
+            if(INDEX_TO_SOCKET_ID[disconnectedIndex] == socket.id){
                 break;
             }
         }
-        console.log(i+"player is disconnected in "+ port+' '+socket.id);
+        console.log(disconnectedIndex+"player is disconnected in "+ port+' '+socket.id);
         CONNECTED_CLIENT_COUNT -= 1;
+
         if(CONNECTED_CLIENT_COUNT == 1){
             var winnerIndex = 0;
-            for(var i = 1; i < totalPlayer; i++){
-                if(SCORE_BOARD[i] < SCORE_BOARD[winnerIndex]){
+            for(var j = 1; j < totalPlayer; j++){
+                if(SCORE_BOARD[j] < SCORE_BOARD[winnerIndex]){
                     continue;
                 }
-                else if(SCORE_BOARD[i] == SCORE_BOARD[winnerIndex]){
-                    if(GOAL_COUNTS[i] > GOAL_COUNTS[winnerIndex]){
-                        winnerIndex = i;
+                else if(SCORE_BOARD[j] == SCORE_BOARD[winnerIndex]){
+                    if(GOAL_COUNTS[j] > GOAL_COUNTS[winnerIndex]){
+                        winnerIndex = j;
                     }
                 }
                 else{
-                    winnerIndex = i;
+                    winnerIndex = j;
                 }
             }
             console.log('End Game in port '+ port);
             io.emit('end_game', JSON.stringify(winnerIndex));
         }
+
         else if(CONNECTED_CLIENT_COUNT == 0){
             process.exit(1);
         }
-        io.emit('disconnection', JSON.stringify(i));
+        io.emit('disconnection', JSON.stringify(disconnectedIndex));
     });
 
     socket.on('disconnection', function(data) {
