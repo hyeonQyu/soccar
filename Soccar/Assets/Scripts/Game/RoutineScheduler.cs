@@ -125,9 +125,9 @@ public class RoutineScheduler : MonoBehaviour
         Vector3[] destPositions = receivingTransform.BallPositions;
         Quaternion[] destRotations = receivingTransform.BallRotations;
 
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 4; i++)
         {
-            t += 0.5f;
+            t += 0.25f;
 
             for (int j = 0; j < destPositions.Length; j++)
             {
@@ -140,7 +140,7 @@ public class RoutineScheduler : MonoBehaviour
                 PlayerController.MiniMapManager.Balls[j].transform.localPosition = newVector;
             }
 
-            yield return new WaitForSeconds(0.02f);
+            yield return new WaitForSeconds(0.002f);
         }
     }
 
