@@ -27,9 +27,9 @@ var PLAYERS_TRANFORM = new Object();
     for(var j = 0; j < totalPlayer; j++){
         var position = new Object();
         var rotation = new Object();
-        position.x = j * 5;
-        position.y = 3.5;
-        position.z = j * 5;
+        position.x = 0;
+        position.y = 0;
+        position.z = 0;
 
         rotation.x = 0;
         rotation.y = 0;
@@ -61,18 +61,27 @@ for(var i = 0; i < totalPlayer; i++){
 var LOADED_PLAYER_INDEX = [];
 
 // 2개의 공 절대위치를 보관
-var ballsPositions = [];
+var BALLS_TRANSFORM = new Object();
+var ballPositions = new Object();
+var ballRotations = new Object();
 for(var i = 0; i < 2; i++){
     var position = new Object();
-    position.x = 18.2 + i * 5;
-    position.y = 33.3;
-    position.z = -18.7;
+    var rotation = new Object();
+    position.x = 0;
+    position.y = 0;
+    position.z = 0;
+    rotation.x = 0;
+    rotation.y = 0;
+    rotation.z = 0;
 
-    ballsPositions.push(position);
+   ballPositions.push(position);
+   ballRotations.push(rotation);
 }
+BALLS_TRANSFORM.positions = ballPositions;
+BALLS_TRANSFORM.rotations = ballRotations;
 
 var sendingPosition = new Object();
-sendingPosition.BallPositions = ballsPositions;
+sendingPosition.BallPositions = BALLS_TRANSFORM;
 //sendingPosition.PlayerPositions = PLAYERS_TRANFORM.positions;
 
 io.on('connection', function(socket) {
@@ -111,10 +120,18 @@ io.on('connection', function(socket) {
         //  슈퍼클라이언트에게서 공의 절대위치 수신
         if(data.PlayerIndex == SUPER_CLIENT_INDEX){
             for(var i = 0; i < 2; i++){
-                ballsPositions[i].x = data.BallPositions[i].x;
-                ballsPositions[i].y = data.BallPositions[i].y;
-                ballsPositions[i].z = data.BallPositions[i].z;
+                BALLS_TRANSFORM.positions[i].x = data.BallPositions[i].x;
+                BALLS_TRANSFORM.positions[i].y = data.BallPositions[i].y;
+                BALLS_TRANSFORM.positions[i].z = data.BallPositions[i].z;
+
+                BALLS_TRANSFORM.rotations[i].x = data.BallRotations[i].x;
+                BALLS_TRANSFORM.rotations[i].y = data.BallRotations[i].y;
+                BALLS_TRANSFORM.rotations[i].z = data.BallRotations[i].z;
             }
+            sendingPosition.BallPositions = BALLS_TRANSFORM.positions;
+            sendingPosition.BallRotations = BALLS_TRANSFORM.rotations;
+            var datas = JSON.stringify(sendingPosition);
+            io.emit('ball_transform', datas);
         }
 
         PLAYERS_TRANFORM.positions[data.PlayerIndex].x = data.PlayerPosition.x;
@@ -148,11 +165,11 @@ io.on('connection', function(socket) {
                     winnerIndex = i;
                 }
             }
+            console.log('End Game in port '+ port);
             io.emit('end_game', JSON.stringify(winnerIndex));
         }
         // 40ms마다 절대 좌표 + 공
         else if(timeDiff > 40){
-            sendingPosition.BallPositions = ballsPositions;
             sendingPosition.PlayerPositions = PLAYERS_TRANFORM.positions;
             sendingPosition.PlayerRotations = PLAYERS_TRANFORM.rotations;
             sendingPosition.AnimHashCodes = PLAYERS_TRANFORM.animHashCodes;
@@ -160,7 +177,7 @@ io.on('connection', function(socket) {
             var datas = JSON.stringify(sendingPosition);
             //console.log('절대' + datas);
 
-             io.emit('transform', datas);
+            io.emit('player_transform', datas);
             TRANSFORM_TIME_STAMP = Date.now();
             for(var i = 0; i < totalPlayer; i++){
                 PLAYERS_TRANFORM.animHashCodes[i] = 0;
