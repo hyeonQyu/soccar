@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
+    public static float[] ShootPowers;
     private Animator _collisionAnimator;
     private Collider _ball;
     private Rigidbody _rigidBody;
@@ -144,7 +145,7 @@ public class BallController : MonoBehaviour
             //transform.position += movingPosition;
 
             // 키 입력 강도에 따른 파워 조절
-            float power = Input.GetAxis("Sensitivity");
+            float power = ShootPowers[collision.transform.root.GetComponent<PlayerInformation>().PlayerIndex];
             if(power < 0.5f)
                 power = 0.5f;
             // 살짝 위로 올라가도록

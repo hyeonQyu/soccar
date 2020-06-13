@@ -142,7 +142,7 @@ namespace AnimFollow
 		public bool stayDeadOnHeadShot = false; // If set the character will stay dead if hit in the head. Character will be destroyed next time it is not wisible to the main camera
 		[HideInInspector] public bool shotInHead = false;
 		ulong i;
-
+		int gettingUpCount = 0;
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		void Awake () // Initialize
@@ -322,6 +322,7 @@ namespace AnimFollow
 						}
 						else if (!(isInTransitionToGetup || getupState)) // Getting up is done. We are back in Idle (if not delayed)
 						{
+							gettingUpCount += 1;
 							SetInhibitMoveFlag(false); // Master is able to move again
 #if SIMPLEFOOTIK
 							simpleFootIK.extraYLerp = 1f;
@@ -337,14 +338,23 @@ namespace AnimFollow
 								IceOnGetup[m].GetComponent<Collider>().material.staticFriction = noIceStatFriction[m];
 							}
 
-							if (limbErrorMagnitude < maxErrorWhenMatching) // Do not go to full strength unless ragdoll is matching master (delay)
+							if (gettingUpCount > 50)
+							{
+								Debug.Log("Escape stuck state");
+								gettingUp = false;
+								numberOfCollisions = 0;
+								delayedGetupDone = false;
+								SetInhibitMoveFlag(false);
+								gettingUpCount = 0;
+							}
+							else if (limbErrorMagnitude < maxErrorWhenMatching) // Do not go to full strength unless ragdoll is matching master (delay)
 							{
 								Debug.Log("Set gettingUP = false");
                                 gettingUp = false; // Getting up is done
 								numberOfCollisions = 0;
 								//ragdollRootBone.position = PlayerController.AlterEgo.transform.position;
 								delayedGetupDone = false;
-								PlayerController.InhibitRun = false;
+								SetInhibitMoveFlag(false);
 							}
 							else
 							{

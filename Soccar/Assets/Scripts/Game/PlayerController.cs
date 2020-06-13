@@ -25,6 +25,8 @@ public static class PlayerController
     // 속도
     private static float _speed;
     private static float _playerSpeed;
+    // 슛 파워
+    private static float _shootPower;
     public static float Theta { get; private set; }
 
     public static int AnimHashCode { get; set; }
@@ -41,7 +43,8 @@ public static class PlayerController
     public static int SuperClientIndex { get; set; }
 
     // 움직임 발생시 true로 변환하여 서버로 패킷전송
-    private static bool _isMoved = false;
+    private static bool _isMoved;
+    private static bool _isShooting;
     public static bool IsPlayersInitialized { get; private set; }
 
     // 플레이어 컴포넌트
@@ -208,6 +211,13 @@ public static class PlayerController
 
             _isMoved = true;
         }
+
+        if(Input.GetKeyDown(KeyCode.D))
+        {
+            _isMoved = true;
+            _isShooting = true;
+        }
+
         direction = myPosition;
         myPosition = myPosition.normalized;
 
@@ -216,8 +226,12 @@ public static class PlayerController
             // 자신의 분신을 움직임
             if (_isDash)
             {
-                _playerSpeed = 5.0f;
+                _playerSpeed = 5f;
             }
+            //else if(_isShooting)
+            //{
+            //    _playerSpeed = 1f;
+            //}
             else
             {
                 _playerSpeed = 2.5f;
@@ -238,19 +252,20 @@ public static class PlayerController
             AlterEgo.transform.rotation = Quaternion.LookRotation(direction.normalized);
         }
 
-        //PlayerAnimator.SetFloat(Hash.SpeedFloat, (_playerSpeed / 5f), 0.1f, Time.fixedDeltaTime);
-
-        if(Input.GetKeyDown(KeyCode.Space))
+        float power = Input.GetAxis("Sensitivity");
+        if(_isShooting && ((power == 1) || Input.GetKeyUp(KeyCode.D)))
+        {
+            AnimHashCode = Hash.ShootTrigger;
+            _shootPower = power;
+            _isShooting = false;
+        }
+        else if(Input.GetKeyDown(KeyCode.Space))
         {
             AnimHashCode = Hash.JumpTrigger;
         }
         else if(Input.GetKeyDown(KeyCode.A))
         {
             AnimHashCode = Hash.TackleTrigger;
-        }
-        else if(Input.GetKeyDown(KeyCode.D))
-        {
-            AnimHashCode = Hash.ShootTrigger;
         }
     }
 
@@ -259,15 +274,22 @@ public static class PlayerController
     {
         Packet.SendingTransform sendingTransform = new Packet.SendingTransform(PlayerIndex);
 
+        for(int i = 0; i < 2; i++)
+        {
+            sendingTransform.BallPositions[i] = GameLauncher.Balls[i].transform.position;
+            sendingTransform.BallRotations[i] = GameLauncher.Balls[i].transform.rotation;
+        }
+
         sendingTransform.PlayerPosition = AlterEgo.transform.position;
         sendingTransform.PlayerRotation = AlterEgo.transform.eulerAngles;
-        sendingTransform.BallPositions[0] = GameLauncher.Balls[0].transform.position;
-        sendingTransform.BallPositions[1] = GameLauncher.Balls[1].transform.position;
         sendingTransform.AnimHashCode = AnimHashCode;
         sendingTransform.PlayerSpeed = _playerSpeed;
+        sendingTransform.ShootPower = _shootPower;
+        Debug.Log("Shoot Send " + sendingTransform.ShootPower);
 
         NetworkManager.Send<Packet.SendingTransform>("transform", sendingTransform);
         AnimHashCode = 0;
+        _shootPower = -1;
     }
 
     // 자신의 분신을 움직임
@@ -307,6 +329,7 @@ public static class PlayerController
         PlayerIndex = 99;
         SuperClientIndex = 0;
         _isMoved = false;
+        _isShooting = false;
         IsPlayersInitialized = false;
         InhibitRun = false;
         InhibitMove = false;

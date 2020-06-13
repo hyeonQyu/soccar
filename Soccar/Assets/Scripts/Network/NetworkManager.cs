@@ -157,15 +157,15 @@ public class NetworkManager : MonoBehaviour
             }
         });
 
-        // 플레이어 + 공
+        // 공 + 플레이어의 정보 수신
         Socket.On("transform", (string data) =>
         {
             data = ToJsonFormat(data);
 
-            // 캐릭터 및 공 이동
-            Packet.ReceivingTransform receivingPositions = JsonUtility.FromJson<Packet.ReceivingTransform>(data);
+            // 캐릭터 이동
+            Packet.ReceivingTransform receivingTransform = JsonUtility.FromJson<Packet.ReceivingTransform>(data);
             GameLauncher.RoutineScheduler.StopMoving();
-            GameLauncher.RoutineScheduler.StartMoving(receivingPositions);
+            GameLauncher.RoutineScheduler.StartMoving(receivingTransform);
         });
 
         // 누군가 태클에 의해 넘어짐
@@ -241,12 +241,17 @@ public class NetworkManager : MonoBehaviour
                 }
             }
             if(PlayerController.PlayerIndex == PlayerController.SuperClientIndex)
+            {
+                GameLauncher.Balls[0].GetComponent<Rigidbody>().isKinematic = false;
+                GameLauncher.Balls[1].GetComponent<Rigidbody>().isKinematic = false;
                 Send("change_super_client", PlayerController.SuperClientIndex.ToString());
+            }
 
             // 연결이 끊어진 플레이어에 대한 오브젝트 삭제
             PlayerController.Players[disconnectPlayerIndex].SetActive(false);
             PlayerController.GoalPosts[disconnectPlayerIndex].SetActive(false);
             PlayerController.MiniMapManager.Players[disconnectPlayerIndex].SetActive(false);
+            BallController.ShootPowers[disconnectPlayerIndex] = 0;
         });
     }
 

@@ -24,12 +24,13 @@ var PLAYERS_TRANFORM = new Object();
     var rotations = [];
     var playerSpeeds = [];
     var animHashCodes = [];
+    var shootPowers = []
     for(var j = 0; j < totalPlayer; j++){
         var position = new Object();
         var rotation = new Object();
-        position.x = j * 5;
-        position.y = 3.5;
-        position.z = j * 5;
+        position.x = 0;
+        position.y = 0;
+        position.z = 0;
 
         rotation.x = 0;
         rotation.y = 0;
@@ -37,6 +38,7 @@ var PLAYERS_TRANFORM = new Object();
 
         playerSpeeds.push(0);
         animHashCodes.push(0);
+        shootPowers.push(0);
 
         positions.push(position);
         rotations.push(rotation);
@@ -45,6 +47,7 @@ PLAYERS_TRANFORM.positions = positions;
 PLAYERS_TRANFORM.playerSpeeds = playerSpeeds;
 PLAYERS_TRANFORM.animHashCodes = animHashCodes;
 PLAYERS_TRANFORM.rotations = rotations;
+PLAYERS_TRANFORM.shootPowers = shootPowers;
 
 // 변수 초기화
 var INDEX_TO_SOCKET_ID = [];
@@ -61,19 +64,26 @@ for(var i = 0; i < totalPlayer; i++){
 var LOADED_PLAYER_INDEX = [];
 
 // 2개의 공 절대위치를 보관
-var ballsPositions = [];
+var BALLS_TRANSFORM = new Object();
+var ballPositions = [];
+var ballRotations = [];
 for(var i = 0; i < 2; i++){
     var position = new Object();
-    position.x = 18.2 + i * 5;
-    position.y = 33.3;
-    position.z = -18.7;
+    var rotation = new Object();
+    position.x = 0;
+    position.y = 0;
+    position.z = 0;
+    rotation.x = 0;
+    rotation.y = 0;
+    rotation.z = 0;
 
-    ballsPositions.push(position);
+   ballPositions.push(position);
+   ballRotations.push(rotation);
 }
+BALLS_TRANSFORM.positions = ballPositions;
+BALLS_TRANSFORM.rotations = ballRotations;
 
-var sendingPosition = new Object();
-sendingPosition.BallPositions = ballsPositions;
-//sendingPosition.PlayerPositions = PLAYERS_TRANFORM.positions;
+var sendingTransform = new Object();
 
 io.on('connection', function(socket) {
 
@@ -111,9 +121,13 @@ io.on('connection', function(socket) {
         //  슈퍼클라이언트에게서 공의 절대위치 수신
         if(data.PlayerIndex == SUPER_CLIENT_INDEX){
             for(var i = 0; i < 2; i++){
-                ballsPositions[i].x = data.BallPositions[i].x;
-                ballsPositions[i].y = data.BallPositions[i].y;
-                ballsPositions[i].z = data.BallPositions[i].z;
+                BALLS_TRANSFORM.positions[i].x = data.BallPositions[i].x;
+                BALLS_TRANSFORM.positions[i].y = data.BallPositions[i].y;
+                BALLS_TRANSFORM.positions[i].z = data.BallPositions[i].z;
+
+                BALLS_TRANSFORM.rotations[i].x = data.BallRotations[i].x;
+                BALLS_TRANSFORM.rotations[i].y = data.BallRotations[i].y;
+                BALLS_TRANSFORM.rotations[i].z = data.BallRotations[i].z;
             }
         }
 
@@ -126,6 +140,7 @@ io.on('connection', function(socket) {
 
         PLAYERS_TRANFORM.playerSpeeds[data.PlayerIndex] = data.PlayerSpeed;
         if(PLAYERS_TRANFORM.animHashCodes[data.PlayerIndex] == 0){
+            PLAYERS_TRANFORM.shootPowers[data.PlayerIndex] = data.ShootPower;
             PLAYERS_TRANFORM.animHashCodes[data.PlayerIndex] = data.AnimHashCode
         }
 
@@ -148,22 +163,26 @@ io.on('connection', function(socket) {
                     winnerIndex = i;
                 }
             }
+            console.log('End Game in port '+ port);
             io.emit('end_game', JSON.stringify(winnerIndex));
         }
         // 40ms마다 절대 좌표 + 공
         else if(timeDiff > 40){
-            sendingPosition.BallPositions = ballsPositions;
-            sendingPosition.PlayerPositions = PLAYERS_TRANFORM.positions;
-            sendingPosition.PlayerRotations = PLAYERS_TRANFORM.rotations;
-            sendingPosition.AnimHashCodes = PLAYERS_TRANFORM.animHashCodes;
-            sendingPosition.PlayerSpeeds = PLAYERS_TRANFORM.playerSpeeds;
-            var datas = JSON.stringify(sendingPosition);
+            sendingTransform.BallPositions = BALLS_TRANSFORM.positions;
+            sendingTransform.BallRotations = BALLS_TRANSFORM.rotations;
+            sendingTransform.PlayerPositions = PLAYERS_TRANFORM.positions;
+            sendingTransform.PlayerRotations = PLAYERS_TRANFORM.rotations;
+            sendingTransform.AnimHashCodes = PLAYERS_TRANFORM.animHashCodes;
+            sendingTransform.PlayerSpeeds = PLAYERS_TRANFORM.playerSpeeds;
+            sendingTransform.ShootPowers = PLAYERS_TRANFORM.shootPowers;
+            var datas = JSON.stringify(sendingTransform);
             //console.log('절대' + datas);
 
-             io.emit('transform', datas);
+            io.emit('transform', datas);
             TRANSFORM_TIME_STAMP = Date.now();
             for(var i = 0; i < totalPlayer; i++){
                 PLAYERS_TRANFORM.animHashCodes[i] = 0;
+                PLAYERS_TRANFORM.shootPowers[i] = 0;
             }
         }
 

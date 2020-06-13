@@ -44,42 +44,37 @@ public class Packet
     public class SendingTransform
     {
         public Vector3[] BallPositions;
+        public Quaternion[] BallRotations;
         public int PlayerIndex;
         public Vector3 PlayerPosition;
         public Vector3 PlayerRotation;
         public int AnimHashCode;
         public float PlayerSpeed;
+        public float ShootPower;
 
         public SendingTransform(int playerIndex)
         {
             BallPositions = new Vector3[2];
+            BallRotations = new Quaternion[2];
             PlayerIndex = playerIndex;
             PlayerPosition = new Vector3();
             PlayerRotation = new Vector3();
             AnimHashCode = 0;
             PlayerSpeed = 0;
+            ShootPower = 0;
         }
     }
 
-    // 공 + 플레이어 좌표 수신
+    // 공 + 절대좌표 수신
     public class ReceivingTransform
     {
         public Vector3[] BallPositions;
+        public Quaternion[] BallRotations;
         public Vector3[] PlayerPositions;
         public Vector3[] PlayerRotations;
         public int[] AnimHashCodes;
         public float[] PlayerSpeeds;
-
-        public ReceivingTransform()
-        {
-            int length = PlayerController.Players.Length;
-
-            BallPositions = new Vector3[2];
-            PlayerPositions = new Vector3[length];
-            PlayerRotations = new Vector3[length];
-            AnimHashCodes = new int[length];
-            PlayerSpeeds = new float[length];
-        }
+        public float[] ShootPowers;
     }
 
     public class SendingTackleEvent
