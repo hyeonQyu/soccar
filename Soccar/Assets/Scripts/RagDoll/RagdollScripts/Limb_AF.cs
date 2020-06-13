@@ -62,7 +62,7 @@ namespace AnimFollow
 			}
             if (transform.root.gameObject.GetInstanceID() == collision.transform.root.gameObject.GetInstanceID())
                 return;
-            if (collision.gameObject.tag.Equals("Ground") || collision.gameObject.tag.Equals("Ball"))
+            if (collision.gameObject.tag.Equals("Ground") || collision.gameObject.tag.Equals("Ball") || collision.transform.root.gameObject.tag.Equals("Player"))
 				return;
 			Vector3 ragdollPosition = transform.root.GetChild(1).GetChild(0).GetChild(0).position;
 			PlayerController.AlterEgo.transform.position = new Vector3(ragdollPosition.x, PlayerController.AlterEgo.transform.position.y, ragdollPosition.z);
