@@ -141,7 +141,7 @@ public class NetworkManager : MonoBehaviour
         RequestPlayerIndex = "";
 
         _scores = new Text[scoreBoard.Length];
-        for(int i = 0; i < scoreBoard.Length; i++)
+        for (int i = 0; i < scoreBoard.Length; i++)
         {
             _scores[i] = scoreBoard[i].transform.Find("Score").GetComponent<Text>();
         }
@@ -151,9 +151,9 @@ public class NetworkManager : MonoBehaviour
         {
             PlayerController.PlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
             // 슈퍼 클라이언트가 아니면 공이 물리엔진의 영향을 받지 않음
-            if(PlayerController.PlayerIndex != PlayerController.SuperClientIndex)
+            if (PlayerController.PlayerIndex != PlayerController.SuperClientIndex)
             {
-                for(int i = 0; i < 2; i++)
+                for (int i = 0; i < 2; i++)
                     GameLauncher.Balls[i].GetComponent<Rigidbody>().isKinematic = true;
             }
         });
@@ -185,7 +185,7 @@ public class NetworkManager : MonoBehaviour
         {
             data = ToJsonFormat(data);
             Packet.ReceivingKickOff receivingKickOff = JsonUtility.FromJson<Packet.ReceivingKickOff>(data);
-            for(int i = 0; i < receivingKickOff.PlayerNames.Length; i++)
+            for (int i = 0; i < receivingKickOff.PlayerNames.Length; i++)
             {
                 PlayerController.PlayerInformations[i].PlayerName = receivingKickOff.PlayerNames[i];
                 scoreBoard[i].transform.Find("Name").GetComponent<Text>().text = receivingKickOff.PlayerNames[i];
@@ -200,7 +200,7 @@ public class NetworkManager : MonoBehaviour
 
             // 스코어보드 업데이트
             Packet.ReceivingScore receivingScore = JsonUtility.FromJson<Packet.ReceivingScore>(data);
-            for(int i = 0; i < sceneMedium.Headcount; i++)
+            for (int i = 0; i < sceneMedium.Headcount; i++)
             {
                 _scores[i].text = receivingScore.ScoreBoard[i].ToString();
             }
@@ -214,10 +214,10 @@ public class NetworkManager : MonoBehaviour
         {
             int winner = int.Parse(data.Substring(1, data.Length - 2));
 
-            if(winner == PlayerController.PlayerIndex)
+            if (winner == PlayerController.PlayerIndex)
                 GameLauncher.IsWinner = true;
             GameLauncher.IsEndGame = true;
-            
+
             StartCoroutine(EndGame(winner));
         });
 
@@ -227,22 +227,22 @@ public class NetworkManager : MonoBehaviour
 
             PlayerController.IsConnectPlayers[disconnectPlayerIndex] = false;
             _scores[disconnectPlayerIndex].transform.parent.GetComponent<Image>().color = new Color(0, 0, 0);
-            
+
             // 슈퍼 클라이언트 인덱스 변경
-            if(disconnectPlayerIndex == PlayerController.SuperClientIndex)
+            if (disconnectPlayerIndex == PlayerController.SuperClientIndex)
             {
                 int index = disconnectPlayerIndex + 1;
 
-                for(; index < sceneMedium.Headcount; index++)
+                for (; index < sceneMedium.Headcount; index++)
                 {
-                    if(PlayerController.IsConnectPlayers[index])
+                    if (PlayerController.IsConnectPlayers[index])
                     {
                         PlayerController.SuperClientIndex = index;
                         break;
                     }
                 }
             }
-            if(PlayerController.PlayerIndex == PlayerController.SuperClientIndex)
+            if (PlayerController.PlayerIndex == PlayerController.SuperClientIndex)
             {
                 GameLauncher.Balls[0].GetComponent<Rigidbody>().isKinematic = false;
                 GameLauncher.Balls[1].GetComponent<Rigidbody>().isKinematic = false;
@@ -287,8 +287,6 @@ public class NetworkManager : MonoBehaviour
 
     private IEnumerator EndGame(int winner)
     {
-        PlayerController.PlayerAnimators[winner].SetInteger(PlayerController.Hash.EndInt, UnityEngine.Random.Range(0, 2));
-        
         GameLauncher.Sound.EndWhistle.Play();
         yield return new WaitForSeconds(1);
         GameLauncher.Sound.CrowdGoal.volume = 1;
@@ -296,9 +294,9 @@ public class NetworkManager : MonoBehaviour
         yield return new WaitForSeconds(1);
 
         // 패자 플레이어를 눕힘
-        for(int i = 0; i < GameLauncher.Headcount; i++)
+        for (int i = 0; i < GameLauncher.Headcount; i++)
         {
-            if(PlayerController.IsConnectPlayers[i] && i != winner)
+            if (PlayerController.IsConnectPlayers[i] && i != winner)
             {
                 PlayerController.Players[i].SetActive(false);
             }
@@ -306,5 +304,8 @@ public class NetworkManager : MonoBehaviour
 
         // 카메라를 승자 플레이어에게로
         _camera.GetComponent<CameraController>().MoveToWinner(winner);
+        
+        // 승자 플레이어 애니메이션 실행
+        PlayerController.PlayerAnimators[winner].SetTrigger(PlayerController.Hash.EndTrigger);
     }
 }
