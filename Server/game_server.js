@@ -15,8 +15,10 @@ var SUPER_CLIENT_INDEX = 0;
 
 var isFirst = true;
 var isEnd = false;
+var isFever = false;
 
 var CONNECTED_CLIENT_COUNT = totalPlayer;
+var BALL_COUNT = 2;
 
 // 상대위치 이동정도 및 절대위치를 보관
 var PLAYERS_TRANFORM = new Object();
@@ -67,11 +69,11 @@ var LOADED_PLAYER_INDEX = [];
 var BALLS_TRANSFORM = new Object();
 var ballPositions = [];
 var ballRotations = [];
-for(var i = 0; i < 2; i++){
+for(var i = 0; i < 3; i++){
     var position = new Object();
     var rotation = new Object();
     position.x = 0;
-    position.y = 0;
+    position.y = 8;
     position.z = 0;
     rotation.x = 0;
     rotation.y = 0;
@@ -117,10 +119,11 @@ io.on('connection', function(socket) {
             TRANSFORM_TIME_STAMP = Date.now();
             isFirst = false;
         }
-
+        var ballCount = data.BallPositions;
+        console.log("ball count = "+ Object.keys(ballCount).length);
         //  슈퍼클라이언트에게서 공의 절대위치 수신
         if(data.PlayerIndex == SUPER_CLIENT_INDEX){
-            for(var i = 0; i < 2; i++){
+            for(var i = 0; i < BALL_COUNT; i++){
                 BALLS_TRANSFORM.positions[i].x = data.BallPositions[i].x;
                 BALLS_TRANSFORM.positions[i].y = data.BallPositions[i].y;
                 BALLS_TRANSFORM.positions[i].z = data.BallPositions[i].z;
@@ -146,6 +149,11 @@ io.on('connection', function(socket) {
 
         
         var timeDiff = Date.now() - TRANSFORM_TIME_STAMP;
+
+        if(!isFever && Date.now - RUNNING_TIME_STAMP > 240000){
+            io.emit('fever_time', "");
+            BALL_COUNT += 1;
+        }
 
         if(!isEnd && Date.now() - RUNNING_TIME_STAMP > 300000){
             isEnd = true;
@@ -243,10 +251,6 @@ io.on('connection', function(socket) {
         io.emit('tackle_event', datas);
     });
 
-    socket.on('end_game', function(data){
-
-    });
-
     socket.on('disconnect', function(data){
         var i;
         for(i = 0; i < totalPlayer; i++){
@@ -256,7 +260,25 @@ io.on('connection', function(socket) {
         }
         console.log(i+"player is disconnected in "+ port+' '+socket.id);
         CONNECTED_CLIENT_COUNT -= 1;
-        if(CONNECTED_CLIENT_COUNT == 0){
+        if(CONNECTED_CLIENT_COUNT == 1){
+            var winnerIndex = 0;
+            for(var i = 1; i < totalPlayer; i++){
+                if(SCORE_BOARD[i] < SCORE_BOARD[winnerIndex]){
+                    continue;
+                }
+                else if(SCORE_BOARD[i] == SCORE_BOARD[winnerIndex]){
+                    if(GOAL_COUNTS[i] > GOAL_COUNTS[winnerIndex]){
+                        winnerIndex = i;
+                    }
+                }
+                else{
+                    winnerIndex = i;
+                }
+            }
+            console.log('End Game in port '+ port);
+            io.emit('end_game', JSON.stringify(winnerIndex));
+        }
+        else if(CONNECTED_CLIENT_COUNT == 0){
             process.exit(1);
         }
         io.emit('disconnection', JSON.stringify(i));
