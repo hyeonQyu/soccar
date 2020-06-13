@@ -282,49 +282,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8096064}
   m_CullTransparentMesh: 0
---- !u!1 &27945753
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 27945754}
-  - component: {fileID: 27945755}
-  m_Layer: 0
-  m_Name: Scene Medium
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &27945754
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 27945753}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 470.39648, y: 231.21017, z: -31.882956}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &27945755
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 27945753}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b82c1c8515f10f469828f6c938934b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &37298841
 GameObject:
   m_ObjectHideFlags: 0
@@ -920,7 +877,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Room 3
+  m_Text: 
 --- !u!222 &112942560
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1301,7 +1258,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: I
+  m_Text: 
 --- !u!222 &184308634
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1976,7 +1933,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: I
+  m_Text: 
 --- !u!222 &328696115
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3044,7 +3001,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Room 4
+  m_Text: '
 
 '
 --- !u!222 &474780717
@@ -4060,7 +4017,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: I
+  m_Text: 
 --- !u!222 &623394661
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4281,7 +4238,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0/6
+  m_Text: 
 --- !u!222 &685471326
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4364,9 +4321,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Room 2
-
-'
+  m_Text: 
 --- !u!222 &714909936
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5781,7 +5736,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0/6
+  m_Text: 
 --- !u!222 &967280218
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5936,7 +5891,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0/6
+  m_Text: 
 --- !u!222 &976348585
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7125,7 +7080,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: I
+  m_Text: 
 --- !u!222 &1087806417
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7637,9 +7592,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Room 1
-
-'
+  m_Text: 
 --- !u!222 &1193201442
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8866,7 +8819,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0/6
+  m_Text: 
 --- !u!222 &1474579699
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10757,7 +10710,7 @@ Transform:
   - {fileID: 204839788}
   - {fileID: 1592111927}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1856523195
 GameObject:
@@ -10793,7 +10746,6 @@ MonoBehaviour:
   _alertPanel: {fileID: 1819630169}
   _buttonControllerObject: {fileID: 95565967}
   _networkManagerObject: {fileID: 418163624}
-  _sceneMediumObject: {fileID: 27945753}
 --- !u!4 &1856523197
 Transform:
   m_ObjectHideFlags: 0
@@ -10918,7 +10870,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Room 0
+  m_Text: 
 --- !u!222 &1887329515
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11078,7 +11030,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: I
+  m_Text: 
 --- !u!222 &1909437528
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11373,7 +11325,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0/6
+  m_Text: 
 --- !u!222 &1951323930
 CanvasRenderer:
   m_ObjectHideFlags: 0

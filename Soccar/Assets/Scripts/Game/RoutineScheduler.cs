@@ -96,6 +96,10 @@ public class RoutineScheduler : MonoBehaviour
                     if (curAnimHashCode == hash.Tackle || curAnimHashCode == hash.Shoot || curAnimHashCode == hash.Jump)
                         continue;
 
+                    if(receivingTransform.AnimHashCodes[j] == hash.TackleTrigger)
+                        GameLauncher.Sound.SlidingTackle.Play();
+                    else if(receivingTransform.AnimHashCodes[j] == hash.JumpTrigger)
+                        GameLauncher.Sound.Jump.Play();
                     // 애니메이션 실행
                     PlayerController.PlayerAnimators[j].SetTrigger(receivingTransform.AnimHashCodes[j]);
                 }

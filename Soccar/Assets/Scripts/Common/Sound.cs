@@ -16,6 +16,9 @@ public class Sound
     public AudioSource BounceBall { get; private set; }
     public AudioSource GoalNet { get; private set; }
     public AudioSource EndWhistle { get; private set; }
+    public AudioSource SlidingTackle { get; private set; }
+    public AudioSource Fall { get; private set; }
+    public AudioSource Jump { get; private set; }
 
     // 로비
 
@@ -36,6 +39,9 @@ public class Sound
             BounceBall = _sounds.transform.Find("Bounce Ball").GetComponent<AudioSource>();
             GoalNet = _sounds.transform.Find("Goal Net").GetComponent<AudioSource>();
             EndWhistle = _sounds.transform.Find("End Whistle").GetComponent<AudioSource>();
+            SlidingTackle = _sounds.transform.Find("Sliding Tackle").GetComponent<AudioSource>();
+            Fall = _sounds.transform.Find("Fall").GetComponent<AudioSource>();
+            Jump = _sounds.transform.Find("Jump").GetComponent<AudioSource>();
         }
         // 로비
         else

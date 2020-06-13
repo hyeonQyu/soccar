@@ -84,7 +84,6 @@ public class CameraController : MonoBehaviour
 
     public void MoveToWinner(int winner)
     {
-        Debug.Log("Move To Winner");
         _isEndGame = true;
         _winner = winner;
         Transform winnerTransform = PlayerController.Players[winner].transform;

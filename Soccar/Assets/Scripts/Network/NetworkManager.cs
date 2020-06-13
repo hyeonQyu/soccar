@@ -149,6 +149,12 @@ public class NetworkManager : MonoBehaviour
         Socket.On("player_index", (string data) =>
         {
             PlayerController.PlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
+            // 슈퍼 클라이언트가 아니면 공이 물리엔진의 영향을 받지 않음
+            if(PlayerController.PlayerIndex != PlayerController.SuperClientIndex)
+            {
+                for(int i = 0; i < 2; i++)
+                    GameLauncher.Balls[i].GetComponent<Rigidbody>().isKinematic = true;
+            }
         });
 
         // 플레이어 + 공
@@ -171,6 +177,7 @@ public class NetworkManager : MonoBehaviour
             Transform tackledAvatar = PlayerController.Players[receiveTackleEvent.PlayerIndex].transform;
             tackledAvatar.position = receiveTackleEvent.PlayerPosition;
             tackledAvatar.root.GetChild(1).gameObject.GetComponent<AnimFollow.RagdollControl_AF>().IsTackled = true;
+            GameLauncher.Sound.Fall.Play();
         });
 
         Socket.On("kick_off", (string data) =>
@@ -206,20 +213,11 @@ public class NetworkManager : MonoBehaviour
         {
             int winner = int.Parse(data.Substring(1, data.Length - 2));
 
+            if(winner == PlayerController.PlayerIndex)
+                GameLauncher.IsWinner = true;
             GameLauncher.IsEndGame = true;
-            StartCoroutine(EndWhistle(winner));
-
-            // 패자 플레이어를 눕힘
-            for(int i = 0; i < GameLauncher.Headcount; i++)
-            {
-                if(PlayerController.IsConnectPlayers[i] && i != winner)
-                {
-                    PlayerController.Players[i].SetActive(false);
-                }
-            }
-
-            // 카메라를 승자 플레이어에게로
-            _camera.GetComponent<CameraController>().MoveToWinner(winner);
+            
+            StartCoroutine(EndGame(winner));
         });
 
         Socket.On("disconnection", (string data) =>
@@ -246,9 +244,9 @@ public class NetworkManager : MonoBehaviour
                 Send("change_super_client", PlayerController.SuperClientIndex.ToString());
 
             // 연결이 끊어진 플레이어에 대한 오브젝트 삭제
-            Destroy(PlayerController.Players[disconnectPlayerIndex]);
-            Destroy(PlayerController.GoalPosts[disconnectPlayerIndex]);
-            Destroy(PlayerController.MiniMapManager.Players[disconnectPlayerIndex]);
+            PlayerController.Players[disconnectPlayerIndex].SetActive(false);
+            PlayerController.GoalPosts[disconnectPlayerIndex].SetActive(false);
+            PlayerController.MiniMapManager.Players[disconnectPlayerIndex].SetActive(false);
         });
     }
 
@@ -280,12 +278,24 @@ public class NetworkManager : MonoBehaviour
         return data.Substring(1, data.Length - 2);
     }
 
-    private IEnumerator EndWhistle(int winner)
+    private IEnumerator EndGame(int winner)
     {
         GameLauncher.Sound.EndWhistle.Play();
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(1);
         GameLauncher.Sound.CrowdGoal.volume = 1;
         GameLauncher.Sound.CrowdGoal.Play();
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
+
+        // 패자 플레이어를 눕힘
+        for(int i = 0; i < GameLauncher.Headcount; i++)
+        {
+            if(PlayerController.IsConnectPlayers[i] && i != winner)
+            {
+                PlayerController.Players[i].SetActive(false);
+            }
+        }
+
+        // 카메라를 승자 플레이어에게로
+        _camera.GetComponent<CameraController>().MoveToWinner(winner);
     }
 }

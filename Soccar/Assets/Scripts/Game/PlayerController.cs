@@ -28,7 +28,6 @@ public static class PlayerController
     public static float Theta { get; private set; }
 
     public static int AnimHashCode { get; set; }
-    public static int PrevHashCode { get; set; }
 
     public static Vector3 RightVector { get; private set; }
     public static Vector3 LeftVector { get; private set; }
@@ -50,7 +49,7 @@ public static class PlayerController
     public static bool InhibitMove { get; set; }     // Set from RagdollControl
     public static float AnimatorSpeed = 1.3f;   // Read by RagdollControl
 	public static Animator[] PlayerAnimators { get; private set; }			// Reference to the animator component.
-	public static AnimFollow.HashIDs_AF Hash;			// Reference to the HashIDs.
+	public static AnimFollow.HashIDs_AF Hash { get; set; }			// Reference to the HashIDs.
     public static readonly int version = 7; // The version of this script
 
     public static void SetPlayers()
@@ -244,17 +243,14 @@ public static class PlayerController
         if(Input.GetKeyDown(KeyCode.Space))
         {
             AnimHashCode = Hash.JumpTrigger;
-            //PlayerAnimator.SetTrigger(Hash.JumpTrigger);  
         }
         else if(Input.GetKeyDown(KeyCode.A))
         {
             AnimHashCode = Hash.TackleTrigger;
-            //PlayerAnimator.SetTrigger(Hash.TackleTrigger);
         }
         else if(Input.GetKeyDown(KeyCode.D))
         {
             AnimHashCode = Hash.ShootTrigger;
-            //PlayerAnimator.SetTrigger(Hash.ShootTrigger);
         }
     }
 
@@ -296,6 +292,25 @@ public static class PlayerController
             return true;
 
         return false;
+    }
+
+    public static void InitializeStatic()
+    {
+        Players = null;
+        Player = null;
+        AlterEgo = null;
+        MiniMapManager = null;
+        GoalPosts = null;
+        IsConnectPlayers = null;
+        Theta = 0;
+        AnimHashCode = 0;
+        PlayerIndex = 99;
+        SuperClientIndex = 0;
+        _isMoved = false;
+        IsPlayersInitialized = false;
+        InhibitRun = false;
+        InhibitMove = false;
+        Hash = null;
     }
 
     public static void Destroy()
