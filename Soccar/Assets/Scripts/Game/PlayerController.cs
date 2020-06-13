@@ -226,7 +226,7 @@ public static class PlayerController
             // 자신의 분신을 움직임
             if (_isDash)
             {
-                _playerSpeed = 5f;
+                _playerSpeed = 4.0f;
             }
             //else if(_isShooting)
             //{
