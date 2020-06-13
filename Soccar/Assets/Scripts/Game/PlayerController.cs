@@ -259,10 +259,14 @@ public static class PlayerController
     {
         Packet.SendingTransform sendingTransform = new Packet.SendingTransform(PlayerIndex);
 
+        for(int i = 0; i < 2; i++)
+        {
+            sendingTransform.BallPositions[i] = GameLauncher.Balls[i].transform.position;
+            sendingTransform.BallRotations[i] = GameLauncher.Balls[i].transform.eulerAngles;
+        }
+
         sendingTransform.PlayerPosition = AlterEgo.transform.position;
         sendingTransform.PlayerRotation = AlterEgo.transform.eulerAngles;
-        sendingTransform.BallPositions[0] = GameLauncher.Balls[0].transform.position;
-        sendingTransform.BallPositions[1] = GameLauncher.Balls[1].transform.position;
         sendingTransform.AnimHashCode = AnimHashCode;
         sendingTransform.PlayerSpeed = _playerSpeed;
 

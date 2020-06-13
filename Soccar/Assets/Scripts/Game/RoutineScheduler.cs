@@ -24,9 +24,9 @@ public class RoutineScheduler : MonoBehaviour
     [SerializeField]
     private float _fadeTime;
 
-    public void StartMoving(Packet.ReceivingTransform receivingTransform)
+    public void StartPlayerMoving(Packet.ReceivingPlayerTransform receivingPlayerTransform)
     {
-        // 현재 공, 플레이어 위치 저장
+        // 현재 플레이어 위치 저장
         Vector3[] currentPlayerPositions = new Vector3[GameLauncher.Headcount];
         for (int i = 0; i < GameLauncher.Headcount; i++)
         {
@@ -36,20 +36,29 @@ public class RoutineScheduler : MonoBehaviour
             }
             catch (Exception e) { }
         }
-        Vector3[] currentBallPositions = new Vector3[2];
-        for (int i = 0; i < 2; i++)
-        {
-            currentBallPositions[i] = GameLauncher.Balls[i].transform.position;
-        }
 
-        // 플레이어와 공 움직임
-        _movePlayersCoroutine = StartCoroutine(MovePlayers(currentPlayerPositions, receivingTransform));
-        _moveBallsCoroutine = StartCoroutine(MoveBalls(currentBallPositions, receivingTransform.BallPositions));
+        // 플레이어를 움직임
+        _movePlayersCoroutine = StartCoroutine(MovePlayers(currentPlayerPositions, receivingPlayerTransform));
     }
 
-    private IEnumerator MovePlayers(Vector3[] prePositions, Packet.ReceivingTransform receivingTransform)
+    public void StartBallMoving(Packet.ReceivingBallTransform receivingBallTransform)
     {
-        Vector3[] destPositions = receivingTransform.PlayerPositions;
+        // 현재 공 위치 저장
+        Vector3[] currentBallPositions = new Vector3[2];
+        Vector3[] currentBallRotations = new Vector3[2];
+        for(int i = 0; i < 2; i++)
+        {
+            currentBallPositions[i] = GameLauncher.Balls[i].transform.position;
+            currentBallRotations[i] = GameLauncher.Balls[i].transform.eulerAngles;
+        }
+
+        // 공을 움직임
+        _moveBallsCoroutine = StartCoroutine(MoveBalls(currentBallPositions, currentBallRotations, receivingBallTransform));
+    }
+
+    private IEnumerator MovePlayers(Vector3[] prePositions, Packet.ReceivingPlayerTransform receivingPlayerTransform)
+    {
+        Vector3[] destPositions = receivingPlayerTransform.PlayerPositions;
         float t = 0;
         AnimFollow.HashIDs_AF hash = PlayerController.Hash;
 
@@ -59,10 +68,10 @@ public class RoutineScheduler : MonoBehaviour
             try
             {
                 if (PlayerController.PlayerAnimators[k].GetCurrentAnimatorStateInfo(0).fullPathHash == hash.Tackle
-                        || receivingTransform.AnimHashCodes[k] == hash.TackleTrigger)
+                        || receivingPlayerTransform.AnimHashCodes[k] == hash.TackleTrigger)
                     continue;
 
-                PlayerController.Players[k].transform.eulerAngles = receivingTransform.PlayerRotations[k];
+                PlayerController.Players[k].transform.eulerAngles = receivingPlayerTransform.PlayerRotations[k];
             }
             catch (MissingReferenceException e) { }
         }
@@ -87,21 +96,21 @@ public class RoutineScheduler : MonoBehaviour
                     );
                     Vector3 newVector = new Vector3(PlayerController.Players[j].transform.position.x, 0.1f, PlayerController.Players[j].transform.position.z);
                     PlayerController.MiniMapManager.Players[j].transform.localPosition = newVector;
-                    PlayerController.PlayerAnimators[j].SetFloat(hash.SpeedFloat, receivingTransform.PlayerSpeeds[j] / 5);
+                    PlayerController.PlayerAnimators[j].SetFloat(hash.SpeedFloat, receivingPlayerTransform.PlayerSpeeds[j] / 5);
 
                     // 애니메이션을 실행시키지 않는 조건
-                    if (receivingTransform.AnimHashCodes[j] == 0 || PlayerController.PlayerAnimators[j].IsInTransition(0))
+                    if (receivingPlayerTransform.AnimHashCodes[j] == 0 || PlayerController.PlayerAnimators[j].IsInTransition(0))
                         continue;
                     int curAnimHashCode = PlayerController.PlayerAnimators[j].GetCurrentAnimatorStateInfo(0).fullPathHash;
                     if (curAnimHashCode == hash.Tackle || curAnimHashCode == hash.Shoot || curAnimHashCode == hash.Jump)
                         continue;
 
-                    if(receivingTransform.AnimHashCodes[j] == hash.TackleTrigger)
+                    if(receivingPlayerTransform.AnimHashCodes[j] == hash.TackleTrigger)
                         GameLauncher.Sound.SlidingTackle.Play();
-                    else if(receivingTransform.AnimHashCodes[j] == hash.JumpTrigger)
+                    else if(receivingPlayerTransform.AnimHashCodes[j] == hash.JumpTrigger)
                         GameLauncher.Sound.Jump.Play();
                     // 애니메이션 실행
-                    PlayerController.PlayerAnimators[j].SetTrigger(receivingTransform.AnimHashCodes[j]);
+                    PlayerController.PlayerAnimators[j].SetTrigger(receivingPlayerTransform.AnimHashCodes[j]);
                 }
                 catch (Exception e) { }
             }
@@ -110,9 +119,12 @@ public class RoutineScheduler : MonoBehaviour
         }
     }
 
-    private IEnumerator MoveBalls(Vector3[] prePositions, Vector3[] destPositions)
+    private IEnumerator MoveBalls(Vector3[] prePositions, Vector3[] preRotations, Packet.ReceivingBallTransform receivingBallTransform)
     {
         float t = 0;
+
+        Vector3[] destPositions = receivingBallTransform.BallPositions;
+        Vector3[] destRotations = receivingBallTransform.BallRotations;
 
         for (int i = 0; i < 10; i++)
         {
@@ -121,7 +133,10 @@ public class RoutineScheduler : MonoBehaviour
             for (int j = 0; j < destPositions.Length; j++)
             {
                 if (PlayerController.PlayerIndex != PlayerController.SuperClientIndex)
+                {
                     GameLauncher.Balls[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
+                    GameLauncher.Balls[j].transform.eulerAngles = Vector3.Lerp(preRotations[j], destRotations[j], t);
+                }
                 Vector3 newVector = new Vector3(GameLauncher.Balls[j].transform.position.x, 0.2f, GameLauncher.Balls[j].transform.position.z);
                 PlayerController.MiniMapManager.Balls[j].transform.localPosition = newVector;
             }
@@ -130,17 +145,16 @@ public class RoutineScheduler : MonoBehaviour
         }
     }
 
-    public void StopMoving()
+    public void StopPlayerMoving()
     {
         if (_movePlayersCoroutine != null)
-        {
             StopCoroutine(_movePlayersCoroutine);
-        }
+    }
 
-        if (_moveBallsCoroutine != null)
-        {
+    public void StopBallMoving()
+    {
+        if(_moveBallsCoroutine != null)
             StopCoroutine(_moveBallsCoroutine);
-        }
     }
 
     public void NoticeScore(int scorer, int conceder)
