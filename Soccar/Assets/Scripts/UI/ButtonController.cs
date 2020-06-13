@@ -211,6 +211,7 @@ public class ButtonController : MonoBehaviour
 
         // static 요소 초기화
         GameLauncher.InitializeStatic();
+        PlayerController.InitializeStatic();
 
         SceneManager.LoadScene("Lobby Scene");
     }

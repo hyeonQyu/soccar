@@ -79,6 +79,16 @@ public class LobbyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // 게임 플레이 후 로비
+        if(CurrentPanel == 0)
+        {
+            if(_networkManager.Socket.IsConnected)
+            {
+                CurrentPanel = OnLobbyPanel;
+                _networkManager.Send("login", PlayerName);
+            }
+        }
+
         // Input Field가 있는 패널에서 엔터키 입력
         if(Input.GetKeyDown(KeyCode.Return))
         {
