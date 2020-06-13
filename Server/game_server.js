@@ -175,7 +175,7 @@ io.on('connection', function(socket) {
             io.emit('end_game', JSON.stringify(winnerIndex));
         }
         // 40ms마다 절대 좌표 + 공
-        else if(timeDiff > 40){
+        else if(timeDiff > 25){
             sendingTransform.BallPositions = BALLS_TRANSFORM.positions;
             sendingTransform.BallRotations = BALLS_TRANSFORM.rotations;
             sendingTransform.PlayerPositions = PLAYERS_TRANFORM.positions;
