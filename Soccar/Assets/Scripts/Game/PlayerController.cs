@@ -44,7 +44,7 @@ public static class PlayerController
 
     // 움직임 발생시 true로 변환하여 서버로 패킷전송
     private static bool _isMoved;
-    private static bool _isShooting;
+    public static bool IsShooting { get; set; }
     public static bool IsPlayersInitialized { get; private set; }
 
     // 플레이어 컴포넌트
@@ -215,7 +215,7 @@ public static class PlayerController
         if(Input.GetKeyDown(KeyCode.D))
         {
             _isMoved = true;
-            _isShooting = true;
+            IsShooting = true;
         }
 
         direction = myPosition;
@@ -253,11 +253,11 @@ public static class PlayerController
         }
 
         float power = Input.GetAxis("Sensitivity");
-        if(_isShooting && ((power == 1) || Input.GetKeyUp(KeyCode.D)))
+        if(IsShooting && ((power == 1) || Input.GetKeyUp(KeyCode.D)))
         {
             AnimHashCode = Hash.ShootTrigger;
             _shootPower = power;
-            _isShooting = false;
+            IsShooting = false;
         }
         else if(Input.GetKeyDown(KeyCode.Space))
         {
@@ -329,7 +329,7 @@ public static class PlayerController
         PlayerIndex = 99;
         SuperClientIndex = 0;
         _isMoved = false;
-        _isShooting = false;
+        IsShooting = false;
         IsPlayersInitialized = false;
         InhibitRun = false;
         InhibitMove = false;
