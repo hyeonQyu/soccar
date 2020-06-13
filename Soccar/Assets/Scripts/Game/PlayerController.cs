@@ -262,7 +262,13 @@ public static class PlayerController
         for(int i = 0; i < 2; i++)
         {
             sendingTransform.BallPositions[i] = GameLauncher.Balls[i].transform.position;
-            sendingTransform.BallRotations[i] = GameLauncher.Balls[i].transform.eulerAngles;
+            sendingTransform.BallRotations[i] = GameLauncher.Balls[i].transform.rotation;
+            if(i == 0)
+            {
+                Debug.Log("Ball " + sendingTransform.BallRotations[i].w);
+                //Debug.Log("Ball Quaternion " + sendingTransform.BallRotations[i]);
+                //Debug.Log("Ball Eueler " + GameLauncher.Balls[i].transform.eulerAngles);
+            }
         }
 
         sendingTransform.PlayerPosition = AlterEgo.transform.position;

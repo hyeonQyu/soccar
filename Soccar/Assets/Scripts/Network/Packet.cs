@@ -44,7 +44,7 @@ public class Packet
     public class SendingTransform
     {
         public Vector3[] BallPositions;
-        public Vector3[] BallRotations;
+        public Quaternion[] BallRotations;
         public int PlayerIndex;
         public Vector3 PlayerPosition;
         public Vector3 PlayerRotation;
@@ -54,7 +54,7 @@ public class Packet
         public SendingTransform(int playerIndex)
         {
             BallPositions = new Vector3[2];
-            BallRotations = new Vector3[2];
+            BallRotations = new Quaternion[2];
             PlayerIndex = playerIndex;
             PlayerPosition = new Vector3();
             PlayerRotation = new Vector3();
@@ -67,7 +67,7 @@ public class Packet
     public class ReceivingTransform
     {
         public Vector3[] BallPositions;
-        public Vector3[] BallRotations;
+        public Quaternion[] BallRotations;
         public Vector3[] PlayerPositions;
         public Vector3[] PlayerRotations;
         public int[] AnimHashCodes;

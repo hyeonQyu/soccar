@@ -241,7 +241,11 @@ public class NetworkManager : MonoBehaviour
                 }
             }
             if(PlayerController.PlayerIndex == PlayerController.SuperClientIndex)
+            {
+                GameLauncher.Balls[0].GetComponent<Rigidbody>().isKinematic = false;
+                GameLauncher.Balls[1].GetComponent<Rigidbody>().isKinematic = false;
                 Send("change_super_client", PlayerController.SuperClientIndex.ToString());
+            }
 
             // 연결이 끊어진 플레이어에 대한 오브젝트 삭제
             PlayerController.Players[disconnectPlayerIndex].SetActive(false);

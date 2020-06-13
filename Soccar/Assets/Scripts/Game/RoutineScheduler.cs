@@ -39,11 +39,11 @@ public class RoutineScheduler : MonoBehaviour
 
         // 현재 공 위치 저장
         Vector3[] currentBallPositions = new Vector3[2];
-        Vector3[] currentBallRotations = new Vector3[2];
+        Quaternion[] currentBallRotations = new Quaternion[2];
         for(int i = 0; i < 2; i++)
         {
             currentBallPositions[i] = GameLauncher.Balls[i].transform.position;
-            currentBallRotations[i] = GameLauncher.Balls[i].transform.eulerAngles;
+            currentBallRotations[i] = GameLauncher.Balls[i].transform.rotation;
         }
 
         // 플레이어를 움직임
@@ -115,29 +115,36 @@ public class RoutineScheduler : MonoBehaviour
         }
     }
 
-    private IEnumerator MoveBalls(Vector3[] prePositions, Vector3[] preRotations, Packet.ReceivingTransform receivingTransform)
+    private IEnumerator MoveBalls(Vector3[] prePositions, Quaternion[] preRotations, Packet.ReceivingTransform receivingTransform)
     {
         float t = 0;
 
         Vector3[] destPositions = receivingTransform.BallPositions;
-        Vector3[] destRotations = receivingTransform.BallRotations;
+        Quaternion[] destRotations = receivingTransform.BallRotations;
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 2; i++)
         {
-            t += 0.1f;
+            t += 0.5f;
 
             for (int j = 0; j < destPositions.Length; j++)
             {
                 if (PlayerController.PlayerIndex != PlayerController.SuperClientIndex)
                 {
                     GameLauncher.Balls[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
-                    GameLauncher.Balls[j].transform.eulerAngles = Vector3.Lerp(preRotations[j], destRotations[j], t);
+
+                    //float[][] sub = new float[3][];
+                    //for(int k = 0; k < 3; k++)
+                    //    sub[k] = new float[2];
+
+                    //sub[0]
+
+                    GameLauncher.Balls[j].transform.rotation = Quaternion.Lerp(preRotations[j], destRotations[j], t);
                 }
                 Vector3 newVector = new Vector3(GameLauncher.Balls[j].transform.position.x, 0.2f, GameLauncher.Balls[j].transform.position.z);
                 PlayerController.MiniMapManager.Balls[j].transform.localPosition = newVector;
             }
 
-            yield return new WaitForSeconds(0.002f);
+            yield return new WaitForSeconds(0.02f);
         }
     }
 
