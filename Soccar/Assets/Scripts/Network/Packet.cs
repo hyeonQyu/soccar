@@ -50,6 +50,7 @@ public class Packet
         public Vector3 PlayerRotation;
         public int AnimHashCode;
         public float PlayerSpeed;
+        public float ShootPower;
 
         public SendingTransform(int playerIndex)
         {
@@ -60,6 +61,7 @@ public class Packet
             PlayerRotation = new Vector3();
             AnimHashCode = 0;
             PlayerSpeed = 0;
+            ShootPower = 0;
         }
     }
 
@@ -72,6 +74,7 @@ public class Packet
         public Vector3[] PlayerRotations;
         public int[] AnimHashCodes;
         public float[] PlayerSpeeds;
+        public float[] ShootPowers;
     }
 
     public class SendingTackleEvent

@@ -251,6 +251,7 @@ public class NetworkManager : MonoBehaviour
             PlayerController.Players[disconnectPlayerIndex].SetActive(false);
             PlayerController.GoalPosts[disconnectPlayerIndex].SetActive(false);
             PlayerController.MiniMapManager.Players[disconnectPlayerIndex].SetActive(false);
+            BallController.ShootPowers[disconnectPlayerIndex] = 0;
         });
     }
 

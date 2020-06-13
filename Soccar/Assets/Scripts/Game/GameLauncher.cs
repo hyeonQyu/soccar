@@ -52,6 +52,7 @@ public class GameLauncher : MonoBehaviour
     {
         _sceneMedium = GameObject.Find("Scene Medium").GetComponent<SceneMedium>();
         Headcount = _sceneMedium.Headcount;
+        BallController.ShootPowers = new float[Headcount];
 
         RoutineScheduler = GetComponent<RoutineScheduler>();
         PlayerController.SetPlayers();       

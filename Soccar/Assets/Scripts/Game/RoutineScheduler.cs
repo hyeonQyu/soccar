@@ -33,6 +33,9 @@ public class RoutineScheduler : MonoBehaviour
             try
             {
                 currentPlayerPositions[i] = PlayerController.Players[i].transform.position;
+                // 슛 파워 저장
+                if(receivingTransform.ShootPowers[i] != -1)
+                    BallController.ShootPowers[i] = receivingTransform.ShootPowers[i];
             }
             catch (Exception) { }
         }
@@ -131,13 +134,6 @@ public class RoutineScheduler : MonoBehaviour
                 if (PlayerController.PlayerIndex != PlayerController.SuperClientIndex)
                 {
                     GameLauncher.Balls[j].transform.position = Vector3.Lerp(prePositions[j], destPositions[j], t);
-
-                    //float[][] sub = new float[3][];
-                    //for(int k = 0; k < 3; k++)
-                    //    sub[k] = new float[2];
-
-                    //sub[0]
-
                     GameLauncher.Balls[j].transform.rotation = Quaternion.Lerp(preRotations[j], destRotations[j], t);
                 }
                 Vector3 newVector = new Vector3(GameLauncher.Balls[j].transform.position.x, 0.2f, GameLauncher.Balls[j].transform.position.z);
