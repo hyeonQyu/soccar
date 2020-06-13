@@ -24,7 +24,7 @@ public class RoutineScheduler : MonoBehaviour
     [SerializeField]
     private float _fadeTime;
 
-    public void StartPlayerMoving(Packet.ReceivingPlayerTransform receivingPlayerTransform)
+    public void StartMoving(Packet.ReceivingTransform receivingTransform)
     {
         // 현재 플레이어 위치 저장
         Vector3[] currentPlayerPositions = new Vector3[GameLauncher.Headcount];
@@ -34,15 +34,9 @@ public class RoutineScheduler : MonoBehaviour
             {
                 currentPlayerPositions[i] = PlayerController.Players[i].transform.position;
             }
-            catch (Exception e) { }
+            catch (Exception) { }
         }
 
-        // 플레이어를 움직임
-        _movePlayersCoroutine = StartCoroutine(MovePlayers(currentPlayerPositions, receivingPlayerTransform));
-    }
-
-    public void StartBallMoving(Packet.ReceivingBallTransform receivingBallTransform)
-    {
         // 현재 공 위치 저장
         Vector3[] currentBallPositions = new Vector3[2];
         Vector3[] currentBallRotations = new Vector3[2];
@@ -52,11 +46,13 @@ public class RoutineScheduler : MonoBehaviour
             currentBallRotations[i] = GameLauncher.Balls[i].transform.eulerAngles;
         }
 
+        // 플레이어를 움직임
+        _movePlayersCoroutine = StartCoroutine(MovePlayers(currentPlayerPositions, receivingTransform));
         // 공을 움직임
-        _moveBallsCoroutine = StartCoroutine(MoveBalls(currentBallPositions, currentBallRotations, receivingBallTransform));
+        _moveBallsCoroutine = StartCoroutine(MoveBalls(currentBallPositions, currentBallRotations, receivingTransform));
     }
 
-    private IEnumerator MovePlayers(Vector3[] prePositions, Packet.ReceivingPlayerTransform receivingPlayerTransform)
+    private IEnumerator MovePlayers(Vector3[] prePositions, Packet.ReceivingTransform receivingPlayerTransform)
     {
         Vector3[] destPositions = receivingPlayerTransform.PlayerPositions;
         float t = 0;
@@ -73,7 +69,7 @@ public class RoutineScheduler : MonoBehaviour
 
                 PlayerController.Players[k].transform.eulerAngles = receivingPlayerTransform.PlayerRotations[k];
             }
-            catch (MissingReferenceException e) { }
+            catch (MissingReferenceException) { }
         }
 
         for (int i = 0; i < 10; i++)
@@ -112,19 +108,19 @@ public class RoutineScheduler : MonoBehaviour
                     // 애니메이션 실행
                     PlayerController.PlayerAnimators[j].SetTrigger(receivingPlayerTransform.AnimHashCodes[j]);
                 }
-                catch (Exception e) { }
+                catch (Exception) { }
             }
 
             yield return new WaitForSeconds(0.002f);
         }
     }
 
-    private IEnumerator MoveBalls(Vector3[] prePositions, Vector3[] preRotations, Packet.ReceivingBallTransform receivingBallTransform)
+    private IEnumerator MoveBalls(Vector3[] prePositions, Vector3[] preRotations, Packet.ReceivingTransform receivingTransform)
     {
         float t = 0;
 
-        Vector3[] destPositions = receivingBallTransform.BallPositions;
-        Vector3[] destRotations = receivingBallTransform.BallRotations;
+        Vector3[] destPositions = receivingTransform.BallPositions;
+        Vector3[] destRotations = receivingTransform.BallRotations;
 
         for (int i = 0; i < 10; i++)
         {
@@ -145,14 +141,10 @@ public class RoutineScheduler : MonoBehaviour
         }
     }
 
-    public void StopPlayerMoving()
+    public void StopMoving()
     {
         if (_movePlayersCoroutine != null)
             StopCoroutine(_movePlayersCoroutine);
-    }
-
-    public void StopBallMoving()
-    {
         if(_moveBallsCoroutine != null)
             StopCoroutine(_moveBallsCoroutine);
     }

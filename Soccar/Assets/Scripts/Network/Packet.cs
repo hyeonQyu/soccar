@@ -63,20 +63,15 @@ public class Packet
         }
     }
 
-    // 플레이어에 대한 정보는 40ms마다 수신
-    public class ReceivingPlayerTransform
+    // 공 + 절대좌표 수신
+    public class ReceivingTransform
     {
+        public Vector3[] BallPositions;
+        public Vector3[] BallRotations;
         public Vector3[] PlayerPositions;
         public Vector3[] PlayerRotations;
         public int[] AnimHashCodes;
         public float[] PlayerSpeeds;
-    }
-
-    // 공에 대한 정보는 매번 수신
-    public class ReceivingBallTransform
-    {
-        public Vector3[] BallPositions;
-        public Vector3[] BallRotations;
     }
 
     public class SendingTackleEvent

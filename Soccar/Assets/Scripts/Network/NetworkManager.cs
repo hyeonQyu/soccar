@@ -157,26 +157,15 @@ public class NetworkManager : MonoBehaviour
             }
         });
 
-        // 플레이어의 정보 수신
-        Socket.On("player_transform", (string data) =>
+        // 공 + 플레이어의 정보 수신
+        Socket.On("transform", (string data) =>
         {
             data = ToJsonFormat(data);
 
             // 캐릭터 이동
-            Packet.ReceivingPlayerTransform receivingPlayerPositions = JsonUtility.FromJson<Packet.ReceivingPlayerTransform>(data);
-            GameLauncher.RoutineScheduler.StopPlayerMoving();
-            GameLauncher.RoutineScheduler.StartPlayerMoving(receivingPlayerPositions);
-        });
-
-        // 공의 정보 수신
-        Socket.On("ball_transform", (string data) =>
-        {
-            data = ToJsonFormat(data);
-
-            // 공 이동
-            Packet.ReceivingBallTransform receivingBallTransform = JsonUtility.FromJson<Packet.ReceivingBallTransform>(data);
-            GameLauncher.RoutineScheduler.StopBallMoving();
-            GameLauncher.RoutineScheduler.StartBallMoving(receivingBallTransform);
+            Packet.ReceivingTransform receivingTransform = JsonUtility.FromJson<Packet.ReceivingTransform>(data);
+            GameLauncher.RoutineScheduler.StopMoving();
+            GameLauncher.RoutineScheduler.StartMoving(receivingTransform);
         });
 
         // 누군가 태클에 의해 넘어짐
