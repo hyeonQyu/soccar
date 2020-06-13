@@ -69,7 +69,7 @@ var LOADED_PLAYER_INDEX = [];
 var BALLS_TRANSFORM = new Object();
 var ballPositions = [];
 var ballRotations = [];
-for(var i = 0; i < 3; i++){
+for(var i = 0; i < 2; i++){
     var position = new Object();
     var rotation = new Object();
     position.x = 0;
@@ -120,10 +120,9 @@ io.on('connection', function(socket) {
             isFirst = false;
         }
         var ballCount = data.BallPositions;
-        console.log("ball count = "+ Object.keys(ballCount).length);
         //  슈퍼클라이언트에게서 공의 절대위치 수신
         if(data.PlayerIndex == SUPER_CLIENT_INDEX){
-            for(var i = 0; i < BALL_COUNT; i++){
+            for(var i = 0; i < Object.keys(ballCount).length; i++){
                 BALLS_TRANSFORM.positions[i].x = data.BallPositions[i].x;
                 BALLS_TRANSFORM.positions[i].y = data.BallPositions[i].y;
                 BALLS_TRANSFORM.positions[i].z = data.BallPositions[i].z;
@@ -152,6 +151,17 @@ io.on('connection', function(socket) {
 
         if(!isFever && Date.now - RUNNING_TIME_STAMP > 240000){
             io.emit('fever_time', "");
+            var position = new Object();
+            var rotation = new Object();
+            position.x = 0;
+            position.y = 8;
+            position.z = 0;
+            rotation.x = 0;
+            rotation.y = 0;
+            rotation.z = 0;
+
+            BALLS_TRANSFORM.positions.push(position);
+            BALLS_TRANSFORM.rotations.push(rotation);
             BALL_COUNT += 1;
         }
 
