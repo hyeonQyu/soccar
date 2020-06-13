@@ -87,16 +87,13 @@ public class CameraController : MonoBehaviour
         _isEndGame = true;
         _winner = winner;
         Transform winnerTransform = PlayerController.Players[winner].transform;
-        float lerpSpeed = Time.deltaTime * 2f;
 
         // 위치 이동
-        Vector3 forwardPosition = winnerTransform.position + winnerTransform.forward * 1.5f + new Vector3(0, 1, 0);
-        transform.position = Vector3.Lerp(transform.position, forwardPosition, lerpSpeed);
+        Vector3 forwardPosition = winnerTransform.position + winnerTransform.forward * 2.0f + new Vector3(0, 1.0f, 0);
+        transform.position = Vector3.Lerp(transform.position, forwardPosition, Time.deltaTime * 2f);
 
         // 승자 플레이어를 비춤
-        Vector3 direction = winnerTransform.position - transform.position;
-        Quaternion rotation = Quaternion.LookRotation(direction.normalized);
-        Vector3 angle = rotation.eulerAngles + new Vector3(-23, 0, 0);
-        transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, angle, lerpSpeed);
+        Vector3 direction = winnerTransform.position + new Vector3(0, 0.5f, 0) - transform.position;
+        transform.rotation = Quaternion.LookRotation(direction.normalized);
     }
 }
