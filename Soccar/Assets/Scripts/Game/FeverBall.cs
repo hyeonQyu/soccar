@@ -28,4 +28,11 @@ public class FeverBall : MonoBehaviour
             _isFinish = true;
         }
     }
+    public void TurnOnEffect()
+    {
+        _star.SetActive(true);
+        _followYellowLight.SetActive(true);
+        _explosion.SetActive(false);
+        _isFinish = false;
+    }
 }
