@@ -169,9 +169,15 @@ public class GameLauncher : MonoBehaviour
         {
             Image gameResultImage = _gameResult.GetComponent<Image>();
             if(IsWinner)
+            {
                 gameResultImage.sprite = Resources.Load<Sprite>("UI/Victory");
+                Sound.Victory.Play();
+            }
             else
+            {
                 gameResultImage.sprite = Resources.Load<Sprite>("UI/Defeat");
+                Sound.Defeat.Play();
+            }
 
             _gameResult.SetActive(true);
             _moveLobbyButton.SetActive(true);
