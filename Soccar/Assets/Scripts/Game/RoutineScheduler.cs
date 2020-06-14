@@ -37,7 +37,7 @@ public class RoutineScheduler : MonoBehaviour
                 if(receivingTransform.ShootPowers[i] != -1)
                     BallController.ShootPowers[i] = receivingTransform.ShootPowers[i];
             }
-            catch (Exception) { Debug.Log("지연이 사랑해용♥"); }
+            catch (Exception) { }
         }
 
         // 현재 공 위치 저장

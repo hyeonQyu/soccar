@@ -19,6 +19,7 @@ public class Sound
     public AudioSource SlidingTackle { get; private set; }
     public AudioSource Fall { get; private set; }
     public AudioSource Jump { get; private set; }
+    public AudioSource FeverTimeStart { get; private set; }
 
     // 로비
 
@@ -42,6 +43,7 @@ public class Sound
             SlidingTackle = _sounds.transform.Find("Sliding Tackle").GetComponent<AudioSource>();
             Fall = _sounds.transform.Find("Fall").GetComponent<AudioSource>();
             Jump = _sounds.transform.Find("Jump").GetComponent<AudioSource>();
+            FeverTimeStart = _sounds.transform.Find("Fever Time Start").GetComponent<AudioSource>();
         }
         // 로비
         else

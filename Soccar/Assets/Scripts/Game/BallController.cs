@@ -108,7 +108,8 @@ public class BallController : MonoBehaviour
 
             string collisionName = collision.gameObject.name;
             // 슈팅
-            if (_collisionAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash == PlayerController.Hash.Shoot && (collisionName.Equals("RightLeg") || collisionName.Equals("RightUpLeg")))
+            if (_collisionAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash == PlayerController.Hash.Shoot && 
+                    (collisionName.Equals("RightLeg") || collisionName.Equals("RightUpLeg") || collision.Equals("LeftLeg")))
             {
                 _isShoot = true;
             }
@@ -122,7 +123,6 @@ public class BallController : MonoBehaviour
         if (LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
         {
             string collisionName = collision.gameObject.name;
-            //Debug.Log("dribble " + collisionName);
             if(collisionName.Equals("RightLeg") || collisionName.Equals("LeftLeg") || collisionName.Equals("RightUpLeg")
                 || collisionName.Equals("LeftUpLeg") || collisionName.Equals("Hips"))
             {
