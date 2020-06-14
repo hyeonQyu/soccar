@@ -35,7 +35,7 @@ public class GoalChecker : MonoBehaviour
         yield return new WaitForSeconds(2);
         // 공을 중앙으로 이동시킴
         ball.transform.position = new Vector3(0, 6, 0);
-        ball.transform.eulerAngles = new Vector3(0, 0, 0);
+        
 
         // 탄성력 복구
         ball.GetComponent<Collider>().material.bounciness = 0.8f;
@@ -45,6 +45,7 @@ public class GoalChecker : MonoBehaviour
         if (ball.gameObject.name.Equals("Ball2"))
         {
             ball.GetComponent<FeverBall>().TurnOnEffect();
+            ball.transform.eulerAngles = new Vector3(0, 0, 0);
         }
     }
 }
