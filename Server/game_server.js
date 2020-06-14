@@ -149,8 +149,9 @@ io.on('connection', function(socket) {
         
         var timeDiff = Date.now() - TRANSFORM_TIME_STAMP;
 
-        if(!isFever && Date.now - RUNNING_TIME_STAMP > 240000){
-            io.emit('fever_time', "");
+        if(!isFever && Date.now() - RUNNING_TIME_STAMP > 240000){
+            isFever = true;
+            io.emit('fever_time', " ");
             var position = new Object();
             var rotation = new Object();
             position.x = 0;
