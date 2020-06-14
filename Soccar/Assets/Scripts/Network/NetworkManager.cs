@@ -212,6 +212,7 @@ public class NetworkManager : MonoBehaviour
 
         Socket.On("fever_time", (string data) =>
         {
+            GameLauncher.IsFeverTime = true;
             GameLauncher.Sound.FeverTimeStart.Play();
             GameObject.Find("Fever Time").GetComponent<Animator>().Play("Fever Time");
             BallController.CurrentBallCount++;

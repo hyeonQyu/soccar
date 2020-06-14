@@ -7,7 +7,8 @@ public class BallController : MonoBehaviour
     public const int TotalBallCount = 3;
     public static int CurrentBallCount { get; set; }
 
-    public static float[] ShootPowers;
+    public int BallIndex { private get; set; }
+    public static float[] ShootPowers { get; set; }
     private Animator _collisionAnimator;
     private Collider _ball;
     private Rigidbody _rigidBody;
@@ -166,8 +167,11 @@ public class BallController : MonoBehaviour
                 power = 0.5f;
             // 살짝 위로 올라가도록
             _rigidBody.velocity = direction * power * _shootSpeed + new Vector3(Random.Range(-2.5f, 2.5f), Random.Range(5f, 10f) * power, Random.Range(-2.5f, 2.5f));
-            GameLauncher.Sound.KickBall.volume = power;
-            GameLauncher.Sound.KickBall.Play();
+            if(!GameLauncher.Sound.KickBall[BallIndex].isPlaying)
+            {
+                GameLauncher.Sound.KickBall[BallIndex].volume = power;
+                GameLauncher.Sound.KickBall[BallIndex].Play();
+            }
         }
 
     }
