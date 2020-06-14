@@ -126,7 +126,7 @@ public class NetworkManager : MonoBehaviour
         // 게임 시작 실패(인원수가 적음)
         Socket.On("fail_start_game", (string data) =>
         {
-            _alertMessage.text = "You cannot start game. It requires 4 ~ 6 players.";
+            _alertMessage.text = "You cannot start game. It requires 2 ~ 6 players.";
             _alertPanel.GetComponent<Animator>().Play("Open Alert");
         });
     }
