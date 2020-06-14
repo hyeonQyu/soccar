@@ -162,7 +162,7 @@ public class GameLauncher : MonoBehaviour
             _txtTime.text = (_seconds / 60).ToString() + ":" + ToDoubleDigit((_seconds % 60).ToString());
             if(IsFeverTime)
             {
-                _txtTime.color = new Color(1, 0, 0);
+                _txtTime.color = new Color(1, 0.25f, 0.1f);
                 IsFeverTime = false;
             }
         }
