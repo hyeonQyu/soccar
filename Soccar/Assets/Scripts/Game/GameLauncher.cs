@@ -82,13 +82,17 @@ public class GameLauncher : MonoBehaviour
         PlayerController.PlayerIndex = 99;
 
         // 공 객체를 찾음
-        Balls = new GameObject[2];
-        for(int i = 0; i < Balls.Length; i++)
+        Balls = new GameObject[BallController.TotalBallCount];
+        BallController.CurrentBallCount = BallController.TotalBallCount - 1;
+        for(int i = 0; i < BallController.TotalBallCount; i++)
         {
             Balls[i] = GameObject.Find("Ball" + i);
             Balls[i].GetComponent<BallController>().IsFeverBall = false;
             PlayerController.MiniMapManager.Balls[i] = PlayerController.MiniMapManager.MiniMap.transform.Find("Mini Map Ball" + i).gameObject;
         }
+        Balls[BallController.CurrentBallCount].GetComponent<BallController>().IsFeverBall = true;
+        Balls[BallController.CurrentBallCount].SetActive(false);
+        PlayerController.MiniMapManager.Balls[BallController.CurrentBallCount].SetActive(false);
     }
 
     void FixedUpdate()

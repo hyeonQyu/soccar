@@ -37,13 +37,13 @@ public class RoutineScheduler : MonoBehaviour
                 if(receivingTransform.ShootPowers[i] != -1)
                     BallController.ShootPowers[i] = receivingTransform.ShootPowers[i];
             }
-            catch (Exception) { }
+            catch (Exception) { Debug.Log("지연이 사랑해용♥"); }
         }
 
         // 현재 공 위치 저장
-        Vector3[] currentBallPositions = new Vector3[2];
-        Quaternion[] currentBallRotations = new Quaternion[2];
-        for(int i = 0; i < 2; i++)
+        Vector3[] currentBallPositions = new Vector3[BallController.CurrentBallCount];
+        Quaternion[] currentBallRotations = new Quaternion[BallController.CurrentBallCount];
+        for(int i = 0; i < BallController.CurrentBallCount; i++)
         {
             currentBallPositions[i] = GameLauncher.Balls[i].transform.position;
             currentBallRotations[i] = GameLauncher.Balls[i].transform.rotation;

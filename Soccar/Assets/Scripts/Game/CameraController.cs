@@ -68,7 +68,7 @@ public class CameraController : MonoBehaviour
                 distanceMin = distanceBackward;
 
             height = -distanceMin + 8.7f;
-            angle = -11f * distanceMin + 80;
+            angle = -11f * distanceMin + 85;
             distance = 0.4f * distanceMin + 3.3f;
         }
 

@@ -272,9 +272,9 @@ public static class PlayerController
     // 공 + 절대좌표 전송
     public static void InputAbsolutePostion()
     {
-        Packet.SendingTransform sendingTransform = new Packet.SendingTransform(PlayerIndex);
+        Packet.SendingTransform sendingTransform = new Packet.SendingTransform(PlayerIndex, BallController.CurrentBallCount);
 
-        for(int i = 0; i < 2; i++)
+        for(int i = 0; i < BallController.CurrentBallCount; i++)
         {
             sendingTransform.BallPositions[i] = GameLauncher.Balls[i].transform.position;
             sendingTransform.BallRotations[i] = GameLauncher.Balls[i].transform.rotation;
@@ -285,9 +285,9 @@ public static class PlayerController
         sendingTransform.AnimHashCode = AnimHashCode;
         sendingTransform.PlayerSpeed = _playerSpeed;
         sendingTransform.ShootPower = _shootPower;
-        Debug.Log("Shoot Send " + sendingTransform.ShootPower);
 
         NetworkManager.Send<Packet.SendingTransform>("transform", sendingTransform);
+        Debug.Log("Send Packet");
         AnimHashCode = 0;
         _shootPower = -1;
     }

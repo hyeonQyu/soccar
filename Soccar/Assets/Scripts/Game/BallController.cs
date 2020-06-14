@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
+    public const int TotalBallCount = 3;
+    public static int CurrentBallCount { get; set; }
+
     public static float[] ShootPowers;
     private Animator _collisionAnimator;
     private Collider _ball;
@@ -105,10 +108,12 @@ public class BallController : MonoBehaviour
 
             string collisionName = collision.gameObject.name;
             // 슈팅
-            if (_collisionAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash == PlayerController.Hash.Shoot && (collisionName.Equals("RightLeg") || collisionName.Equals("LeftLeg")))
+            if (_collisionAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash == PlayerController.Hash.Shoot && (collisionName.Equals("RightLeg") || collisionName.Equals("RightUpLeg")))
             {
                 _isShoot = true;
             }
+            else if(_collisionAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash == PlayerController.Hash.Shoot)
+                Debug.Log("shoot " + collisionName);
         }
     }
 
@@ -116,12 +121,18 @@ public class BallController : MonoBehaviour
     {
         if (LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
         {
-            try
+            string collisionName = collision.gameObject.name;
+            //Debug.Log("dribble " + collisionName);
+            if(collisionName.Equals("RightLeg") || collisionName.Equals("LeftLeg") || collisionName.Equals("RightUpLeg")
+                || collisionName.Equals("LeftUpLeg") || collisionName.Equals("Hips"))
             {
-                // 드리블
-                _rigidBody.velocity = collision.transform.forward * _collisionAnimator.GetFloat("SpeedFloat") * 5.0f;
+                try
+                {
+                    // 드리블
+                    _rigidBody.velocity = collision.transform.forward * _collisionAnimator.GetFloat("SpeedFloat") * 5.0f;
+                }
+                catch(MissingReferenceException) { }
             }
-            catch(MissingReferenceException) { }
         }
     }
 
@@ -130,6 +141,11 @@ public class BallController : MonoBehaviour
         if (collision.gameObject.CompareTag("Net"))
         {
             _isOnNet = false;
+        }
+
+        if(LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll"))
+        {
+            //Debug.Log("fever_time 드리블 종료");
         }
 
         if (LayerMask.LayerToName(collision.gameObject.layer).Equals("RagDoll") && _isShoot)

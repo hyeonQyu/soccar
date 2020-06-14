@@ -153,7 +153,7 @@ public class NetworkManager : MonoBehaviour
             // 슈퍼 클라이언트가 아니면 공이 물리엔진의 영향을 받지 않음
             if (PlayerController.PlayerIndex != PlayerController.SuperClientIndex)
             {
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i < BallController.CurrentBallCount; i++)
                     GameLauncher.Balls[i].GetComponent<Rigidbody>().isKinematic = true;
             }
         });
@@ -210,6 +210,15 @@ public class NetworkManager : MonoBehaviour
             GameLauncher.RoutineScheduler.CrowdScream();
         });
 
+        Socket.On("fever_time", (string data) =>
+        {
+            Debug.Log("fever_time");
+            GameObject.Find("Fever Time").GetComponent<Animator>().Play("Fever Time");
+            BallController.CurrentBallCount++;
+            GameLauncher.Balls[BallController.TotalBallCount - 1].SetActive(true);
+            PlayerController.MiniMapManager.Balls[BallController.TotalBallCount - 1].SetActive(true);
+        });
+
         Socket.On("end_game", (string data) =>
         {
             int winner = int.Parse(data.Substring(1, data.Length - 2));
@@ -244,8 +253,10 @@ public class NetworkManager : MonoBehaviour
             }
             if (PlayerController.PlayerIndex == PlayerController.SuperClientIndex)
             {
-                GameLauncher.Balls[0].GetComponent<Rigidbody>().isKinematic = false;
-                GameLauncher.Balls[1].GetComponent<Rigidbody>().isKinematic = false;
+                for(int i = 0; i < BallController.CurrentBallCount; i++)
+                {
+                    GameLauncher.Balls[i].GetComponent<Rigidbody>().isKinematic = false;
+                }
                 Send("change_super_client", PlayerController.SuperClientIndex.ToString());
             }
 

@@ -13,7 +13,7 @@ public class MiniMapManager
     public MiniMapManager(int headcount)
     {
         Players = new GameObject[headcount];
-        Balls = new GameObject[2];
+        Balls = new GameObject[BallController.TotalBallCount];
 
         MiniMap = GameObject.Find("Mini Map");
     }

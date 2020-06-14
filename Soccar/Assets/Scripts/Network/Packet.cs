@@ -52,10 +52,10 @@ public class Packet
         public float PlayerSpeed;
         public float ShootPower;
 
-        public SendingTransform(int playerIndex)
+        public SendingTransform(int playerIndex, int ballCount)
         {
-            BallPositions = new Vector3[2];
-            BallRotations = new Quaternion[2];
+            BallPositions = new Vector3[ballCount];
+            BallRotations = new Quaternion[ballCount];
             PlayerIndex = playerIndex;
             PlayerPosition = new Vector3();
             PlayerRotation = new Vector3();
