@@ -13,6 +13,7 @@ public class RoomManager
     private Text[] _roomKeys = new Text[MaxRoomCount];
     private Text[] _roomNames = new Text[MaxRoomCount];
     private Text[] _roomHeadcounts = new Text[MaxRoomCount];
+    private GameObject[] _flags = new GameObject[MaxRoomCount];
 
     public RoomManager(GameObject roomList)
     {
@@ -30,6 +31,7 @@ public class RoomManager
             _roomKeys[i] = _rooms[i].transform.Find("Room Key").gameObject.GetComponent<Text>();
             _roomNames[i] = _rooms[i].transform.Find("Room Name").gameObject.GetComponent<Text>();
             _roomHeadcounts[i] = _rooms[i].transform.Find("Room Headcount").gameObject.GetComponent<Text>();
+            _flags[i] = _rooms[i].transform.Find("Flag").gameObject;
         }
     }
 
@@ -57,6 +59,7 @@ public class RoomManager
             _roomKeys[i].text = Rooms[i].RoomKey.ToString();
             _roomNames[i].text = Rooms[i].RoomName.ToString();
             _roomHeadcounts[i].text = Rooms[i].Headcount.ToString() + "/6";
+            _flags[i].SetActive(true);
         }
         // 빈 셀
         for(; i < MaxRoomCount; i++)
@@ -64,6 +67,7 @@ public class RoomManager
             _roomKeys[i].text = "";
             _roomNames[i].text = "";
             _roomHeadcounts[i].text = "";
+            _flags[i].SetActive(false);
         }
     }
 }
