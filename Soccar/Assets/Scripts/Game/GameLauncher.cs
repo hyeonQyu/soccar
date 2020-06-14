@@ -38,6 +38,7 @@ public class GameLauncher : MonoBehaviour
     public static bool IsEndGame { get; set; }
     private bool _isEndGameComponentsActivated;
     public static bool IsWinner { get; set; }
+    public static bool IsFeverTime { get; set; }
 
     // 플레이어 움직임 보간에 사용
     public static RoutineScheduler RoutineScheduler { get; private set; }
@@ -87,7 +88,11 @@ public class GameLauncher : MonoBehaviour
         for(int i = 0; i < BallController.TotalBallCount; i++)
         {
             Balls[i] = GameObject.Find("Ball" + i);
-            Balls[i].GetComponent<BallController>().IsFeverBall = false;
+
+            BallController ballController = Balls[i].GetComponent<BallController>();
+            ballController.IsFeverBall = false;
+            ballController.BallIndex = i;
+
             PlayerController.MiniMapManager.Balls[i] = PlayerController.MiniMapManager.MiniMap.transform.Find("Mini Map Ball" + i).gameObject;
         }
         Balls[BallController.CurrentBallCount].GetComponent<BallController>().IsFeverBall = true;
@@ -152,9 +157,14 @@ public class GameLauncher : MonoBehaviour
         // 경기 시작 휘슬이 울린 후 타이머 시작
         if(_seconds >= 0)
         {
-            _time -= Time.deltaTime;
+            _time -= Time.fixedDeltaTime;
             _seconds = (int)Math.Round(_time);
             _txtTime.text = (_seconds / 60).ToString() + ":" + ToDoubleDigit((_seconds % 60).ToString());
+            if(IsFeverTime)
+            {
+                _txtTime.color = new Color(1, 0, 0);
+                IsFeverTime = false;
+            }
         }
 
         // 움직임 입력
@@ -194,6 +204,7 @@ public class GameLauncher : MonoBehaviour
         IsWinner = false;
         IsEndGame = false;
         IsCrowdScream = false;
+        IsFeverTime = false;
     }
 
     private string ToDoubleDigit(string str)

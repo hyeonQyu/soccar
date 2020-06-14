@@ -10,7 +10,7 @@ public class Sound
     public AudioSource CrowdDefault { get; private set; }
     public AudioSource CrowdGoal { get; private set; }
     public AudioSource Whistle { get; private set; }
-    public AudioSource KickBall { get; private set; }
+    public AudioSource[] KickBall { get; private set; }
     public AudioSource HitPost { get; private set; }
     public AudioSource HitFense { get; private set; }
     public AudioSource BounceBall { get; private set; }
@@ -33,10 +33,12 @@ public class Sound
         // 게임
         if(isGameScene)
         {
+            KickBall = new AudioSource[BallController.TotalBallCount];
+            for(int i = 0; i < BallController.TotalBallCount; i++)
+                KickBall[i] = _sounds.transform.Find("Kick Ball" + i.ToString()).GetComponent<AudioSource>();
             CrowdDefault = _sounds.transform.Find("Crowd Default").GetComponent<AudioSource>();
             CrowdGoal = _sounds.transform.Find("Crowd Goal").GetComponent<AudioSource>();
             Whistle = _sounds.transform.Find("Whistle").GetComponent<AudioSource>();
-            KickBall = _sounds.transform.Find("Kick Ball").GetComponent<AudioSource>();
             HitPost = _sounds.transform.Find("Hit Post").GetComponent<AudioSource>();
             HitFense = _sounds.transform.Find("Hit Fense").GetComponent<AudioSource>();
             BounceBall = _sounds.transform.Find("Bounce Ball").GetComponent<AudioSource>();
