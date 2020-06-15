@@ -299,25 +299,25 @@ public class NetworkManager : MonoBehaviour
 
     private IEnumerator EndGame(int winner)
     {
+        // 승자 플레이어 애니메이션 실행
+        PlayerController.PlayerAnimators[winner].SetTrigger(PlayerController.Hash.EndTrigger);
+
         GameLauncher.Sound.EndWhistle.Play();
         yield return new WaitForSeconds(1);
+
         GameLauncher.Sound.CrowdGoal.volume = 1;
         GameLauncher.Sound.CrowdGoal.Play();
-        yield return new WaitForSeconds(1);
-
         // 패자 플레이어를 눕힘
-        for (int i = 0; i < GameLauncher.Headcount; i++)
+        for(int i = 0; i < GameLauncher.Headcount; i++)
         {
-            if (PlayerController.IsConnectPlayers[i] && i != winner)
+            if(PlayerController.IsConnectPlayers[i] && i != winner)
             {
                 PlayerController.Players[i].SetActive(false);
             }
         }
+        yield return new WaitForSeconds(1);
 
         // 카메라를 승자 플레이어에게로
         _camera.GetComponent<CameraController>().MoveToWinner(winner);
-        
-        // 승자 플레이어 애니메이션 실행
-        PlayerController.PlayerAnimators[winner].SetTrigger(PlayerController.Hash.EndTrigger);
     }
 }

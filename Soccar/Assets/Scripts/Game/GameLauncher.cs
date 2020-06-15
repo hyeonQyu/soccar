@@ -177,6 +177,8 @@ public class GameLauncher : MonoBehaviour
     {
         if(!_moveLobbyButton.activeSelf)
         {
+            PlayerController.MiniMapManager.MiniMap.SetActive(false);
+
             Image gameResultImage = _gameResult.GetComponent<Image>();
             if(IsWinner)
             {

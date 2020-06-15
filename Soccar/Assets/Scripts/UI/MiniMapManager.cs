@@ -16,5 +16,6 @@ public class MiniMapManager
         Balls = new GameObject[BallController.TotalBallCount];
 
         MiniMap = GameObject.Find("Mini Map");
+        MiniMap.SetActive(true);
     }
 }
