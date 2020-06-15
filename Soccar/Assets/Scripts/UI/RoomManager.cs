@@ -59,7 +59,7 @@ public class RoomManager
             _roomKeys[i].text = Rooms[i].RoomKey.ToString();
             _roomNames[i].text = Rooms[i].RoomName.ToString();
             _roomHeadcounts[i].text = Rooms[i].Headcount.ToString() + "/6";
-            _flags[i].SetActive(true);
+            _flags[i].transform.localScale = new Vector3(1, 1, 1);
         }
         // 빈 셀
         for(; i < MaxRoomCount; i++)
@@ -67,7 +67,7 @@ public class RoomManager
             _roomKeys[i].text = "";
             _roomNames[i].text = "";
             _roomHeadcounts[i].text = "";
-            _flags[i].SetActive(false);
+            _flags[i].transform.localScale = new Vector3(0, 0, 0);
         }
     }
 }

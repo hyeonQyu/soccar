@@ -78,8 +78,10 @@ public class ButtonController : MonoBehaviour
 
     public void OnClickRefresh()
     {
+        GetComponent<Animator>().SetBool("IsClicked", true);
         _buttonClickSound.Play();
         _networkManager.Send("refresh", LobbyManager.PlayerName);
+        GetComponent<Animator>().SetBool("IsClicked", false);
     }
 
     public void OnClickCreateRoom()
