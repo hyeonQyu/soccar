@@ -196,6 +196,9 @@ public class NetworkManager : MonoBehaviour
 
         Socket.On("score", (string data) =>
         {
+            if(GameLauncher.IsEndGame)
+                return;
+
             data = ToJsonFormat(data);
 
             // 스코어보드 업데이트
@@ -233,6 +236,9 @@ public class NetworkManager : MonoBehaviour
 
         Socket.On("disconnection", (string data) =>
         {
+            if(GameLauncher.IsEndGame)
+                return;
+
             int disconnectPlayerIndex = int.Parse(data.Substring(1, data.Length - 2));
 
             PlayerController.IsConnectPlayers[disconnectPlayerIndex] = false;

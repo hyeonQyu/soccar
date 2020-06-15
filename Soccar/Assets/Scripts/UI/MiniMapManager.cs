@@ -6,7 +6,7 @@ public class MiniMapManager
 {
     public GameObject[] Players { get; set; }
     public GameObject[] Balls { get; set; }
-    // public GameObject[] GoalPosts { get; set; }
+    public GameObject[] GoalPosts { get; set; }
 
     public GameObject MiniMap { get; private set; }
 
@@ -14,6 +14,7 @@ public class MiniMapManager
     {
         Players = new GameObject[headcount];
         Balls = new GameObject[BallController.TotalBallCount];
+        GoalPosts = new GameObject[headcount];
 
         MiniMap = GameObject.Find("Mini Map");
         MiniMap.SetActive(true);

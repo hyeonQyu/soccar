@@ -150,6 +150,10 @@ public static class PlayerController
                 GoalPosts[i].transform.position = backwardVector * 8.7f;
                 GoalPosts[i].transform.eulerAngles = new Vector3(0, -theta * i, 0);
 
+                MiniMapManager.GoalPosts[i] = MiniMapManager.MiniMap.transform.Find("Mini Map Goal Post" + suffix).gameObject;
+                MiniMapManager.GoalPosts[i].transform.localPosition = GoalPosts[i].transform.position + new Vector3(0, 0.1f, 0);
+                MiniMapManager.GoalPosts[i].transform.eulerAngles = GoalPosts[i].transform.eulerAngles;
+
                 // Set Player Position & Rotation (골대 위치 초기화하는 김에 플레이어도 같이 함)
                 Players[i].transform.parent.transform.position = backwardVector * 6 + new Vector3(0, 0, 0);
                 Players[i].SetActive(true);
@@ -158,7 +162,8 @@ public static class PlayerController
             }
             else
             {
-                UnityEngine.Object.Destroy(GameObject.Find("Goal Post" + suffix));
+                GameObject.Find("Goal Post" + suffix).SetActive(false);
+                GameObject.Find("Mini Map Goal Post" + suffix).SetActive(false);
             }
         }
         AlterEgo.transform.position = Player.transform.position;

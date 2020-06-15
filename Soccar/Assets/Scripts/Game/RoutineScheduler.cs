@@ -89,9 +89,7 @@ public class RoutineScheduler : MonoBehaviour
 
                     // 플레이어 이동
                     PlayerController.Players[j].transform.position = new Vector3(
-                        Mathf.Lerp(prePositions[j].x, destPositions[j].x, t), 
-                        prePositions[j].y,
-                        Mathf.Lerp(prePositions[j].z, destPositions[j].z, t)
+                        Mathf.Lerp(prePositions[j].x, destPositions[j].x, t), prePositions[j].y, Mathf.Lerp(prePositions[j].z, destPositions[j].z, t)
                     );
                     Vector3 newVector = new Vector3(PlayerController.Players[j].transform.position.x, 0.1f, PlayerController.Players[j].transform.position.z);
                     PlayerController.MiniMapManager.Players[j].transform.localPosition = newVector;
