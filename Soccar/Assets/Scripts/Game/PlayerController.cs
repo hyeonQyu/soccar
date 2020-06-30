@@ -147,7 +147,7 @@ public static class PlayerController
                 GoalPosts[i] = GameObject.Find("Goal Post" + suffix);
                 piTheta = theta * Mathf.PI / 180 * i;
                 Vector3 backwardVector = new Vector3(Mathf.Sin(piTheta), 0, -Mathf.Cos(piTheta)); // 현재 골대의 back_ward 방향벡터 구하기
-                GoalPosts[i].transform.position = backwardVector * 8.7f;
+                GoalPosts[i].transform.position = backwardVector * 9.65f;
                 GoalPosts[i].transform.eulerAngles = new Vector3(0, -theta * i, 0);
 
                 MiniMapManager.GoalPosts[i] = MiniMapManager.MiniMap.transform.Find("Mini Map Goal Post" + suffix).gameObject;
