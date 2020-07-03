@@ -11,6 +11,8 @@ public class ButtonController : MonoBehaviour
     private GameObject _alertPanel;
     private Text _alertMessage;
 
+    private GameObject _exitGamePanel;
+
     // 방만들기 관련
     private GameObject _createRoomPanel;
     private InputField _inputRoomName;
@@ -38,6 +40,7 @@ public class ButtonController : MonoBehaviour
 
             _alertPanel = GameObject.Find("Alert Panel");
             _alertMessage = _alertPanel.transform.Find("Message").gameObject.GetComponent<Text>();
+            _exitGamePanel = GameObject.Find("Exit Game Panel");
             _createRoomPanel = GameObject.Find("Create Room Panel");
             _inputRoomName = _createRoomPanel.transform.Find("InputField").GetComponent<InputField>();
             _roomPanel = GameObject.Find("Room Panel");
@@ -214,6 +217,30 @@ public class ButtonController : MonoBehaviour
         PlayerController.InitializeStatic();
 
         SceneManager.LoadScene("Lobby Scene");
+    }
+
+    public void OnClickExitGame()
+    {
+        _buttonClickSound.Play();
+
+        // 게임 종료 패널 활성화
+        _exitGamePanel.GetComponent<Animator>().Play("Create Exit Game Panel");
+    }
+
+    public void OnClickExitGameOk()
+    {
+        _buttonClickSound.Play();
+
+        // 게임 종료
+        Application.Quit();
+    }
+
+    public void OnClickExitGameCancel()
+    {
+        _buttonClickSound.Play();
+
+        // 게임 종료 패널 비활성화
+        _exitGamePanel.GetComponent<Animator>().Play("Destroy Exit Game Panel");
     }
 
     private bool IsAlphabetNumeric(string str, bool isNickname)
