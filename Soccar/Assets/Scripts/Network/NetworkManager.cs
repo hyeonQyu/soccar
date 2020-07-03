@@ -12,9 +12,9 @@ public class NetworkManager : MonoBehaviour
 {
     /* 서버 접속에 관한 요소 */
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-    private const string Ip = "http://15.164.59.198:";
+    private const string Ip = "http://15.165.123.174:";
 #elif UNITY_WEBGL
-    private const string Ip = "http://15.164.59.198:";
+    private const string Ip = "http://15.165.123.174:";
 #endif
     public Socket Socket { get; private set; }
 
