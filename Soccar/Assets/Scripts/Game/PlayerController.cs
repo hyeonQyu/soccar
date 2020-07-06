@@ -309,7 +309,7 @@ public static class PlayerController
         //Players[_playerIndex].transform.Translate(movingPosition);
     }
 
-    public static bool IsOutOfStadium(Vector3 curPosition, Vector3 movingPosition)
+    private static bool IsOutOfStadium(Vector3 curPosition, Vector3 movingPosition)
     {
         Vector2 alterEgoVector2 = new Vector2(curPosition.x, curPosition.z);
         Vector2 movingVector2 = new Vector2(movingPosition.x, movingPosition.z);
