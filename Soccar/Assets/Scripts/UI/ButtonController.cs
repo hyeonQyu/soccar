@@ -62,13 +62,13 @@ public class ButtonController : MonoBehaviour
             return;
         LobbyManager.PlayerName = inputIdField.text;
 
-        // 닉네임은 알파벳과 숫자만 가능
-        if(!IsAlphabetNumeric(LobbyManager.PlayerName, true))
-        {
-            _alertMessage.text = "You can use only alphabetic and numeric nicknames without space.";
-            _alertPanel.GetComponent<Animator>().Play("Open Alert");
-            return;
-        }
+        //// 닉네임은 알파벳과 숫자만 가능
+        //if(!IsAlphabetNumeric(LobbyManager.PlayerName, true))
+        //{
+        //    _alertMessage.text = "You can use only alphabetic and numeric nicknames without space.";
+        //    _alertPanel.GetComponent<Animator>().Play("Open Alert");
+        //    return;
+        //}
 
         // 로그인과 동시에 게임 방 리스트 요청
         _networkManager.Send("login", LobbyManager.PlayerName);
@@ -108,13 +108,13 @@ public class ButtonController : MonoBehaviour
         if(roomName.Equals(""))
             return;
 
-        // 방 이름은 알파벳과 숫자만 가능
-        if(!IsAlphabetNumeric(roomName, false))
-        {
-            _alertMessage.text = "You can use only alphabetic and numeric room names.";
-            _alertPanel.GetComponent<Animator>().Play("Open Alert");
-            return;
-        }
+        //// 방 이름은 알파벳과 숫자만 가능
+        //if(!IsAlphabetNumeric(roomName, false))
+        //{
+        //    _alertMessage.text = "You can use only alphabetic and numeric room names.";
+        //    _alertPanel.GetComponent<Animator>().Play("Open Alert");
+        //    return;
+        //}
 
         Packet.SendingCreateRoom sendingCreateRoom = new Packet.SendingCreateRoom(roomName, LobbyManager.PlayerName);
         _networkManager.Send<Packet.SendingCreateRoom>("create_room", sendingCreateRoom);

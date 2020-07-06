@@ -23405,7 +23405,7 @@ MonoBehaviour:
   _scorer: {fileID: 1045440239}
   _conceder: {fileID: 243882798}
   _scoreMark: {fileID: 1174924856}
-  _fadeTime: 6.3
+  _fadeTime: 3
 --- !u!114 &1564077112
 MonoBehaviour:
   m_ObjectHideFlags: 0
