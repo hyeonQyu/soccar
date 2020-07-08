@@ -179,7 +179,7 @@ public class RoutineScheduler : MonoBehaviour
         if(_crowdScreamCoroutine != null)
         {
             StopCoroutine(_crowdScreamCoroutine);
-            GameLauncher.Sound.CrowdGoal.volume = 0.5f;
+            GameLauncher.Sound.CrowdGoal.volume = 0.3f;
         }
         _crowdScreamCoroutine = StartCoroutine(CrowdScreamCoroutine());
     }

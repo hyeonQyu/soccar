@@ -108,23 +108,13 @@ public class BallController : MonoBehaviour
             _collisionAnimator = _lastPlayer.transform.GetChild(0).gameObject.GetComponent<Animator>();
 
             string collisionName = collision.gameObject.name;
+
             // 슈팅
             if (_collisionAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash == PlayerController.Hash.Shoot && 
-                    (collisionName.Equals("RightLeg") || collisionName.Equals("RightUpLeg") || collision.Equals("LeftLeg")))
+                    (collisionName.Equals("RightLeg") || collisionName.Equals("RightUpLeg") || collisionName.Equals("LeftLeg")))
             {
-                // 방향은 Avatar가 바라보는 방향
-                Vector3 direction = collision.transform.root.GetChild(0).forward;
-                Vector3 movingPosition = direction * 0.2f;
-                // 경기장 밖으로 나가지 않도록 조절
-                if(PlayerController.IsOutOfStadium(transform.position, movingPosition))
-                    return;
-                // 한 번만 실행하도록 위치 바꿔줌
-                transform.position += movingPosition;
-
                 _isShoot = true;
             }
-            else if(_collisionAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash == PlayerController.Hash.Shoot)
-                Debug.Log("shoot " + collisionName);
         }
     }
 
@@ -162,8 +152,6 @@ public class BallController : MonoBehaviour
         {
             // 방향은 Avatar가 바라보는 방향
             Vector3 direction = collision.transform.root.GetChild(0).forward;
-
-            
 
             // 키 입력 강도에 따른 파워 조절
             float power = ShootPowers[collision.transform.root.GetComponent<PlayerInformation>().PlayerIndex];
